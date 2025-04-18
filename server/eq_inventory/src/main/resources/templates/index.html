@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html layout:decorate="layout/defaultLayout" xmlns:th="http://www.thymeleaf.org">
+    <div layout:fragment="content"  class=" h-[560px] w-[900px] flex flex-row  absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2">
+        <div class=" h-full  w-3/5">
+            <img th:src="@{/images/slushie.jpeg}" alt="slushie" class="w-full h-full  object-cover">
+        </div>
+        <div class="relative w-2/5 h-full bg-color-1 text-app-white">
+            <div class="">
+                <form action="#" method="post" th:action="@{/app/login} "th:object="${user}" class="absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 w-4/5">
+                    <h1 class="text-xl font-semibold">Welcome</h1>
+                    <p class="text-sm italic my-4">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis et inventore."</p>
+                    <div class="flex flex-col">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" th:field="*{email}" placeholder="example@email.com" th:classappend="${#fields.hasErrors('email') ? 'border-2 border-color-4 bg-color-3' : 'border-none'}">
+                        <div th:if="${#fields.hasErrors('email')}" th:each="err : ${#fields.errors('email')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
+                            <span th:text="${err}"  class=" text-color-4 italic text-xs "></span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" th:field="*{password}" th:classappend="${#fields.hasErrors('password') ? 'border-2 border-color-4 bg-color-3' : 'border-none'}">
+                        <div th:if="${#fields.hasErrors('password')}" th:each="err : ${#fields.errors('password')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
+                            <span th:text="${err}" class=" text-color-4 italic text-xs leading-none"></span>
+                        </div>
+
+                    </div>
+                    <p class="text-[12px] italic w-full text-end">Forgot Password</p>
+                    <div>
+                        <button class="bg-color-4 text-color-1 font-semibold w-full h-8 rounded mt-4">Sign In</button>
+                    </div>
+                    <div th:if="${UserError}" class="bg-color-3 p-2 mb-4 rounded">
+                        <span th:text="${UserError}" class="text-color-4 italic text-sm"></span>
+                    </div>
+                </form>
+                <p class="text-[10px] absolute bottom-2  left-1/2 -translate-x-1/2">&copy 2025 ALL RIGHTS RESERVED</p>
+            </div>
+        </div>
+    </div>
+</html>
