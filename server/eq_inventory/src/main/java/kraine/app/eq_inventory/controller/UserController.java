@@ -35,8 +35,9 @@ public class UserController {
     }
 
     @GetMapping("/app/admin")
-    public String loadAdminPanel() {
-        return "admin";
+    public String loadAdminPanel(Model model, HttpSession session) {
+        model.addAttribute("user", new User());
+        return "admin-panel";
     }
 
 
