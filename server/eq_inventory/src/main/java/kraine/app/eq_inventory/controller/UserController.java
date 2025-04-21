@@ -1,6 +1,8 @@
 package kraine.app.eq_inventory.controller;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,13 +36,15 @@ public class UserController {
 
 
     @GetMapping("")
-    public String loadWelcome(Model model, HttpSession session) {
+    public String loadIndex(Model model, HttpSession session) {
         model.addAttribute("user", new User());
         return "index";
     }
 
     @GetMapping("/app/admin")
     public String loadAdminPanel(Model model, HttpSession session) {
+        List<User> UserList = us.getUsers();
+        model.addAttribute("userList", UserList);
         model.addAttribute("user", new User());
         return "admin-panel";
     }

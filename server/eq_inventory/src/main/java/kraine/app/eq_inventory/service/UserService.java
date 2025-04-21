@@ -1,5 +1,7 @@
 package kraine.app.eq_inventory.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class UserService {
 
     public User addUser(User user) {
         if (userRepo.existsByEmail(user.getEmail())) {
-            throw new DuplicateUserException("Email is already in use. Please try again.");
+            throw new DuplicateUserException(user.getEmail()+" is already in use.");
         }
 
         if (user.getPassword() == null) {
@@ -51,6 +53,10 @@ public class UserService {
         }
 
         return retrievedUser;
+    }
+
+    public List<User> getUsers() {
+        return userRepo.findAll();
     }
 
 }
