@@ -21,7 +21,7 @@ public class Equipment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = true)
+    @Column(nullable = true, unique = true)
     private String serialNumber;
 
     @Column(nullable = true)

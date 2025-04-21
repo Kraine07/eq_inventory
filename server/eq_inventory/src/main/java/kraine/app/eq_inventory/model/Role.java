@@ -24,7 +24,6 @@ public class Role {
     private Long id;
 
     @Column(nullable = false, unique = true, name = "description")
-    @NotBlank(message = "Role description is needed.")
     private RoleType roleType;
 
     @OneToMany(mappedBy = "role")

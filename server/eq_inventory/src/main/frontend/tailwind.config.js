@@ -11,6 +11,7 @@ module.exports = {
         "color-2":"#04293A",
         "color-3":"#064663",
         "color-4":"#ECB365",
+        "modal-background":"#04293AEA",
     },
     },
   },

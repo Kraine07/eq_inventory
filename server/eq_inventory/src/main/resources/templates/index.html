@@ -6,7 +6,7 @@
         </div>
         <div class="relative w-2/5 h-full bg-color-1 text-app-white">
             <div class="">
-                <form action="#" method="post" th:action="@{/app/login} "th:object="${user}" class="absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 w-4/5">
+                <form action="#" method="post" th:action="@{/app/login}" th:object="${user}" class="absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 w-4/5">
                     <h1 class="text-xl font-semibold">Welcome</h1>
                     <p class="text-sm italic my-4">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis et inventore."</p>
                     <div class="flex flex-col">
@@ -27,9 +27,6 @@
                     <p class="text-[12px] italic w-full text-end">Forgot Password</p>
                     <div>
                         <button class="bg-color-4 text-color-1 font-semibold w-full h-8 rounded mt-4">Sign In</button>
-                    </div>
-                    <div th:if="${UserError}" class="bg-color-3 p-2 mb-4 rounded">
-                        <span th:text="${UserError}" class="text-color-4 italic text-sm"></span>
                     </div>
                 </form>
                 <p class="text-[10px] absolute bottom-2  left-1/2 -translate-x-1/2">&copy 2025 ALL RIGHTS RESERVED</p>

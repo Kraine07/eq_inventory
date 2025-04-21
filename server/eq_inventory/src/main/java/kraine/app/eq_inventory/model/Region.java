@@ -19,6 +19,6 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.AUTO) // auto increment
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 }
