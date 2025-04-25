@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import kraine.app.eq_inventory.RandomPasswordGenerator;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
@@ -29,16 +30,13 @@ public class UserService {
         if (userRepo.existsByEmail(user.getEmail())) {
             throw new DuplicateUserException(user.getEmail()+" is already in use.");
         }
-
-        if (user.getPassword() == null) {
-            user.setPassword(RandomPasswordGenerator.generatePassword(12));
-        }
         user.setPassword(bpe.encode(user.getPassword()));
         user.setIsTemporaryPassword(true);
         user.setIsSuspended(false);
 
         return userRepo.save(user);
     }
+
 
 
     public User findByEmail(User user) {

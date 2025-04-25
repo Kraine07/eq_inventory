@@ -52,7 +52,8 @@
             </label>
             <input type="checkbox" id="user-form-modal" class="peer" hidden>
 
-            <div class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md active:hidden">
+            <!-- hidden form -->
+            <div id="user-form" class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md active:hidden">
                 <div th:replace="~{layout/forms/new-user :: user-form}">...</div>
             </div>
 
