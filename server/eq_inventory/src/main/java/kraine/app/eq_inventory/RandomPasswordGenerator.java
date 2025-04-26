@@ -13,8 +13,8 @@ public class RandomPasswordGenerator {
     private static final SecureRandom random = new SecureRandom();
 
     public static String generatePassword(int length) {
-        if (length < 4) {
-            throw new IllegalArgumentException("Password length should be at least 4 to include all character types");
+        if (length < 8) {
+            throw new IllegalArgumentException("Password length should be at least 8 characters.");
         }
 
         StringBuilder password = new StringBuilder(length);

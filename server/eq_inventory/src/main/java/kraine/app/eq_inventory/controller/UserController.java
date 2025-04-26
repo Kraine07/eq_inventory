@@ -3,11 +3,9 @@ package kraine.app.eq_inventory.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kraine.app.eq_inventory.RandomPasswordGenerator;
+import kraine.app.eq_inventory.Email.EmailModel;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
-import kraine.app.eq_inventory.model.Role;
 import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.service.RoleService;
@@ -30,7 +28,8 @@ import kraine.app.eq_inventory.service.UserService;
 public class UserController {
 
     private final UserService us;
-    private RoleService rs;
+    private final RoleService rs;
+    private EmailModel email = new EmailModel();
 
 
 
@@ -76,26 +75,30 @@ public class UserController {
     @PostMapping("/app/register")
     public String addUser(@Valid User user, BindingResult bindingResult, @RequestParam(name = "role") String role,
             Model model, HttpSession session) {
-
-System.out.println(user.toString()+" <<<>>> "+role.toString());
-        // user.setRole(rs.getRole(role.contains("admin") ? RoleType.ADMINISTRATOR : RoleType.EDITOR));
-        user.setPassword(RandomPasswordGenerator.generatePassword(12));
+        String pGen = RandomPasswordGenerator.generatePassword(12);
+        user.setPassword(pGen);
 
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", bindingResult.getAllErrors().toString());
         }
+        session.setAttribute("pgen", pGen);
+
+        email.setRecipient(user.getEmail());
+        email.setSubject("Equipment Inventory App Verification");
+        email.setMessageBody("Kindly click the link below to set password.\r <a>Link to be provided</a>");
+        model.addAttribute("email", email);
         try {
-            User newUser = us.addUser(user);
+            us.addUser(user);
+            return "send-email";
         } catch (DuplicateUserException e) {
 
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/app/admin";
+            return "";
         }
 
-        return loadScreen(model, session);
     }
 
 
