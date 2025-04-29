@@ -1,13 +1,11 @@
 package kraine.app.eq_inventory.Email;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import kraine.app.eq_inventory.model.User;
+import kraine.app.eq_inventory.SessionHandler;
 
 @Controller
 public class EmailController {
@@ -21,28 +19,19 @@ public class EmailController {
 
 
 
-    public static String getPassword(HttpServletRequest request) {
-    HttpSession session = request.getSession(false);
-    if (session != null) {
-        Object userObj = session.getAttribute("pgen");
-        if (userObj instanceof String) {
-            return (String) userObj;
-        }
-    }
-    return null;
-}
+
 
     // Sending Email
-    @PostMapping("/send-password")
-    public String sendPassword(@ModelAttribute EmailModel emailModel, HttpServletRequest request){
+    @GetMapping("/send-password")
+    public String sendPassword(HttpServletRequest request){
 
         try {
-            emailService.sendPassword(emailModel, EmailController.getPassword(request));
+            emailService.sendPassword(SessionHandler.getAttribute(request, "recipient", String.class), SessionHandler.getAttribute(request,"rawPass",String.class));
         } catch (MessagingException e) {
-            // TODO Auto-generated catch block
+            System.out.println("Error sending email...");
             e.printStackTrace();
         }
-        return "redirect:/";
+        return "redirect:";
     }
 
 

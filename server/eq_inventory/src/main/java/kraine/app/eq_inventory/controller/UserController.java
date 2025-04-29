@@ -7,13 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import kraine.app.eq_inventory.RandomPasswordGenerator;
-import kraine.app.eq_inventory.Email.EmailModel;
+import kraine.app.eq_inventory.PasswordServices;
+import kraine.app.eq_inventory.SessionHandler;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
@@ -21,6 +21,8 @@ import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.service.RoleService;
 import kraine.app.eq_inventory.service.UserService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -29,7 +31,6 @@ public class UserController {
 
     private final UserService us;
     private final RoleService rs;
-    private EmailModel email = new EmailModel();
 
 
 
@@ -40,12 +41,12 @@ public class UserController {
 
 
     // check if a user has been created and decide whether to load setup or index
-    public String loadScreen(Model model, HttpSession session){
+    private String loadScreen(Model model, HttpServletRequest request){
         if (us.getUsers().isEmpty()) {
             return "setup";
         }
-        else if(session.getAttribute("user") != null){
-            return "redirect:/app/admin";
+        else if(SessionHandler.hasSessionAttribute(request, "user")){
+            return "admin-panel"; // calls loadAdminPanel method
 
         }
         return "index";
@@ -53,16 +54,16 @@ public class UserController {
 
 
     @GetMapping("")
-    public String loadApp(Model model, HttpSession session) {
+    public String loadApp(Model model, HttpServletRequest request) {
         model.addAttribute("admin", rs.findByRoleType(RoleType.ADMINISTRATOR).getId());
         model.addAttribute("editor", rs.findByRoleType(RoleType.EDITOR).getId());
         model.addAttribute("user", new User());
-        return loadScreen(model, session);
+        return loadScreen(model, request);
     }
 
 
     @GetMapping("/app/admin")
-    public String loadAdminPanel(Model model, HttpSession session) {
+    public String loadAdminPanel(Model model) {
         List<User> UserList = us.getUsers();
         model.addAttribute("admin", rs.findByRoleType(RoleType.ADMINISTRATOR).getId());
         model.addAttribute("editor", rs.findByRoleType(RoleType.EDITOR).getId());
@@ -72,26 +73,34 @@ public class UserController {
     }
 
 
+
+
+
     @PostMapping("/app/register")
-    public String addUser(@Valid User user, BindingResult bindingResult, @RequestParam(name = "role") String role,
-            Model model, HttpSession session) {
-        String pGen = RandomPasswordGenerator.generatePassword(12);
-        user.setPassword(pGen);
+    public String addUser(@Valid User user, BindingResult bindingResult,
+            Model model, HttpServletRequest request) {
+
+
+        String genPass = PasswordServices.generatePassword(12);
+        // generate, set password then add to session
+        user.setPassword(genPass);
+        SessionHandler.addAttribute(request, "rawPass", genPass);
+        SessionHandler.addAttribute(request, "recipient", user.getEmail());
+
 
         if (bindingResult.hasErrors()) {
-
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", bindingResult.getAllErrors().toString());
         }
-        session.setAttribute("pgen", pGen);
 
-        email.setRecipient(user.getEmail());
-        email.setSubject("Equipment Inventory App Verification");
-        email.setMessageBody("Kindly click the link below to set password.\r <a>Link to be provided</a>");
-        model.addAttribute("email", email);
         try {
-            us.addUser(user);
-            return "send-email";
+            if (us.addUser(user) != null) {
+                //save user to be emailed
+                return "redirect:/send-password";
+            }
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "Error creating user. Please try again.");
+            return "";
         } catch (DuplicateUserException e) {
 
             model.addAttribute("error", true);
@@ -105,8 +114,8 @@ public class UserController {
 
 
 
-    @PostMapping("/app/login")
-    public String login(@Valid User user, BindingResult bindingResult, Model model, HttpSession session) {
+    @PostMapping("/attempt-login")
+    public String login(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model, HttpServletRequest request) {
 
         // Handle validation errors
         if (bindingResult.hasFieldErrors("email") || bindingResult.hasFieldErrors("password")) {
@@ -116,14 +125,69 @@ public class UserController {
         // Handle login logic
         try {
             User authenticatedUser = us.findByEmail(user);
-            session.setAttribute("user", authenticatedUser); // Set user in session if login succeeds
-        } catch (UserNotFoundException | PasswordNotFoundException e) {
+            SessionHandler.addAttribute(request, "user", authenticatedUser);
+            //check if password is temporary
+            if (authenticatedUser.getIsTemporaryPassword()) {
+                return "update-password";
+            }
+
+            return "redirect:";
+        }
+        catch (UserNotFoundException | PasswordNotFoundException e) {
             model.addAttribute("errorMessage", "User not found.");
             model.addAttribute("error", true);
             return "index";
+        }// Proceed to main page upon successful login
+    }
+
+
+
+
+    @PostMapping("/update-password") // validate fields against password pattern
+    public String updatePassword(Model model, @RequestParam(name = "old-password") String oldPassword,
+            @RequestParam(name = "new-password") String newPassword,
+            @RequestParam(name = "confirm-password") String confirmPassword, HttpServletRequest request) {
+
+
+        // TODO CHECK FOR CORRECT OLD PASSWORD - service layer???
+
+        // VALIDATE PASSWORDS AGAINST PATTERN
+        if(!PasswordServices.validateFieldAgainstPattern(new User(), "password", oldPassword) || !PasswordServices.validateFieldAgainstPattern(new User(), "password", newPassword) || !PasswordServices.validateFieldAgainstPattern(new User(), "password", confirmPassword)){
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "Password must be at least 8 characters long with uppercase, lowercase, numeral and any special character from  !@#$%^*&()");
+            return "update-password";
         }
 
-        return "main"; // Proceed to main page upon successful login
+
+        //CHECK IS NEW PASSWORD IS DIFFERENT FROM OLD PASSWORD
+        else if (oldPassword.equals(newPassword)) {
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "New password must be different from old password. Please try again.");
+            return "update-password";
+        }
+
+
+        // CHECK IF NEW AND CONFIRMED PASSWORDS ARE THE SAME
+        else if (!confirmPassword.equals(newPassword)) {
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "New passwords do not match. Please try again.");
+            return "update-password";
+        }
+
+        // UPDATE PASSWORD
+        User userToBeUpdated = SessionHandler.getAttribute(request, "user", User.class);
+
+        // UPDATE PASSWORD
+        userToBeUpdated.setPassword(newPassword);
+        userToBeUpdated.setIsTemporaryPassword(false);
+
+        // UPDATE USER
+        if (us.updateUser(userToBeUpdated) != null) {
+            System.out.println("PASSWORD UPDATED");
+            return "redirect:";
+        }
+        return "update-password";
     }
+
 
 }

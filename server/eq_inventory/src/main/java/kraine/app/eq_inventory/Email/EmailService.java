@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import kraine.app.eq_inventory.model.User;
 
 @Service
 public class EmailService implements EmailServiceInterface {
@@ -65,23 +64,23 @@ public class EmailService implements EmailServiceInterface {
 
 
 
-    public void sendPassword(EmailModel emailModel, String password)
+    public void sendPassword(String recipient, String password)
             throws MessagingException {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setTo(emailModel.getRecipient());
-        helper.setSubject("Equipment Inventory App");
+        helper.setTo(recipient);
+        helper.setSubject("Equipment Inventory App Password");
         helper.setFrom("mail@equipment-inventory.app");
 
         String htmlContent = "<html>" +
                 "<body>" +
                 "    <h2>Account Created</h2>" +
-                "    <p>Your temporary password is :</p>" +
+                "    <p>Your temporary password is</p>" +
                 "    <p>" +
                 "        <span style=\"" +
-                "            display: inline-block; padding: 10px 20px; font-size: 20px; letter-spacing:1px; font-weight:bold; background-color: #ECB365; " +
+                "            display: inline-block; padding: 6px 20px; font-size: 20px; letter-spacing:1px; font-weight:bold; background-color: #ECB365; " +
                 "            color: #041C32; text-decoration: none; border-radius: 5px;" +
                 "        \">" + password + "</span>" +
                 "    </p>" +
