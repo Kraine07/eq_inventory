@@ -1,8 +1,9 @@
 package kraine.app.eq_inventory;
 
+import java.lang.reflect.Field;
 import java.security.SecureRandom;
 
-public class RandomPasswordGenerator {
+public class PasswordServices {
 
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
@@ -12,6 +13,8 @@ public class RandomPasswordGenerator {
 
     private static final SecureRandom random = new SecureRandom();
 
+    
+    
     public static String generatePassword(int length) {
         if (length < 8) {
             throw new IllegalArgumentException("Password length should be at least 8 characters.");
@@ -41,4 +44,29 @@ public class RandomPasswordGenerator {
 
         return new String(pwdArray);
     }
+
+
+
+
+    public static boolean validateFieldAgainstPattern(Object object, String fieldName, String input) {
+        try {
+            Class<?> clazz = object.getClass();
+            Field field = clazz.getDeclaredField(fieldName);
+
+            if (field.isAnnotationPresent(jakarta.validation.constraints.Pattern.class)) {
+                // Fully qualified name to resolve collision
+                jakarta.validation.constraints.Pattern patternAnnotation = field
+                        .getAnnotation(jakarta.validation.constraints.Pattern.class);
+
+                String regex = patternAnnotation.regexp();
+                return java.util.regex.Pattern.compile(regex).matcher(input).matches(); // For regex matching
+            } else {
+                System.out.println("Field does not have @Pattern annotation.");
+            }
+        } catch (NoSuchFieldException | SecurityException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

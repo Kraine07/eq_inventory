@@ -26,7 +26,7 @@ public class UserService {
 
     public User addUser(User user) {
         if (userRepo.existsByEmail(user.getEmail())) {
-            throw new DuplicateUserException(user.getEmail()+" is already in use.");
+            throw new DuplicateUserException(user.getEmail() + " is already in use.");
         }
         user.setPassword(bpe.encode(user.getPassword()));
         user.setIsTemporaryPassword(true);
@@ -34,6 +34,20 @@ public class UserService {
 
         return userRepo.save(user);
     }
+
+
+
+
+    public User updateUser(User user) {
+        //check if old password matches
+        User userInDb = userRepo.findByEmail(user.getEmail());
+        if (!bpe.matches(user.getPassword(), userInDb.getPassword())) {
+            throw new PasswordNotFoundException("The old password provided is not correct.");
+        }
+        user.setPassword(bpe.encode(user.getPassword()));
+        return userRepo.save(user);
+    }
+
 
 
 
@@ -47,9 +61,11 @@ public class UserService {
         if (!bpe.matches(user.getPassword(), retrievedUser.getPassword())) {
             throw new PasswordNotFoundException("Invalid password for user with email " + user.getEmail());
         }
-
+        // retrievedUser.setPassword("");
         return retrievedUser;
     }
+
+
 
     public List<User> getUsers() {
         return userRepo.findAll();
