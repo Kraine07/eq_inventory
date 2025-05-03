@@ -13,8 +13,8 @@ public class PasswordServices {
 
     private static final SecureRandom random = new SecureRandom();
 
-    
-    
+
+
     public static String generatePassword(int length) {
         if (length < 8) {
             throw new IllegalArgumentException("Password length should be at least 8 characters.");
@@ -54,6 +54,7 @@ public class PasswordServices {
             Field field = clazz.getDeclaredField(fieldName);
 
             if (field.isAnnotationPresent(jakarta.validation.constraints.Pattern.class)) {
+
                 // Fully qualified name to resolve collision
                 jakarta.validation.constraints.Pattern patternAnnotation = field
                         .getAnnotation(jakarta.validation.constraints.Pattern.class);
