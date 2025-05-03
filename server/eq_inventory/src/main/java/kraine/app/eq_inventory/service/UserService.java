@@ -37,20 +37,6 @@ public class UserService {
 
 
 
-
-    public User updateUser(User user) {
-        //check if old password matches
-        User userInDb = userRepo.findByEmail(user.getEmail());
-        if (!bpe.matches(user.getPassword(), userInDb.getPassword())) {
-            throw new PasswordNotFoundException("The old password provided is not correct.");
-        }
-        user.setPassword(bpe.encode(user.getPassword()));
-        return userRepo.save(user);
-    }
-
-
-
-
     public User findByEmail(User user) {
         User retrievedUser = userRepo.findByEmail(user.getEmail());
 
@@ -61,9 +47,23 @@ public class UserService {
         if (!bpe.matches(user.getPassword(), retrievedUser.getPassword())) {
             throw new PasswordNotFoundException("Invalid password for user with email " + user.getEmail());
         }
-        // retrievedUser.setPassword("");
         return retrievedUser;
     }
+
+
+
+
+    public User updatePassword(User user, String oldPassword) {
+        System.out.println("DEBUG - Input user password: " + user.getPassword());
+        //check if old password matches
+        User userInDb = userRepo.findByEmail(user.getEmail());
+        if (!bpe.matches(oldPassword, userInDb.getPassword())) {
+            throw new PasswordNotFoundException("The old password provided is not correct.");
+        }
+        user.setPassword(bpe.encode(user.getPassword()));
+        return userRepo.save(user);
+    }
+
 
 
 

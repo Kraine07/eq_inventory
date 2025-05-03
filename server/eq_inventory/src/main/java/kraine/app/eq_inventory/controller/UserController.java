@@ -17,9 +17,7 @@ import kraine.app.eq_inventory.SessionHandler;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
-import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
-import kraine.app.eq_inventory.service.RoleService;
 import kraine.app.eq_inventory.service.UserService;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,44 +28,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
 
     private final UserService us;
-    private final RoleService rs;
 
 
 
-    public UserController(UserService us, RoleService rs) {
+    public UserController(UserService us) {
         this.us = us;
-        this.rs = rs;
     }
 
 
-    // check if a user has been created and decide whether to load setup or index
-    private String loadScreen(Model model, HttpServletRequest request){
+
+
+    // ROUTES
+    @GetMapping("")
+    public String loadApp(Model model, HttpServletRequest request) {
+
+
+        // attribute to be used in user form
+        model.addAttribute("user", new User());
+
+        //check if any user have been created
         if (us.getUsers().isEmpty()) {
             return "setup";
         }
-        else if(SessionHandler.hasSessionAttribute(request, "user")){
-            return "admin-panel"; // calls loadAdminPanel method
 
+        // check if a user is logged in
+        else if (SessionHandler.hasSessionAttribute(request, "authUser")) {
+            return "redirect:/app/admin"; // redirect so app calls loadAdminPanel method
         }
+
         return "index";
     }
 
 
-    @GetMapping("")
-    public String loadApp(Model model, HttpServletRequest request) {
-        model.addAttribute("admin", rs.findByRoleType(RoleType.ADMINISTRATOR).getId());
-        model.addAttribute("editor", rs.findByRoleType(RoleType.EDITOR).getId());
-        model.addAttribute("user", new User());
-        return loadScreen(model, request);
-    }
 
 
     @GetMapping("/app/admin")
-    public String loadAdminPanel(Model model) {
-        List<User> UserList = us.getUsers();
-        model.addAttribute("admin", rs.findByRoleType(RoleType.ADMINISTRATOR).getId());
-        model.addAttribute("editor", rs.findByRoleType(RoleType.EDITOR).getId());
-        model.addAttribute("userList", UserList);
+    public String loadAdminPanel(Model model, HttpServletRequest request) {
+
+        // check if session timed out
+        if (!SessionHandler.hasSessionAttribute(request, "authUser")) {
+            return "redirect:/";
+        }
+
+        //TODO  get list of equipment and property so populate respective list
+
+        // get list of users to populate user list
+        List<User> userList = us.getUsers();
+        model.addAttribute("userList", userList);
         model.addAttribute("user", new User());
         return "admin-panel";
     }
@@ -79,6 +86,7 @@ public class UserController {
     @PostMapping("/app/register")
     public String addUser(@Valid User user, BindingResult bindingResult,
             Model model, HttpServletRequest request) {
+        model.addAttribute("user", new User());
 
 
         String genPass = PasswordServices.generatePassword(12);
@@ -100,12 +108,12 @@ public class UserController {
             }
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "Error creating user. Please try again.");
-            return "";
+            return "redirect:/";
         } catch (DuplicateUserException e) {
 
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", e.getMessage());
-            return "";
+            return "redirect:/";
         }
 
     }
@@ -115,7 +123,9 @@ public class UserController {
 
 
     @PostMapping("/attempt-login")
-    public String login(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String login(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model,
+            HttpServletRequest request) {
+        model.addAttribute("user", new User());
 
         // Handle validation errors
         if (bindingResult.hasFieldErrors("email") || bindingResult.hasFieldErrors("password")) {
@@ -125,13 +135,13 @@ public class UserController {
         // Handle login logic
         try {
             User authenticatedUser = us.findByEmail(user);
-            SessionHandler.addAttribute(request, "user", authenticatedUser);
+            SessionHandler.addAttribute(request, "authUser", authenticatedUser);
             //check if password is temporary
             if (authenticatedUser.getIsTemporaryPassword()) {
                 return "update-password";
             }
 
-            return "redirect:";
+            return "redirect:/";
         }
         catch (UserNotFoundException | PasswordNotFoundException e) {
             model.addAttribute("errorMessage", "User not found.");
@@ -142,52 +152,65 @@ public class UserController {
 
 
 
-
-    @PostMapping("/update-password") // validate fields against password pattern
-    public String updatePassword(Model model, @RequestParam(name = "old-password") String oldPassword,
+    @PostMapping("/update-password")
+    public String updatePassword(Model model,
+            @RequestParam(name = "old-password") String oldPassword,
             @RequestParam(name = "new-password") String newPassword,
-            @RequestParam(name = "confirm-password") String confirmPassword, HttpServletRequest request) {
+            @RequestParam(name = "confirm-password") String confirmPassword,
+            HttpServletRequest request) {
 
+        User userToBeUpdated = SessionHandler.getAttribute(request, "authUser", User.class);
 
-        // TODO CHECK FOR CORRECT OLD PASSWORD - service layer???
-
-        // VALIDATE PASSWORDS AGAINST PATTERN
-        if(!PasswordServices.validateFieldAgainstPattern(new User(), "password", oldPassword) || !PasswordServices.validateFieldAgainstPattern(new User(), "password", newPassword) || !PasswordServices.validateFieldAgainstPattern(new User(), "password", confirmPassword)){
+        // Check if new passwords match
+        if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", true);
-            model.addAttribute("errorMessage", "Password must be at least 8 characters long with uppercase, lowercase, numeral and any special character from  !@#$%^*&()");
+            model.addAttribute("errorMessage", "New passwords do not match.");
             return "update-password";
         }
 
-
-        //CHECK IS NEW PASSWORD IS DIFFERENT FROM OLD PASSWORD
-        else if (oldPassword.equals(newPassword)) {
+        // Check if new password is different
+        if (oldPassword.equals(newPassword)) {
             model.addAttribute("error", true);
-            model.addAttribute("errorMessage", "New password must be different from old password. Please try again.");
+            model.addAttribute("errorMessage", "New password must be different.");
             return "update-password";
         }
 
-
-        // CHECK IF NEW AND CONFIRMED PASSWORDS ARE THE SAME
-        else if (!confirmPassword.equals(newPassword)) {
+        // Validate pattern (only for new password)
+        if (!PasswordServices.validateFieldAgainstPattern(new User(), "password", newPassword)) {
             model.addAttribute("error", true);
-            model.addAttribute("errorMessage", "New passwords do not match. Please try again.");
+            model.addAttribute("errorMessage", "Invalid password format.");
             return "update-password";
         }
 
-        // UPDATE PASSWORD
-        User userToBeUpdated = SessionHandler.getAttribute(request, "user", User.class);
-
-        // UPDATE PASSWORD
+        // Set new password before service call
         userToBeUpdated.setPassword(newPassword);
         userToBeUpdated.setIsTemporaryPassword(false);
 
-        // UPDATE USER
-        if (us.updateUser(userToBeUpdated) != null) {
-            System.out.println("PASSWORD UPDATED");
-            return "redirect:";
+        try {
+            User updatedUser = us.updatePassword(userToBeUpdated, oldPassword);
+            if (updatedUser != null) {
+                return "redirect:/";
+            }
+        } catch (PasswordNotFoundException e) {
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "An error occurred. Please try again.");
         }
+
         return "update-password";
     }
 
+
+
+
+
+
+    @GetMapping("/logout")
+    public String logout (HttpServletRequest request){
+        SessionHandler.clearSession(request);
+        return "redirect:/";
+    }
 
 }

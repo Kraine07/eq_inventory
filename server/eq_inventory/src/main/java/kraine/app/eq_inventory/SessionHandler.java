@@ -42,4 +42,13 @@ public class SessionHandler {
         HttpSession session = request.getSession(false);
         return session != null && session.getAttribute(attribute) != null;
     }
+
+
+    public static void clearSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+            System.out.println("Session invalidated.");
+        }
+    }
 }
