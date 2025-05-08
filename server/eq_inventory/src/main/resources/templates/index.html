@@ -8,14 +8,14 @@
             <div class="">
 
                 <!-- Login form -->
-                <form action="#" method="post" th:action="@{/attempt-login}" th:object="${user}" class="absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 w-4/5">
+                <form action="#" method="post" th:action="@{/attempt-login}" th:object="${loginModel}" class="absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 w-4/5">
                     <h1 class="text-xl font-semibold">Welcome</h1>
-                    <p class="text-sm italic my-4">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis et inventore."</p>
+                    <p class="text-sm italic my-4">"You have mass and occupy space, therefore you matter."</p>
 
                     <!-- Email Field -->
                     <div class="flex flex-col">
                         <label for="email">Email</label>
-                        <input type="email" id="email" th:field="*{email}" placeholder="example@email.com" th:class="${user != null && #fields.hasErrors('email')} ? 'border-2 border-color-4 bg-color-3' : 'border-none'">
+                        <input type="email" id="email" th:field="*{email}" placeholder="example@email.com" th:class="${loginModel != null && #fields.hasErrors('email')} ? 'border-2 border-color-4 bg-color-3' : 'border-none'">
                         <div th:if="${#fields.hasErrors('email')}" th:each="err : ${#fields.errors('email')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
                             <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
                         </div>
@@ -24,7 +24,7 @@
                     <!-- Password Field -->
                     <div class="flex flex-col">
                         <label for="password">Password</label>
-                        <input type="password" id="password" th:field="*{password}" th:class="${user != null && #fields.hasErrors('password')} ? 'border-2 border-color-4 bg-color-3' : 'border-none'">
+                        <input type="password" id="password" th:field="*{password}" th:class="${loginModel != null && #fields.hasErrors('password')} ? 'border-2 border-color-4 bg-color-3' : 'border-none'">
                         <div th:if="${#fields.hasErrors('password')}" th:each="err : ${#fields.errors('password')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
                             <span th:text="${err}" class=" text-color-4 italic text-xs leading-none"></span>
                         </div>

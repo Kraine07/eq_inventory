@@ -12,10 +12,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+
+@Builder
 // generate getters, setters, toString(), etc.
 @Data
 // constructors
@@ -46,7 +49,6 @@ public class User {
 
     @Column(nullable = false)
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^*&()]).{8,}$", message = "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character")
-
     private String password;
 
     @ManyToOne
@@ -59,5 +61,12 @@ public class User {
     @Column(nullable = false)
     private Boolean isSuspended;
 
+    @Column(nullable = false)
+    private int failedAttempts = 0;
+
+    // Helper method to calculate attempts left
+    public int getRemainingAttempts() {
+        return Math.max(0, Integer.parseInt(System.getenv("MAX_LOGIN_ATTEMPTS")) - failedAttempts);
+    }
 
 }

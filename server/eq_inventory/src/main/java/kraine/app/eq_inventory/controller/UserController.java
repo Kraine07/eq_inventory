@@ -1,6 +1,7 @@
 package kraine.app.eq_inventory.controller;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,14 @@ import kraine.app.eq_inventory.SessionHandler;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
+import kraine.app.eq_inventory.model.LoginAttempt;
+import kraine.app.eq_inventory.model.LoginModel;
+import kraine.app.eq_inventory.model.LoginStatus;
+import kraine.app.eq_inventory.model.RegisterModel;
+import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
+import kraine.app.eq_inventory.service.LoginAttemptsService;
+import kraine.app.eq_inventory.service.RoleService;
 import kraine.app.eq_inventory.service.UserService;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,25 +36,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
 
     private final UserService us;
+    private final LoginAttemptsService las;
+    private final RoleService roleService;
+
+    private User authenticatedUser = new User();
 
 
 
-    public UserController(UserService us) {
+    public UserController(UserService us, LoginAttemptsService las, RoleService roleService) {
         this.us = us;
+        this.las = las;
+        this.roleService = roleService;
     }
-
-
 
 
     // ROUTES
     @GetMapping("")
     public String loadApp(Model model, HttpServletRequest request) {
 
-
         // attribute to be used in user form
-        model.addAttribute("user", new User());
+        model.addAttribute("loginModel", new LoginModel());
+        model.addAttribute("registerModel", new RegisterModel());
 
-        //check if any user have been created
+        //check if any users have been created
         if (us.getUsers().isEmpty()) {
             return "setup";
         }
@@ -75,7 +87,8 @@ public class UserController {
         // get list of users to populate user list
         List<User> userList = us.getUsers();
         model.addAttribute("userList", userList);
-        model.addAttribute("user", new User());
+        model.addAttribute("loginModel", new LoginModel());
+        model.addAttribute("registerModel", new RegisterModel());
         return "admin-panel";
     }
 
@@ -84,16 +97,19 @@ public class UserController {
 
 
     @PostMapping("/app/register")
-    public String addUser(@Valid User user, BindingResult bindingResult,
-            Model model, HttpServletRequest request) {
-        model.addAttribute("user", new User());
+    public String addUser(@Valid RegisterModel registerModel, BindingResult bindingResult,
+            Model model, @RequestParam(name = "role") String role, HttpServletRequest request) {
 
-
+        // generate, set password 
         String genPass = PasswordServices.generatePassword(12);
-        // generate, set password then add to session
-        user.setPassword(genPass);
+        registerModel.setPassword(genPass);
+        
+        // get and set role
+        registerModel.setRole(role.contains("admin") ? roleService.getRole(RoleType.ADMINISTRATOR) : roleService.getRole(RoleType.EDITOR));
+        
+        // attributes to be used when sending email
         SessionHandler.addAttribute(request, "rawPass", genPass);
-        SessionHandler.addAttribute(request, "recipient", user.getEmail());
+        SessionHandler.addAttribute(request, "recipient", registerModel.getEmail());
 
 
         if (bindingResult.hasErrors()) {
@@ -102,12 +118,13 @@ public class UserController {
         }
 
         try {
-            if (us.addUser(user) != null) {
-                //save user to be emailed
-                return "redirect:/send-password";
-            }
+            // send password to email if creation was successful
+            if (us.addUser(RegisterModel.toUser(registerModel)) != null) return "redirect:/send-password";
+            
+            // error message
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "Error creating user. Please try again.");
+            
             return "redirect:/";
         } catch (DuplicateUserException e) {
 
@@ -123,32 +140,57 @@ public class UserController {
 
 
     @PostMapping("/attempt-login")
-    public String login(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model,
+    public String login(@Valid LoginModel loginModel, BindingResult bindingResult, Model model,
             HttpServletRequest request) {
-        model.addAttribute("user", new User());
+        
+        
+
+        // construct login attempt
+        LoginAttempt currentAttempt = LoginAttempt.builder()
+                .email(loginModel.getEmail())
+                .ipAddress(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now())
+                .status(LoginStatus.SUCCESSFUL)
+                .userAgent(request.getHeader("User-Agent"))
+                .build();
 
         // Handle validation errors
-        if (bindingResult.hasFieldErrors("email") || bindingResult.hasFieldErrors("password")) {
+        if (bindingResult.hasErrors()) {
             return "index";
         }
 
-        // Handle login logic
+        // successful attempt
         try {
-            User authenticatedUser = us.findByEmail(user);
-            SessionHandler.addAttribute(request, "authUser", authenticatedUser);
+            authenticatedUser = us.findByEmail(loginModel);
+            
+             SessionHandler.clearSession(request);
+             SessionHandler.addAttribute(request, "authUser", authenticatedUser);
+
+            // record attempt
+            las.recordSuccessfulAttempt(currentAttempt, loginModel);
+
             //check if password is temporary
             if (authenticatedUser.getIsTemporaryPassword()) {
                 return "update-password";
             }
 
+            // TODO set access level
             return "redirect:/";
         }
+
+        // record failed attempt
         catch (UserNotFoundException | PasswordNotFoundException e) {
             model.addAttribute("errorMessage", "User not found.");
             model.addAttribute("error", true);
+
+            //update lagin attempts
+            las.recordFailedAttempt(loginModel, currentAttempt, request);
+
             return "index";
-        }// Proceed to main page upon successful login
+        }
     }
+
+
 
 
 
