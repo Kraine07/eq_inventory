@@ -8,12 +8,12 @@
 
 <div th:fragment="user-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
 
-    <form action="#" method="post" th:action="@{/app/register}"  th:object="${user}">
+    <form action="#" method="post" th:action="@{/app/register}"  th:object="${registerModel}">
 
         <!-- show only in initial setup -->
         <div th:unless="${userList}" class="my-4">
             <h1 class="text-3xl font-thin mb-4">Initial Setup</h1>
-            <p class="text-sm italic mb-4">Please enter your name and a valid email address to initialize the application.</p>
+            <p class="text-sm italic mb-4">Please enter a name and a valid email address to initialize the application. A temporary password will be sent to the email address provided.</p>
             <input type="hidden" name="role" th:value="${admin}">
         </div>
 

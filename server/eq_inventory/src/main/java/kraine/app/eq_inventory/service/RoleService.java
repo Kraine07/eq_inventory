@@ -21,9 +21,6 @@ public class RoleService {
         return roleRepositoryInterface.findAll();
     }
 
-    public Role findByRoleType(RoleType rt) {
-        return roleRepositoryInterface.findByRoleType(rt);
-    }
 
     public Role getRole(RoleType roleType){
         return roleRepositoryInterface.findByRoleType(roleType);

@@ -1,5 +1,6 @@
 package kraine.app.eq_inventory.API;
 
+import kraine.app.eq_inventory.model.LoginModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,8 @@ public class UserAPI {
 
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginAPI(@RequestBody User user) {
-        User retrievedUser = us.findByEmail(user);
+    public ResponseEntity<User> loginAPI(@RequestBody LoginModel loginModel) {
+        User retrievedUser = us.findByEmail(loginModel);
         return new ResponseEntity<>(retrievedUser, HttpStatus.OK) ;
     }
 }
