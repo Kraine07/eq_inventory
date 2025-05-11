@@ -6,14 +6,14 @@ import jakarta.servlet.http.HttpSession;
 public class SessionHandler {
 
     // Setting an attribute
-    public static void addAttribute(HttpServletRequest request, String attribute, Object object) {
-        if (attribute == null || object == null) {
+    public static void addAttribute(HttpServletRequest request, String attributeName, Object attribute) {
+        if (attributeName == null || attribute == null) {
             throw new IllegalArgumentException("Attribute name and object cannot be null");
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute(attribute, object);
-        System.out.println("Added attribute: " + attribute);
+        session.setAttribute(attributeName, attribute);
+        System.out.println("Added attribute: " + attributeName);
     }
 
 

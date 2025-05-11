@@ -62,11 +62,8 @@ public class User {
     private Boolean isSuspended;
 
     @Column(nullable = false)
-    private int failedAttempts = 0;
+    private int failedAttempts;
 
-    // Helper method to calculate attempts left
-    public int getRemainingAttempts() {
-        return Math.max(0, Integer.parseInt(System.getenv("MAX_LOGIN_ATTEMPTS")) - failedAttempts);
-    }
+   
 
 }

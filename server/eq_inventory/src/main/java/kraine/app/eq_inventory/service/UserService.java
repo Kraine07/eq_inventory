@@ -11,7 +11,6 @@ import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
 import kraine.app.eq_inventory.model.LoginModel;
-import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.UserRepoInterface;
 
@@ -34,6 +33,7 @@ public class UserService {
         // hash password
         user.setPassword(bpe.encode(user.getPassword()));
         // set remaining fields
+        user.setFailedAttempts(0);
         user.setIsTemporaryPassword(true);
         user.setIsSuspended(false);
         return userRepo.save(user);
@@ -41,17 +41,28 @@ public class UserService {
 
 
 
-    public User findByEmail(LoginModel loginModel) {
+    public User attemptLogin(LoginModel loginModel) {
         User retrievedUser = userRepo.findByEmail(loginModel.getEmail());
-
+            
         if (retrievedUser == null) {
-            throw new UserNotFoundException("User with email " + loginModel.getEmail() + " not found.");
+            return retrievedUser;
         }
-
-        if (!bpe.matches(loginModel.getPassword(), retrievedUser.getPassword())) {
-            throw new PasswordNotFoundException("Invalid password for user with email " + loginModel.getEmail());
+        
+        // increment failed attempts if password does not match
+        if(!bpe.matches(loginModel.getPassword(), retrievedUser.getPassword())){
+            retrievedUser.setFailedAttempts(retrievedUser.getFailedAttempts() + 1);
+            
+            // suspend account if login attempts is 5 or more
+            if(retrievedUser.getFailedAttempts() >= 5)retrievedUser.setIsSuspended(true);
+             updateUser(retrievedUser);
+             return new User();
         }
-        return retrievedUser;
+            
+        
+        // reset failed attempts on successful login
+        retrievedUser.setFailedAttempts(0);
+        
+        return updateUser(retrievedUser);
     }
 
     
@@ -60,7 +71,8 @@ public class UserService {
     public User updateUser(User user) {
         // prevent a new user form being created
         if(user == null || user.getId() == null) throw new UserNotFoundException("This user does not exist.");
-        return userRepo.save(user);
+            
+            return userRepo.saveAndFlush(user);
     }
 
 
@@ -73,10 +85,8 @@ public class UserService {
             throw new PasswordNotFoundException("The old password provided is not correct.");
         }
         user.setPassword(bpe.encode(user.getPassword()));
-        return userRepo.save(user);
+        return userRepo.saveAndFlush(user);
     }
-
-
 
 
     public List<User> getUsers() {

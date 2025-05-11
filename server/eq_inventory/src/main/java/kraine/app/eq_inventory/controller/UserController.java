@@ -8,14 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kraine.app.eq_inventory.PasswordServices;
 import kraine.app.eq_inventory.SessionHandler;
-import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
 import kraine.app.eq_inventory.model.LoginAttempt;
@@ -24,6 +22,7 @@ import kraine.app.eq_inventory.model.LoginStatus;
 import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
+import kraine.app.eq_inventory.service.AuthService;
 import kraine.app.eq_inventory.service.LoginAttemptsService;
 import kraine.app.eq_inventory.service.RoleService;
 import kraine.app.eq_inventory.service.UserService;
@@ -38,15 +37,15 @@ public class UserController {
     private final UserService us;
     private final LoginAttemptsService las;
     private final RoleService roleService;
-
-    private User authenticatedUser = new User();
-
+    private final AuthService authService;
 
 
-    public UserController(UserService us, LoginAttemptsService las, RoleService roleService) {
+
+    public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService) {
         this.us = us;
         this.las = las;
         this.roleService = roleService;
+        this.authService = authService;
     }
 
 
@@ -55,11 +54,13 @@ public class UserController {
     public String loadApp(Model model, HttpServletRequest request) {
 
         // attribute to be used in user form
-        model.addAttribute("loginModel", new LoginModel());
-        model.addAttribute("registerModel", new RegisterModel());
+        
 
         //check if any users have been created
         if (us.getUsers().isEmpty()) {
+            model.addAttribute("registerModel", new RegisterModel());
+            model.addAttribute("editor","editor");
+            model.addAttribute("admin","admin");
             return "setup";
         }
 
@@ -67,7 +68,8 @@ public class UserController {
         else if (SessionHandler.hasSessionAttribute(request, "authUser")) {
             return "redirect:/app/admin"; // redirect so app calls loadAdminPanel method
         }
-
+        
+        model.addAttribute("loginModel", new LoginModel());
         return "index";
     }
 
@@ -87,7 +89,8 @@ public class UserController {
         // get list of users to populate user list
         List<User> userList = us.getUsers();
         model.addAttribute("userList", userList);
-        model.addAttribute("loginModel", new LoginModel());
+        model.addAttribute("editor","editor");
+        model.addAttribute("admin","admin");
         model.addAttribute("registerModel", new RegisterModel());
         return "admin-panel";
     }
@@ -126,7 +129,8 @@ public class UserController {
             model.addAttribute("errorMessage", "Error creating user. Please try again.");
             
             return "redirect:/";
-        } catch (DuplicateUserException e) {
+        }
+        catch (UserNotFoundException e) {
 
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", e.getMessage());
@@ -143,7 +147,7 @@ public class UserController {
     public String login(@Valid LoginModel loginModel, BindingResult bindingResult, Model model,
             HttpServletRequest request) {
         
-        
+        SessionHandler.clearSession(request);
 
         // construct login attempt
         LoginAttempt currentAttempt = LoginAttempt.builder()
@@ -155,43 +159,66 @@ public class UserController {
                 .build();
 
         // Handle validation errors
-        if (bindingResult.hasErrors()) {
-            return "index";
-        }
-
-        // successful attempt
-        try {
-            authenticatedUser = us.findByEmail(loginModel);
+        if (bindingResult.hasErrors()) return "index";
+        
+        
+        try{
+            LoginStatus loginStatus = authService.authenticateUser(loginModel.getEmail(), loginModel.getPassword(), request);
             
-             SessionHandler.clearSession(request);
-             SessionHandler.addAttribute(request, "authUser", authenticatedUser);
-
-            // record attempt
-            las.recordSuccessfulAttempt(currentAttempt, loginModel);
-
-            //check if password is temporary
-            if (authenticatedUser.getIsTemporaryPassword()) {
+            
+            if(loginStatus == LoginStatus.FAILED){
+                las.recordFailedAttempt(loginModel, currentAttempt);
+                model.addAttribute("error", true);
+                model.addAttribute("errorMessage", "User not found. Please try again.");
+                return "index";
+            }
+            
+            
+             // when login is successful
+            if(loginStatus == LoginStatus.SUCCESSFUL){
+                
+                las.recordSuccessfulAttempt(currentAttempt, loginModel);
+                return "redirect:/";
+            }
+            
+             //check if password is temporary
+            if (loginStatus == LoginStatus.TEMPORARY) {
+                las.recordSuccessfulAttempt(currentAttempt, loginModel);
                 return "update-password";
             }
 
-            // TODO set access level
-            return "redirect:/";
+            // check if account is suspended
+            if(loginStatus == LoginStatus.LOCKED){
+                // TODO handle error message
+                model.addAttribute("error", true);
+                model.addAttribute("errorMessage", "Account has been suspended. Please contact administrator.");
+                las.recordLoginLocked(currentAttempt);
+                return "index";
+            }
+            
         }
+        
+        catch(UserNotFoundException  e){
+            
+            // TODO implement global error message handler
 
-        // record failed attempt
-        catch (UserNotFoundException | PasswordNotFoundException e) {
-            model.addAttribute("errorMessage", "User not found.");
             model.addAttribute("error", true);
-
-            //update lagin attempts
-            las.recordFailedAttempt(loginModel, currentAttempt, request);
+            model.addAttribute("errorMessage", e.getMessage()+" Please try again.");
+            las.recordFailedAttempt(loginModel, currentAttempt);
 
             return "index";
         }
+        catch(Exception e){
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "Something went wrong. Please try again.");
+            las.recordFailedAttempt(loginModel, currentAttempt);
+        }
+                
+        // TODO set access level
+        return "redirect:/";
+        
+            
     }
-
-
-
 
 
     @PostMapping("/update-password")

@@ -29,7 +29,7 @@ public class UserAPI {
 
     @PostMapping("/login")
     public ResponseEntity<User> loginAPI(@RequestBody LoginModel loginModel) {
-        User retrievedUser = us.findByEmail(loginModel);
+        User retrievedUser = us.attemptLogin(loginModel);
         return new ResponseEntity<>(retrievedUser, HttpStatus.OK) ;
     }
 }

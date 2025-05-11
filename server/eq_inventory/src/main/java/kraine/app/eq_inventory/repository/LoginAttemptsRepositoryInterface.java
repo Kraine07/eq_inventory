@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.model.LoginAttempt;
-import kraine.app.eq_inventory.model.User;
 
 @Transactional
 @Repository
