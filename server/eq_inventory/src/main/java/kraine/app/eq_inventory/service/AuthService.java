@@ -19,12 +19,11 @@ public class AuthService {
     }
 
     public LoginStatus authenticateUser(String email, String password, HttpServletRequest request) {
-        User authUser = new User();
+        
 
-            authUser = us.attemptLogin(LoginModel.builder().email(email).password(password).build());
-
+            User authUser = us.attemptLogin(LoginModel.builder().email(email).password(password).build());
             // check if a user is found
-            if(authUser==null) throw new UserNotFoundException("Invalid credentials.");
+            if(authUser == null) throw new UserNotFoundException("Invalid credentials.");
 
             //check account status
             if(authUser.getIsSuspended())return LoginStatus.LOCKED;

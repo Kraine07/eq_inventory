@@ -55,7 +55,7 @@ public class UserService {
             // suspend account if login attempts is 5 or more
             if(retrievedUser.getFailedAttempts() >= 5)retrievedUser.setIsSuspended(true);
              updateUser(retrievedUser);
-             return new User();
+             return null;
         }
             
         

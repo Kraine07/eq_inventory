@@ -23,18 +23,27 @@
         <div class="my-2">
             <label for="firstName">First Name</label>
             <input type="text" th:field="*{firstName}">
+            <div th:if="${#fields.hasErrors('firstName')}" th:each="err : ${#fields.errors('firstName')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
+                <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
+            </div>
         </div>
 
         <!-- Last Name -->
         <div class="mb-2">
             <label for="lastName">Last Name</label>
             <input type="text" th:field="*{lastName}">
+            <div th:if="${#fields.hasErrors('lastName')}" th:each="err : ${#fields.errors('lastName')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
+                <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
+            </div>
         </div>
 
         <!-- Email -->
         <div class="mb-2">
             <label for="email">Email</label>
             <input type="email" th:field="*{email}">
+            <div th:if="${#fields.hasErrors('email')}" th:each="err : ${#fields.errors('email')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
+                <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
+            </div>
         </div>
 
         <!-- Admin Toggle Switch shown only in the admin panel-->

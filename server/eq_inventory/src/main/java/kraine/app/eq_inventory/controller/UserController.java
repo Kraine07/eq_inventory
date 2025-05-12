@@ -144,8 +144,7 @@ public class UserController {
 
 
     @PostMapping("/attempt-login")
-    public String login(@Valid LoginModel loginModel, BindingResult bindingResult, Model model,
-            HttpServletRequest request) {
+    public String login(@Valid LoginModel loginModel, BindingResult bindingResult, Model model, HttpServletRequest request) {
         
         SessionHandler.clearSession(request);
 
@@ -165,18 +164,18 @@ public class UserController {
         try{
             LoginStatus loginStatus = authService.authenticateUser(loginModel.getEmail(), loginModel.getPassword(), request);
             
-            
-            if(loginStatus == LoginStatus.FAILED){
-                las.recordFailedAttempt(loginModel, currentAttempt);
+            // check if account is suspended
+            if(loginStatus == LoginStatus.LOCKED){
+                // TODO handle error message
                 model.addAttribute("error", true);
-                model.addAttribute("errorMessage", "User not found. Please try again.");
+                model.addAttribute("errorMessage", "Account has been suspended. Please contact administrator.");
+                las.recordLoginLocked(currentAttempt);
                 return "index";
             }
             
             
              // when login is successful
             if(loginStatus == LoginStatus.SUCCESSFUL){
-                
                 las.recordSuccessfulAttempt(currentAttempt, loginModel);
                 return "redirect:/";
             }
@@ -187,14 +186,6 @@ public class UserController {
                 return "update-password";
             }
 
-            // check if account is suspended
-            if(loginStatus == LoginStatus.LOCKED){
-                // TODO handle error message
-                model.addAttribute("error", true);
-                model.addAttribute("errorMessage", "Account has been suspended. Please contact administrator.");
-                las.recordLoginLocked(currentAttempt);
-                return "index";
-            }
             
         }
         
@@ -205,7 +196,6 @@ public class UserController {
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", e.getMessage()+" Please try again.");
             las.recordFailedAttempt(loginModel, currentAttempt);
-
             return "index";
         }
         catch(Exception e){
