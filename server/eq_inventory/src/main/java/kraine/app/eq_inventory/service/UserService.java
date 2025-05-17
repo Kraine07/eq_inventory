@@ -26,9 +26,10 @@ public class UserService {
 
 
     public User addUser(User user) {
+        
         // check for duplicate email
         if (userRepo.existsByEmail(user.getEmail())) {
-            throw new DuplicateUserException(user.getEmail() + " is already in use.");
+            throw new DuplicateUserException("The email address " + user.getEmail() + " is already in use.");
         }
         // hash password
         user.setPassword(bpe.encode(user.getPassword()));
@@ -45,7 +46,8 @@ public class UserService {
         User retrievedUser = userRepo.findByEmail(loginModel.getEmail());
             
         if (retrievedUser == null) {
-            return retrievedUser;
+            throw new UserNotFoundException("This user does not exist.");
+//            return null;
         }
         
         // increment failed attempts if password does not match
@@ -54,8 +56,10 @@ public class UserService {
             
             // suspend account if login attempts is 5 or more
             if(retrievedUser.getFailedAttempts() >= 5)retrievedUser.setIsSuspended(true);
-             updateUser(retrievedUser);
-             return null;
+            updateUser(retrievedUser);
+            
+            throw new UserNotFoundException("This user does not exist.");
+//            return null;
         }
             
         
@@ -68,11 +72,11 @@ public class UserService {
     
     
     
-    public User updateUser(User user) {
+    public User updateUser(User user) throws UserNotFoundException{
         // prevent a new user form being created
-        if(user == null || user.getId() == null) throw new UserNotFoundException("This user does not exist.");
+        if(user == null || user.getId() == null || !userRepo.existsById(user.getId())) throw new UserNotFoundException("This user does not exist.");
             
-            return userRepo.saveAndFlush(user);
+        return userRepo.saveAndFlush(user);
     }
 
 
@@ -82,7 +86,7 @@ public class UserService {
         //check if old password matches
         User userInDb = userRepo.findByEmail(user.getEmail());
         if (!bpe.matches(oldPassword, userInDb.getPassword())) {
-            throw new PasswordNotFoundException("The old password provided is not correct.");
+            throw new PasswordNotFoundException("The old password is not correct.");
         }
         user.setPassword(bpe.encode(user.getPassword()));
         return userRepo.saveAndFlush(user);

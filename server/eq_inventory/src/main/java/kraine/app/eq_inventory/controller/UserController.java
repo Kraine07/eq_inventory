@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kraine.app.eq_inventory.PasswordServices;
 import kraine.app.eq_inventory.SessionHandler;
+import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
 import kraine.app.eq_inventory.model.LoginAttempt;
@@ -26,6 +27,7 @@ import kraine.app.eq_inventory.service.AuthService;
 import kraine.app.eq_inventory.service.LoginAttemptsService;
 import kraine.app.eq_inventory.service.RoleService;
 import kraine.app.eq_inventory.service.UserService;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -49,13 +51,11 @@ public class UserController {
     }
 
 
-    // ROUTES
+    
     @GetMapping("")
     public String loadApp(Model model, HttpServletRequest request) {
 
-        // attribute to be used in user form
         
-
         //check if any users have been created
         if (us.getUsers().isEmpty()) {
             model.addAttribute("registerModel", new RegisterModel());
@@ -72,8 +72,6 @@ public class UserController {
         model.addAttribute("loginModel", new LoginModel());
         return "index";
     }
-
-
 
 
     @GetMapping("/app/admin")
@@ -101,7 +99,7 @@ public class UserController {
 
     @PostMapping("/app/register")
     public String addUser(@Valid RegisterModel registerModel, BindingResult bindingResult,
-            Model model, @RequestParam(name = "role") String role, HttpServletRequest request) {
+            Model model, @RequestParam(name = "role") String role, HttpServletRequest request) throws BindException {
 
         // generate, set password 
         String genPass = PasswordServices.generatePassword(12);
@@ -115,9 +113,10 @@ public class UserController {
         SessionHandler.addAttribute(request, "recipient", registerModel.getEmail());
 
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("error", true);
-            model.addAttribute("errorMessage", bindingResult.getAllErrors().toString());
+        if (bindingResult.hasFieldErrors("firstName")) {
+            throw new BindException(bindingResult);
+//            model.addAttribute("error", true);
+//            model.addAttribute("errorMessage", bindingResult.getAllErrors().toString());
         }
 
         try {
@@ -125,17 +124,18 @@ public class UserController {
             if (us.addUser(RegisterModel.toUser(registerModel)) != null) return "redirect:/send-password";
             
             // error message
-            model.addAttribute("error", true);
-            model.addAttribute("errorMessage", "Error creating user. Please try again.");
+//            model.addAttribute("error", true);
+//            model.addAttribute("errorMessage", "Error creating user. Please try again.");
             
             return "redirect:/";
         }
-        catch (UserNotFoundException e) {
-
-            model.addAttribute("error", true);
-            model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/";
+        catch (DuplicateUserException e) {
+            throw e;
+//            model.addAttribute("error", true);
+//            model.addAttribute("errorMessage", e.getMessage());
+//            return "redirect:/";
         }
+        catch(Exception e) {throw e;}
 
     }
 
@@ -190,8 +190,6 @@ public class UserController {
         }
         
         catch(UserNotFoundException  e){
-            
-            // TODO implement global error message handler
 
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", e.getMessage()+" Please try again.");

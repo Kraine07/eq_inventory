@@ -22,7 +22,7 @@
         <!-- First Name -->
         <div class="my-2">
             <label for="firstName">First Name</label>
-            <input type="text" th:field="*{firstName}">
+            <input type="text" th:field="*{firstName}" required>
             <div th:if="${#fields.hasErrors('firstName')}" th:each="err : ${#fields.errors('firstName')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
                 <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
             </div>
@@ -31,7 +31,7 @@
         <!-- Last Name -->
         <div class="mb-2">
             <label for="lastName">Last Name</label>
-            <input type="text" th:field="*{lastName}">
+            <input type="text" th:field="*{lastName}" required>
             <div th:if="${#fields.hasErrors('lastName')}" th:each="err : ${#fields.errors('lastName')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
                 <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
             </div>
@@ -40,7 +40,7 @@
         <!-- Email -->
         <div class="mb-2">
             <label for="email">Email</label>
-            <input type="email" th:field="*{email}">
+            <input type="email" th:field="*{email}" required>
             <div th:if="${#fields.hasErrors('email')}" th:each="err : ${#fields.errors('email')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
                 <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
             </div>

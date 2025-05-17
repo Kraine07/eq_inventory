@@ -1,5 +1,10 @@
 package kraine.app.eq_inventory;
 
+import kraine.app.eq_inventory.exception.DuplicateUserException;
+import kraine.app.eq_inventory.exception.PasswordNotFoundException;
+import kraine.app.eq_inventory.exception.UserNotFoundException;
+import kraine.app.eq_inventory.model.LoginModel;
+import kraine.app.eq_inventory.model.RegisterModel;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -20,8 +25,10 @@ import kraine.app.eq_inventory.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserServiceTest {
 
@@ -35,6 +42,9 @@ public class UserServiceTest {
     private UserService userService;
 
     private User mockUser;
+    
+    private LoginModel mockLoginModel;
+    private RegisterModel mockRegisterModel;
 
     @BeforeEach
     void setup() {
@@ -44,10 +54,20 @@ public class UserServiceTest {
         mockUser.setLastName("Doe");
         mockUser.setEmail("john@example.com");
         mockUser.setPassword("plaintext123");
+        
+        mockLoginModel = new LoginModel();
+        mockLoginModel.setEmail("john@example.com");
+        mockLoginModel.setPassword("plaintext123");
+        
+        mockRegisterModel = new RegisterModel();
+        mockUser.setFirstName("John");
+        mockUser.setLastName("Doe");
+        mockRegisterModel.setEmail("john@example.com");
+        mockRegisterModel.setPassword("plaintext123");
     }
 
 
-    // CREATION
+    // CREATE USER
 
     @Test
     void shouldAddUserSuccessfully() {
@@ -68,82 +88,107 @@ public class UserServiceTest {
     }
 
 
+    
+    // DUPLICATE EMAIL
     @Test
     void shouldThrowExceptionWhenEmailAlreadyExists() {
         // Arrange
         when(userRepo.existsByEmail("john@example.com")).thenReturn(true);
 
         // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        DuplicateUserException exception = assertThrows(DuplicateUserException.class, () -> {
             userService.addUser(mockUser);
         });
 
-        assertThat(exception.getMessage()).isEqualTo("Email is already in use.");
+        assertThat(exception.getMessage()).isEqualTo("The email address john@example.com is already in use.");
         verify(userRepo, never()).save(any());
     }
 
-
-    // RETRIEVE
+    
+    
+    // SUCCESSFULL LOGIN
     @Test
-    void userFoundAndCredentialsMatch() {
-        User inputUser = new User();
-        inputUser.setEmail("test@example.com");
-        inputUser.setPassword("password123");
+    void successfulLogin_ReturnsUserAndResetsFailedAttempts() {
+        // Arrange
+        LoginModel loginModel = new LoginModel("test@example.com", "rawPassword");
+        User mockUser =  User.builder()
+            .id(1L)
+            .email("test@example.com")
+            .password("encodedPassword")
+            .failedAttempts(3)
+            .isSuspended(false)
+            .isTemporaryPassword(false)
+            .build();
+        
+        // mock repo
+        when(userRepo.findByEmail("test@example.com")).thenReturn(mockUser);
+        when(bpe.matches("rawPassword", "encodedPassword")).thenReturn(true);
+//        when(userRepo.save(mockUser)).thenReturn(mockUser); // Return updated user
+        when(userRepo.existsById(1L)).thenReturn(true);
+        when(userRepo.saveAndFlush(any(User.class))).thenReturn(mockUser);
 
-        User retrievedUser = new User();
-        retrievedUser.setEmail("test@example.cm");
-        retrievedUser.setPassword("$2a$12$hashedPassword"); // Example of bcrypt hash
 
-        when(userRepo.findByEmail(inputUser.getEmail())).thenReturn(retrievedUser);
-        when(bpe.matches(inputUser.getPassword(), retrievedUser.getPassword())).thenReturn(true);
+        // Act
+        User result = userService.attemptLogin(loginModel);
 
-        User result = userService.findByEmail(inputUser);
-
-        assertNotNull(result);
-        assertEquals(retrievedUser, result);
-        verify(userRepo, times(1)).findByEmail(inputUser.getEmail());
-        verify(bpe, times(1)).matches(inputUser.getPassword(), retrievedUser.getPassword());
+        // Assert
+        assertNotNull(result, "The returned user should not be null");
+        assertEquals(0, result.getFailedAttempts(), "Failed attempts should be reset to 0");
+        assertEquals("test@example.com", result.getEmail(), "Email should match");
+        verify(userRepo).saveAndFlush(mockUser);
     }
 
-
+    
+   
+    
+    
+    
+    
+    // INVALID EMAIL
     @Test
     void testFindByEmail_UserNotFound() {
-        User inputUser = new User();
-        inputUser.setEmail("test@example.com");
-        inputUser.setPassword("password123");
+        LoginModel inputLoginModel = new LoginModel();
+        inputLoginModel.setEmail("test@example.com");
+        inputLoginModel.setPassword("password123");
 
-        when(userRepo.findByEmail(inputUser.getEmail())).thenReturn(null);
+        when(userRepo.findByEmail(inputLoginModel.getEmail())).thenReturn(null);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.findByEmail(inputUser);
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.attemptLogin(inputLoginModel);
         });
 
-        assertEquals("User not found.", exception.getMessage());
-        verify(userRepo, times(1)).findByEmail(inputUser.getEmail());
+        assertEquals("This user does not exist.", exception.getMessage());
+        verify(userRepo, times(1)).findByEmail(inputLoginModel.getEmail());
         verifyNoInteractions(bpe);
     }
 
 
+    
+    
+    
+    
+    
+    // INVALID PASSWORD
     @Test
     void testFindByEmail_InvalidPassword() {
-        User inputUser = new User();
-        inputUser.setEmail("test@example.com");
-        inputUser.setPassword("password123");
+        LoginModel inputLoginModel = new LoginModel();
+        inputLoginModel.setEmail("test@example.com");
+        inputLoginModel.setPassword("password123");
 
         User retrievedUser = new User();
         retrievedUser.setEmail("test@example.com");
         retrievedUser.setPassword("$2a$12$hashedPassword"); // Example of bcrypt hash
 
-        when(userRepo.findByEmail(inputUser.getEmail())).thenReturn(retrievedUser);
-        when(bpe.matches(inputUser.getPassword(), retrievedUser.getPassword())).thenReturn(false);
+        when(userRepo.findByEmail(inputLoginModel.getEmail())).thenReturn(retrievedUser);
+        when(bpe.matches(inputLoginModel.getPassword(), retrievedUser.getPassword())).thenReturn(false);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.findByEmail(inputUser);
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.attemptLogin(inputLoginModel);
         });
 
-        assertEquals("Invalid Password.", exception.getMessage());
-        verify(userRepo, times(1)).findByEmail(inputUser.getEmail());
-        verify(bpe, times(1)).matches(inputUser.getPassword(), retrievedUser.getPassword());
+        assertEquals("This user does not exist.", exception.getMessage());
+        verify(userRepo, times(1)).findByEmail(inputLoginModel.getEmail());
+        verify(bpe, times(1)).matches(inputLoginModel.getPassword(), retrievedUser.getPassword());
     }
 
 
