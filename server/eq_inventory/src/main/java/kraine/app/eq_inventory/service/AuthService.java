@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kraine.app.eq_inventory.SessionHandler;
-import kraine.app.eq_inventory.exception.UserNotFoundException;
 import kraine.app.eq_inventory.model.LoginModel;
 import kraine.app.eq_inventory.model.LoginStatus;
 import kraine.app.eq_inventory.model.User;
@@ -28,10 +27,10 @@ public class AuthService {
             //check account status
             if(authUser.getIsSuspended())return LoginStatus.LOCKED;
 
+            SessionHandler.addAttribute(request, "authUser", authUser);
             // check if password is temporary
             if(authUser.getIsTemporaryPassword()) return LoginStatus.TEMPORARY;
 
-            SessionHandler.addAttribute(request, "authUser", authUser);
             return LoginStatus.SUCCESSFUL;
 
 

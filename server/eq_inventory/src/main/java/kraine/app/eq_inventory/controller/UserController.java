@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -51,11 +52,11 @@ public class UserController {
     }
 
 
-    
+
     @GetMapping("")
     public String loadApp(Model model, HttpServletRequest request) {
 
-        
+
         //check if any users have been created
         if (us.getUsers().isEmpty()) {
             model.addAttribute("registerModel", new RegisterModel());
@@ -66,9 +67,13 @@ public class UserController {
 
         // check if a user is logged in
         else if (SessionHandler.hasSessionAttribute(request, "authUser")) {
+            User authUser = SessionHandler.getAttribute(request, "authUser", User.class);
+            if (authUser.getIsTemporaryPassword()) {
+                return "update-password";
+            }
             return "redirect:/app/admin"; // redirect so app calls loadAdminPanel method
         }
-        
+
         model.addAttribute("loginModel", new LoginModel());
         return "index";
     }
@@ -104,10 +109,10 @@ public class UserController {
         // generate, set password 
         String genPass = PasswordServices.generatePassword(12);
         registerModel.setPassword(genPass);
-        
+
         // get and set role
         registerModel.setRole(role.contains("admin") ? roleService.getRole(RoleType.ADMINISTRATOR) : roleService.getRole(RoleType.EDITOR));
-        
+
         // attributes to be used when sending email
         SessionHandler.addAttribute(request, "rawPass", genPass);
         SessionHandler.addAttribute(request, "recipient", registerModel.getEmail());
@@ -115,25 +120,17 @@ public class UserController {
 
         if (bindingResult.hasFieldErrors("firstName")) {
             throw new BindException(bindingResult);
-//            model.addAttribute("error", true);
-//            model.addAttribute("errorMessage", bindingResult.getAllErrors().toString());
         }
 
         try {
             // send password to email if creation was successful
             if (us.addUser(RegisterModel.toUser(registerModel)) != null) return "redirect:/send-password";
-            
-            // error message
-//            model.addAttribute("error", true);
-//            model.addAttribute("errorMessage", "Error creating user. Please try again.");
-            
+
+
             return "redirect:/";
         }
         catch (DuplicateUserException e) {
             throw e;
-//            model.addAttribute("error", true);
-//            model.addAttribute("errorMessage", e.getMessage());
-//            return "redirect:/";
         }
         catch(Exception e) {throw e;}
 
@@ -145,7 +142,7 @@ public class UserController {
 
     @PostMapping("/attempt-login")
     public String login(@Valid LoginModel loginModel, BindingResult bindingResult, Model model, HttpServletRequest request) {
-        
+
         SessionHandler.clearSession(request);
 
         // construct login attempt
@@ -159,11 +156,11 @@ public class UserController {
 
         // Handle validation errors
         if (bindingResult.hasErrors()) return "index";
-        
-        
+
+
         try{
             LoginStatus loginStatus = authService.authenticateUser(loginModel.getEmail(), loginModel.getPassword(), request);
-            
+
             // check if account is suspended
             if(loginStatus == LoginStatus.LOCKED){
                 // TODO handle error message
@@ -172,41 +169,88 @@ public class UserController {
                 las.recordLoginLocked(currentAttempt);
                 return "index";
             }
-            
-            
+
+
              // when login is successful
             if(loginStatus == LoginStatus.SUCCESSFUL){
                 las.recordSuccessfulAttempt(currentAttempt, loginModel);
                 return "redirect:/";
             }
-            
+
              //check if password is temporary
             if (loginStatus == LoginStatus.TEMPORARY) {
                 las.recordSuccessfulAttempt(currentAttempt, loginModel);
                 return "update-password";
             }
 
-            
+
         }
-        
+
         catch(UserNotFoundException  e){
 
-            model.addAttribute("error", true);
-            model.addAttribute("errorMessage", e.getMessage()+" Please try again.");
+            // model.addAttribute("error", true);
+            // model.addAttribute("errorMessage", e.getMessage()+" Please try again.");
             las.recordFailedAttempt(loginModel, currentAttempt);
-            return "index";
+            throw e;
         }
         catch(Exception e){
-            model.addAttribute("error", true);
-            model.addAttribute("errorMessage", "Something went wrong. Please try again.");
+            // model.addAttribute("error", true);
+            // model.addAttribute("errorMessage", "Something went wrong. Please try again.");
             las.recordFailedAttempt(loginModel, currentAttempt);
+            throw e;
         }
-                
+
         // TODO set access level
         return "redirect:/";
-        
-            
+
+
     }
+
+
+
+
+    @PostMapping("/update-user")
+    public String updateUser(
+            @RequestParam(name = "id") String id,
+            @RequestParam(name = "firstName")String firstName,
+            @RequestParam(name = "lastName")String lastName,
+            @RequestParam(name = "role") String role) {
+
+        try {
+            User retrievedUser = us.findById(Long.parseLong(id));
+            if (retrievedUser != null) {
+                retrievedUser.setFirstName(firstName);
+                retrievedUser.setLastName(lastName);
+                retrievedUser.setRole(role.contains("admin") ? roleService.getRole(RoleType.ADMINISTRATOR)
+                        : roleService.getRole(RoleType.EDITOR));
+            }
+            us.updateUser(retrievedUser);
+        }
+        catch (Exception e) {
+            throw e;
+        }
+
+        return "redirect:/";
+    }
+
+
+    @PostMapping("/change-status")
+    public String postMethodName(@RequestParam(name="id")String id) {
+        try {
+            User retrievedUser = us.findById(Long.parseLong(id));
+            if (retrievedUser != null) {
+                retrievedUser.setFailedAttempts(0);
+                retrievedUser.setIsSuspended(!retrievedUser.getIsSuspended());
+                us.updateUser(retrievedUser);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return "redirect:/";
+    }
+
+
 
 
     @PostMapping("/update-password")
@@ -260,8 +304,11 @@ public class UserController {
     }
 
 
-
-
+    @PostMapping("/delete-user")
+    public String deleteUser(@RequestParam(name="id")String id) {
+        System.out.println("#################"+id);        us.deleteUser(Long.parseLong(id));
+        return "redirect:/";
+    }
 
 
     @GetMapping("/logout")
