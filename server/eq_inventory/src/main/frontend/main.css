@@ -34,4 +34,10 @@
         border-radius:6px;
     }
 
+    th, td {
+        padding: 16px ;
+        text-align: left;
+        border-bottom: 1px solid theme('colors.app-white-40');
+    }
+
 }
