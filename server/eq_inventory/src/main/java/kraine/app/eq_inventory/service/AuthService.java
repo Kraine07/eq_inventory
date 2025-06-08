@@ -18,7 +18,6 @@ public class AuthService {
     }
 
     public LoginStatus authenticateUser(String email, String password, HttpServletRequest request) {
-        
 
             User authUser = us.attemptLogin(LoginModel.builder().email(email).password(password).build());
             // check if a user is found

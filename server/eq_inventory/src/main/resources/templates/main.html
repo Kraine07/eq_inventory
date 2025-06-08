@@ -1,6 +1,161 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout/defaultLayout}" xmlns:th="http://www.thymeleaf.org">
-    <div layout:fragment="content"  class="container min-h-full w-4/5 mx-auto flex bg-red-400">
-        <h1>MAIN PAGE</h1>
+    <div layout:fragment="content"  class="container min-h-full w-4/5 mx-auto ">
+
+        <!-- NAVBAR -->
+        <nav class=" flex justify-between items-center font-medium text-app-white text-sm px-4 py-2 mb-2  bg-color-2">
+            <div class="flex justify-between items-center basis-3/4  h-full ">
+                <!-- logo -->
+                <div class="basis-1/4">
+                    <img th:src="@{/images/eq_logo_white.png}" alt="logo">
+                </div>
+
+                <!-- nav links -->
+                <div class="ml-12 h-full space-x-4 flex items-center">
+                    <a href="#" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Dashboard</a>
+                    <a href="#" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Equipment</a>
+                    <a href="#" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Properties</a>
+                    <a href="#" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Reports</a>
+                </div>
+            </div>
+            <div class="flex justify-end items-center basis-1/4 space-x-4 px-4   ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="cursor-pointer hover:text-color-4">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                    <path d="M6 21v-2a4 4 0 0 1 4 -4h2.5" />
+                    <path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M19.001 15.5v1.5" />
+                    <path d="M19.001 21v1.5" />
+                    <path d="M22.032 17.25l-1.299 .75" />
+                    <path d="M17.27 20l-1.3 .75" />
+                    <path d="M15.97 17.25l1.3 .75" />
+                    <path d="M20.733 20l1.3 .75" />
+                </svg>
+            </div>
+        </nav>
+
+
+
+        <!-- EQUIPMENT INFO-->
+        <div class="flex justify-between items-center mb-8 px-4">
+            <div>
+                <h2 class="text-2xl font-semibold">Equipment Inventory</h2>
+                <p class="text-sm">Track and maintain equipment across all your properties.</p>
+            </div>
+
+            <!-- add equipment button -->
+            <label for="user-form-modal" class="cursor-pointer bg-color-1 flex w-[200px] items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-1 rounded-lg mb-4 mt-12 py-1 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span >Add Equipment</span>
+            </label>
+        </div>
+
+
+
+        <!-- EQUIPMENT METRICS -->
+        <div class="grid grid-cols-4 gap-4 mb-8 px-4">
+            <!-- total equipment -->
+            <div class="flex items-center p-4 rounded-md  bg-color-2 text-app-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                    class=" bg-color-4/40 rounded-md">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M11 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M6 16l3 2" />
+                    <path d="M12 17l8 -12" />
+                    <path d="M17 10l2 1" />
+                    <path
+                        d="M9.592 4.695l3.306 2.104a1.3 1.3 0 0 1 .396 1.8l-3.094 4.811a1.3 1.3 0 0 1 -1.792 .394l-3.306 -2.104a1.3 1.3 0 0 1 -.396 -1.8l3.094 -4.81a1.3 1.3 0 0 1 1.792 -.394z" />
+                </svg>
+                <div class="ml-4">
+                    <p class="text-sm">Total Equipment</p>
+                    <span class="text-2xl font-semibold">468</span>
+                </div>
+            </div>
+
+            <!-- juice equipment -->
+            <div  class="flex items-center bg-color-2 text-app-white p-4 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                    class=" bg-color-4/40 rounded-md">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M9 21h6a1 1 0 0 0 1 -1v-3.625c0 -1.397 .29 -2.775 .845 -4.025l.31 -.7c.556 -1.25 .845 -2.253 .845 -3.65v-4a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v4c0 1.397 .29 2.4 .845 3.65l.31 .7a9.931 9.931 0 0 1 .845 4.025v3.625a1 1 0 0 0 1 1z" />
+                    <path d="M6 8h12" />
+                </svg>
+                <div class="ml-4">
+                    <p class="text-sm">Juice</p>
+                    <span class="text-2xl font-semibold">273</span>
+                </div>
+            </div>
+
+            <!-- slush equipment -->
+            <div  class="flex items-center bg-color-2 text-app-white p-4 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                    class="bg-color-4/40 rounded-md">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M17.95 9l-1.478 8.69c-.25 1.463 -.374 2.195 -.936 2.631c-1.2 .931 -6.039 .88 -7.172 0c-.562 -.436 -.687 -1.168 -.936 -2.632l-1.478 -8.689" />
+                    <path d="M6 9l.514 -1.286a5.908 5.908 0 0 1 10.972 0l.514 1.286" />
+                    <path d="M5 9h14" />
+                    <path d="M12 9l4 -7" />
+                    <path d="M10.01 14h.01" />
+                    <path d="M11.02 18h.01" />
+                    <path d="M13.02 16h.01" />
+                </svg>
+                <div class="ml-4">
+                    <p class="text-sm">Slush</p>
+                    <span class="text-2xl font-semibold">121</span>
+                </div>
+            </div>
+
+            <!-- soft serve -->
+            <div class="flex items-center bg-color-2 text-app-white p-4 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                    class=" bg-color-4/40 rounded-md">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M17.657 11a6 6 0 1 0 -11.315 0" />
+                    <path d="M6.342 11l5.658 11l5.657 -11z" />
+                </svg>
+                <div class="ml-4">
+                    <p class="text-sm">Soft Serve</p>
+                    <span class="text-2xl font-semibold">89</span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- EQUIPMENT SEARCH -->
+        <div class="px-4">
+            <div class="grid grid-cols-3 gap-6 mb-8 bg-color-2 text-app-white border-2 border-color-3/10 p-4 rounded-md">
+                <div class="flex flex-col space-y-1">
+                    <label for="eq-search">Search Equipment</label>
+                    <input id="eq-search" type="text" class="bg-app-white">
+                </div>
+                <div class="flex flex-col space-y-1">
+                    <label for="">Property</label>
+                    <select name="" id="">
+                        <option class="bg-color-3" value="">Property 1</option>
+                        <option class="bg-color-3" value="">Property 2</option>
+                        <option class="bg-color-3" value="">Property 3</option>
+                    </select>
+                </div>
+                <div class="flex flex-col space-y-1">
+                    <label for="">Model</label>
+                    <select name="" id="">
+                        <option class="bg-color-3" value="">Model 1</option>
+                        <option class="bg-color-3" value="">Model 2</option>
+                        <option class="bg-color-3" value="">Model 3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </div>
 </html>

@@ -5,7 +5,7 @@
 
 
 @layer components {
-    input{
+    input,select{
         /* display: block; */
         background-color: theme('colors.color-3') !important;
         font-weight: bold;

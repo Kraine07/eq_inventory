@@ -66,12 +66,15 @@ public class UserController {
         }
 
         // check if a user is logged in
-        else if (SessionHandler.hasSessionAttribute(request, "authUser")) {
+        if (SessionHandler.hasSessionAttribute(request, "authUser")) {
             User authUser = SessionHandler.getAttribute(request, "authUser", User.class);
+            // check if password is temporary
             if (authUser.getIsTemporaryPassword()) {
                 return "update-password";
             }
-            return "redirect:/app/admin"; // redirect so app calls loadAdminPanel method
+            // check if user has admin privileges
+            if(authUser.getRole().getRoleType() == RoleType.ADMINISTRATOR) return "redirect:/app/admin";
+            return "main";
         }
 
         model.addAttribute("loginModel", new LoginModel());
@@ -89,7 +92,7 @@ public class UserController {
 
         //TODO  get list of equipment and property so populate respective list
 
-        // get list of users to populate user list
+        // get list of users to populate user list (TODO research a more optimized method)
         List<User> userList = us.getUsers();
         model.addAttribute("userList", userList);
         model.addAttribute("editor","editor");
