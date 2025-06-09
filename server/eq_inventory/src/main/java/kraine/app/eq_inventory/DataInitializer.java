@@ -16,6 +16,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // populate role table if empty
         if (roleRepository.count() == 0) {
             roleRepository.save(new Role(null, RoleType.ADMINISTRATOR, null));
             roleRepository.save(new Role(null, RoleType.EDITOR, null));

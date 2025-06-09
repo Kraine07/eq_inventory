@@ -74,7 +74,7 @@ public class UserController {
             }
             // check if user has admin privileges
             if(authUser.getRole().getRoleType() == RoleType.ADMINISTRATOR) return "redirect:/app/admin";
-            return "main";
+            return "redirect:/dashboard";
         }
 
         model.addAttribute("loginModel", new LoginModel());

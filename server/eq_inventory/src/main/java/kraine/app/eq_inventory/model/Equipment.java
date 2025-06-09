@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +27,8 @@ public class Equipment {
     @Column(nullable = true, unique = true)
     private String serialNumber;
 
-    @Column(nullable = true)
-    private String manufacturerDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime manufacteredDate;
 
     @ManyToOne
     @JoinColumn(name = "model") //column in other table this is linked to
