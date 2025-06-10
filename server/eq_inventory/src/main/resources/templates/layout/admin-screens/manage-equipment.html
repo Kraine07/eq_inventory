@@ -1,0 +1,64 @@
+<div th:fragment="manage-equipment" >
+
+    <h1 class="mt-12 text-2xl">Equipment Management</h1>
+
+    
+
+
+    <div class="flex space-x-4">
+        <!-- manufacturer button and form -->
+        <div class="w-auto">
+            <!-- new manufacturer button -->
+            <label for="manufacturer-form-modal" class="cursor-pointer bg-color-1 inline-flex items-center   rounded-lg mb-4 mt-12 py-2 px-4 space-x-2 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span class="text-sm">New Manufacturer</span>
+            </label>
+            <input type="checkbox" id="manufacturer-form-modal" class="peer" hidden>
+
+            <!-- manufacturer form -->
+            <div id="manufacturer-form-container"
+                class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md active:hidden">
+                <div th:replace="~{layout/forms/new-manufacturer :: manufacturer-form}">...</div>
+            </div>
+        </div>
+
+        <!-- model button and form -->
+        <div class="w-auto">
+            <!-- new model button -->
+            <label for="model-form-modal" class="cursor-pointer bg-color-1 inline-flex items-center   rounded-lg mb-4 mt-12 py-2 px-4 space-x-2 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span class="text-sm">New Model</span>
+            </label>
+            <input type="checkbox" id="model-form-modal" class="peer" hidden>
+
+            <!-- model form -->
+            <div id="model-form-container"
+                class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md active:hidden">
+                <div th:replace="~{layout/forms/new-model :: model-form}">...</div>
+            </div>
+        </div>
+
+        <!-- equipment button and form -->
+        <div class="w-auto">
+            <!-- new equipment button -->
+            <label for="equipment-form-modal" class="cursor-pointer bg-color-1 inline-flex items-center   rounded-lg mb-4 mt-12 py-2 px-4 space-x-2 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span class="text-sm">New Equipment</span>
+            </label>
+            <input type="checkbox" id="equipment-form-modal" class="peer" hidden>
+
+            <!-- equipment form -->
+            <div id="equipment-form-container"
+                class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md active:hidden">
+                <div th:replace="~{layout/forms/new-equipment :: equipment-form}">...</div>
+            </div>
+        </div>
+    </div>
+
+</div>

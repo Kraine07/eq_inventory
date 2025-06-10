@@ -17,6 +17,14 @@ const statusConfirmationButton = document.querySelector("#status-confirm-btn");
 
 const changeStatusButton = document.querySelector("#change-status-btn");
 
+// admin panel
+const manageUserButton = document.querySelector("#manage-user-btn");
+const manageEquipmentButton = document.querySelector("#manage-equipment-btn");
+const managePropertyButton = document.querySelector("#manage-property-btn");
+const manageUserScreen = document.querySelector("#manage-user-screen");
+const manageEquipmentScreen = document.querySelector("#manage-equipment-screen");
+const managePropertyScreen = document.querySelector("#manage-property-screen");
+
 
 
 // close user form with button
@@ -149,4 +157,27 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
         });
     }
 
+
+    //toggle admin panel screens
+    if (manageUserButton !== null) {
+        manageUserButton.addEventListener("click", function () {
+            manageUserScreen.style.display = "block";
+            manageEquipmentScreen.style.display = "none";
+            managePropertyScreen.style.display = "none";
+        });
+    }
+    if (manageEquipmentButton !== null) {
+        manageEquipmentButton.addEventListener("click", function () {
+            manageUserScreen.style.display = "none";
+            manageEquipmentScreen.style.display = "block";
+            managePropertyScreen.style.display = "none";
+        });
+    }
+    if (managePropertyButton !== null) {
+        managePropertyButton.addEventListener("click", function () {
+            manageUserScreen.style.display = "none";
+            manageEquipmentScreen.style.display = "none";
+            managePropertyScreen.style.display = "block";
+        });
+    }
 }

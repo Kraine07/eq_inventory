@@ -1,0 +1,44 @@
+
+
+<div th:fragment="equipment-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
+    <form id="equipment-form" action="#" method="post" th:action="@{/app/equipment}" th:object="${equipmentModel}">
+
+        <h1 class="text-3xl font-thin mb-4">Create Equipment</h1>
+
+        <div class="mb-4">
+            <label for="equipment-serial-number" class="">Serial Number</label>
+            <input type="text" id="equipment-serial-number" name="equipmentSerialNumber" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
+        </div>
+
+        <div class="mb-4">
+            <label for="equipment-model">Model</label>
+            <select name="equipment-model" id="equipment-model" class="focus:ring focus:ring-app-white focus:ring-opacity-50">
+                <option value="" hidden>Select Model</option>
+                <option th:each="model : ${models}" th:value="${model}" th:text="${model.description}"></option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="equipment-location">Location</label>
+            <select name="equipment-location" id="equipment-location" class="focus:ring focus:ring-app-white focus:ring-opacity-50">
+                <option value="" hidden>Select Location</option>
+                <option th:each="location : ${locations}" th:value="${location}" th:text="${location.property.name} + ' ' + ${location.name}"></option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="equipment-manufactured-date">Manufactured Date</label>
+            <input type="month" id="equipment-manufactured-date" name="equipmentManufacturedDate" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
+        </div>
+
+        <div class="flex justify-end">
+            <button id="equipment-form-submit" type="submit" class="mt-4">Create Equipment</button>
+        </div>
+
+        <!-- cancel button -->
+        <div id="close-equipment-form" for="user-form-modal" class="flex justify-center items-center ring-1 ring-app-white font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
+            <span class="text-app-white">Cancel</span>
+        </div>
+
+    </form>
+</div>
