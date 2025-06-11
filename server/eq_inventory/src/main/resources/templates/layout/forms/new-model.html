@@ -2,10 +2,6 @@
 
     <form id="model-form" action="#" method="post" th:action="@{/app/model}" th:object="${modelModel}">
         <h1 class="text-3xl font-thin mb-4">Create Model</h1>
-        <div class="mb-4">
-            <label for="model-description" class="">Description</label>
-            <input type="text" id="model-description" name="modelDescription" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
-        </div>
 
         <div class="mb-4">
             <label for="model-manufacturer">Manufacturer</label>
@@ -14,6 +10,10 @@
 
                 <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer}" th:text="${manufacturer.name}"></option>
             </select>
+        </div>
+        <div class="mb-4">
+            <label for="model-description" class="">Description</label>
+            <input type="text" id="model-description" name="modelDescription" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
         </div>
         <div class="flex justify-end">
             <button id="model-form-submit" type="submit" class="mt-4">Create Model</button>

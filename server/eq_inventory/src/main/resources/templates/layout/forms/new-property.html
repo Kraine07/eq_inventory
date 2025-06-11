@@ -1,1 +1,39 @@
-<div th:fragment="property-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white"></div>
+<div th:fragment="property-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
+    <form id="property-form" action="#" method="post" th:action="@{/add-property}" th:object="${propertyModel}">
+
+        <h1 class="text-3xl font-thin mb-4">Create Property</h1>
+
+        <div class="mb-4">
+            <label for="name">Property Name</label>
+            <input type="text" id="name" name="name" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50  capitalize">
+        </div>
+
+        <div class="mb-4">
+            <label for="region">Region</label>
+            <select name="region" id="region" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
+                <option value="" hidden>Select Region</option>
+
+                <option th:each="region : ${regionList}" th:value="${region.id}" th:text="${region.name}" class="capitalize"></option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="user">User</label>
+            <select name="user" id="user" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
+                <option value="" hidden>Select User</option>
+
+                <option th:each="user : ${userList}" th:value="${user.id}" th:text="${user.firstName} + ' ' + ${user.lastName}" class="capitalize"></option>
+            </select>
+        </div>
+
+        <div class="flex justify-end">
+            <button id="property-form-submit" type="submit" class="mt-4">Create Property</button>
+        </div>
+
+        <!-- cancel button -->
+        <div id="close-property-form" for="property-form-modal" class="flex justify-center items-center ring-1 ring-app-white font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
+            <span class=" text-app-white">Cancel</span>
+        </div>
+
+    </form>
+</div>

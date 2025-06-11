@@ -2,14 +2,12 @@ package kraine.app.eq_inventory.controller;
 
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -25,7 +23,10 @@ import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.service.AuthService;
+import kraine.app.eq_inventory.service.LocationService;
 import kraine.app.eq_inventory.service.LoginAttemptsService;
+import kraine.app.eq_inventory.service.PropertyService;
+import kraine.app.eq_inventory.service.RegionService;
 import kraine.app.eq_inventory.service.RoleService;
 import kraine.app.eq_inventory.service.UserService;
 import org.springframework.validation.BindException;
@@ -41,14 +42,20 @@ public class UserController {
     private final LoginAttemptsService las;
     private final RoleService roleService;
     private final AuthService authService;
+    private final RegionService regionService;
+    private final PropertyService propertyService;
+    private final LocationService locationService;
 
 
 
-    public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService) {
+    public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService, RegionService regionService, PropertyService propertyService, LocationService locationService) {
         this.us = us;
         this.las = las;
         this.roleService = roleService;
         this.authService = authService;
+        this.regionService = regionService;
+        this.propertyService = propertyService;
+        this.locationService = locationService;
     }
 
 
@@ -81,6 +88,7 @@ public class UserController {
         return "index";
     }
 
+    
 
     @GetMapping("/app/admin")
     public String loadAdminPanel(Model model, HttpServletRequest request) {
@@ -92,9 +100,12 @@ public class UserController {
 
         //TODO  get list of equipment and property so populate respective list
 
-        // get list of users to populate user list (TODO research a more optimized method)
-        List<User> userList = us.getUsers();
-        model.addAttribute("userList", userList);
+        // TODO research a more optimized method
+
+        model.addAttribute("userList", us.getUsers());
+        model.addAttribute("regionList", regionService.getAllRegions());
+        model.addAttribute("propertyList", propertyService.getAllProperties());
+        model.addAttribute("locationList", locationService.getAllLocations());
         model.addAttribute("editor","editor");
         model.addAttribute("admin","admin");
         model.addAttribute("registerModel", new RegisterModel());
@@ -109,7 +120,7 @@ public class UserController {
     public String addUser(@Valid RegisterModel registerModel, BindingResult bindingResult,
             Model model, @RequestParam(name = "role") String role, HttpServletRequest request) throws BindException {
 
-        // generate, set password 
+        // generate, set password
         String genPass = PasswordServices.generatePassword(12);
         registerModel.setPassword(genPass);
 
@@ -309,7 +320,7 @@ public class UserController {
 
     @PostMapping("/delete-user")
     public String deleteUser(@RequestParam(name="id")String id) {
-        System.out.println("#################"+id);        us.deleteUser(Long.parseLong(id));
+        us.deleteUser(Long.parseLong(id));
         return "redirect:/";
     }
 
