@@ -149,12 +149,12 @@
                         </thead>
                         <tbody>
                             <!-- No equipment found -->
-                            <tr th:if="${#lists.isEmpty(equipmentList)}">
+                            <tr th:if="${#lists.isEmpty(userEquipmentList)}">
                                 <td colspan="4" class="text-center py-8">No equipment found</td>
                             </tr>
 
                             <!-- Equipment rows -->
-                            <tr th:each="equipment :${equipmentList}">
+                            <tr th:each="equipment :${userEquipmentList}">
                                 <td>
                                     <span th:text="${equipment.getModel().getManufacturer().getName()} "></span>
                                     <span th:text="${equipment.getModel().getDescription()}"></span>

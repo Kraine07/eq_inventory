@@ -6,7 +6,6 @@ package kraine.app.eq_inventory.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +16,7 @@ import kraine.app.eq_inventory.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +33,8 @@ public class EquipmentController {
     EquipmentService es;
 
 
+
+
     @GetMapping("/dashboard")
     public String loadDashboard(Model model, HttpServletRequest request) {
         // check if session timed out
@@ -46,19 +48,28 @@ public class EquipmentController {
         // user equipment
         User authUser = SessionHandler.getAttribute(request, "authUser", User.class);
         List<Equipment> userEquipmentList = equipmentList.stream()
-        .filter(e -> e.getLocation().getProperty().getUser().getId().equals(authUser.getId()))
+        .filter(equipment -> equipment.getLocation().getProperty().getUser().getId().equals(authUser.getId()))
         .collect(Collectors.toList());
 
-
-        model.addAttribute("equipmentList", userEquipmentList);
+System.out.println("###############################################" +authUser.toString());
+System.out.println("###############################################" +userEquipmentList.toString());
+System.out.println("###############################################" +equipmentList.toString());
+        model.addAttribute("userEquipmentList", userEquipmentList);
 
         return "main";
     }
 
 
 
+
+
     @PostMapping("/add-equipment")
-    public Equipment addEquipment(@Valid Equipment equipment, BindingResult bindingResult, Model model){
-        return es.addEquipment(equipment);
+    public String addEquipment(@Valid Equipment equipment, BindingResult bindingResult, Model model) throws BindException{
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+
+        es.addEquipment(equipment);
+        return "redirect:/";
     }
 }

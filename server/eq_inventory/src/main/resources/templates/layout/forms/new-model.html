@@ -1,19 +1,19 @@
 <div th:fragment="model-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
 
-    <form id="model-form" action="#" method="post" th:action="@{/app/model}" th:object="${modelModel}">
+    <form id="model-form" action="#" method="post" th:action="@{/add-model}" th:object="${modelModel}">
         <h1 class="text-3xl font-thin mb-4">Create Model</h1>
 
         <div class="mb-4">
-            <label for="model-manufacturer">Manufacturer</label>
-            <select name="model-manufacturer" id="model-manufacturer" class="focus:ring focus:ring-app-white focus:ring-opacity-50">
+            <label for="manufacturer">Manufacturer</label>
+            <select name="manufacturer" id="manufacturer" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
                 <option value="" hidden>Select Manufacturer</option>
 
-                <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer}" th:text="${manufacturer.name}"></option>
+                <option th:each="manufacturer : ${manufacturerList}" th:value="${manufacturer.id}" th:text="${manufacturer.name}" class="capitalize"></option>
             </select>
         </div>
         <div class="mb-4">
-            <label for="model-description" class="">Description</label>
-            <input type="text" id="model-description" name="modelDescription" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
+            <label for="description" class="">Description</label>
+            <input type="text" id="description" name="description" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize" placeholder="Enter model description" >
         </div>
         <div class="flex justify-end">
             <button id="model-form-submit" type="submit" class="mt-4">Create Model</button>

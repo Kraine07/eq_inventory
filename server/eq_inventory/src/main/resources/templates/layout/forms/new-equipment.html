@@ -1,34 +1,34 @@
 
 
 <div th:fragment="equipment-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
-    <form id="equipment-form" action="#" method="post" th:action="@{/app/equipment}" th:object="${equipmentModel}">
+    <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}">
 
         <h1 class="text-3xl font-thin mb-4">Create Equipment</h1>
 
         <div class="mb-4">
-            <label for="equipment-serial-number" class="">Serial Number</label>
-            <input type="text" id="equipment-serial-number" name="equipmentSerialNumber" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
+            <label for="serial-number" class="">Serial Number</label>
+            <input type="text" id="equipment-serial-number" name="serialNumber" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
         </div>
 
         <div class="mb-4">
-            <label for="equipment-model">Model</label>
-            <select name="equipment-model" id="equipment-model" class="focus:ring focus:ring-app-white focus:ring-opacity-50">
+            <label for="model">Model</label>
+            <select name="model" id="model" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
                 <option value="" hidden>Select Model</option>
-                <option th:each="model : ${models}" th:value="${model}" th:text="${model.description}"></option>
+                <option th:each="model : ${modelList}" th:value="${model.id}" th:text="${model.description}" class="capitalize"></option>
             </select>
         </div>
 
         <div class="mb-4">
-            <label for="equipment-location">Location</label>
-            <select name="equipment-location" id="equipment-location" class="focus:ring focus:ring-app-white focus:ring-opacity-50">
+            <label for="location">Location</label>
+            <select name="location" id="location" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
                 <option value="" hidden>Select Location</option>
-                <option th:each="location : ${locations}" th:value="${location}" th:text="${location.property.name} + ' ' + ${location.name}"></option>
+                <option th:each="location : ${locationList}" th:value="${location.id}" th:text="${location.property.name} + ' -- ' + ${location.name}" class="capitalize"></option>
             </select>
         </div>
 
         <div class="mb-4">
-            <label for="equipment-manufactured-date">Manufactured Date</label>
-            <input type="month" id="equipment-manufactured-date" name="equipmentManufacturedDate" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
+            <label for="manufactured-date">Manufactured Date</label>
+            <input type="month" id="manufactured-date" name="manufacturedDate" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
         </div>
 
         <div class="flex justify-end">

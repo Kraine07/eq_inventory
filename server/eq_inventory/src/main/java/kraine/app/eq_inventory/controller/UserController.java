@@ -25,6 +25,8 @@ import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.service.AuthService;
 import kraine.app.eq_inventory.service.LocationService;
 import kraine.app.eq_inventory.service.LoginAttemptsService;
+import kraine.app.eq_inventory.service.ManufacturerService;
+import kraine.app.eq_inventory.service.ModelService;
 import kraine.app.eq_inventory.service.PropertyService;
 import kraine.app.eq_inventory.service.RegionService;
 import kraine.app.eq_inventory.service.RoleService;
@@ -45,10 +47,12 @@ public class UserController {
     private final RegionService regionService;
     private final PropertyService propertyService;
     private final LocationService locationService;
+    private final ManufacturerService manufacturerService;
+    private final ModelService modelService;
 
 
 
-    public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService, RegionService regionService, PropertyService propertyService, LocationService locationService) {
+    public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService, RegionService regionService, PropertyService propertyService, LocationService locationService, ManufacturerService manufacturerService, ModelService modelService) {
         this.us = us;
         this.las = las;
         this.roleService = roleService;
@@ -56,6 +60,8 @@ public class UserController {
         this.regionService = regionService;
         this.propertyService = propertyService;
         this.locationService = locationService;
+        this.manufacturerService = manufacturerService;
+        this.modelService = modelService;
     }
 
 
@@ -88,7 +94,6 @@ public class UserController {
         return "index";
     }
 
-    
 
     @GetMapping("/app/admin")
     public String loadAdminPanel(Model model, HttpServletRequest request) {
@@ -98,7 +103,6 @@ public class UserController {
             return "redirect:/";
         }
 
-        //TODO  get list of equipment and property so populate respective list
 
         // TODO research a more optimized method
 
@@ -106,6 +110,8 @@ public class UserController {
         model.addAttribute("regionList", regionService.getAllRegions());
         model.addAttribute("propertyList", propertyService.getAllProperties());
         model.addAttribute("locationList", locationService.getAllLocations());
+        model.addAttribute("manufacturerList", manufacturerService.getAllManufacturers());
+        model.addAttribute("modelList", modelService.getAllModels());
         model.addAttribute("editor","editor");
         model.addAttribute("admin","admin");
         model.addAttribute("registerModel", new RegisterModel());
