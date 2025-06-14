@@ -51,9 +51,6 @@ public class EquipmentController {
         .filter(equipment -> equipment.getLocation().getProperty().getUser().getId().equals(authUser.getId()))
         .collect(Collectors.toList());
 
-System.out.println("###############################################" +authUser.toString());
-System.out.println("###############################################" +userEquipmentList.toString());
-System.out.println("###############################################" +equipmentList.toString());
         model.addAttribute("userEquipmentList", userEquipmentList);
 
         return "main";

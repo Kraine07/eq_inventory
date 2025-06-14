@@ -7,99 +7,40 @@
 
 
 
-        <!-- EQUIPMENT INFO-->
+
+        <!-- EQUIPMENT SCREEN-->
+
         <div class="px-4">
             <div class="flex justify-between items-center mb-8 px-4 bg-app-white rounded-md">
                 <div>
-                    <h2 class="text-2xl font-semibold">Equipment Inventory</h2>
-                    <p class="text-sm">Track and maintain equipment across all your properties.</p>
+                    <h2 class="text-2xl font-semibold">Equipment Management</h2>
+                    <p class="text-sm">Track and move equipment across locations.</p>
                 </div>
 
-                <!-- add equipment button -->
-                <label for="user-form-modal" class="cursor-pointer bg-color-3 flex w-[200px] items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg mb-4 mt-12 py-1 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    <span >Add Equipment</span>
-                </label>
-            </div>
-        </div>
 
+                <!-- equipment button and form -->
+                <div class="flex justify-end items-center">
 
+                    <!-- new equipment button -->
+                    <label for="equipment-form-modal" class="cursor-pointer bg-color-3 flex w-auto space-x-2 items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg mb-4 mt-12 py-2 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        <span class="text-sm">New Equipment</span>
+                    </label>
+                    <input type="checkbox" id="equipment-form-modal" class="peer" hidden>
 
-        <!-- EQUIPMENT METRICS -->
-        <div class="grid grid-cols-4 gap-4 mb-8 px-4">
-            <!-- total equipment -->
-            <div class="flex items-center p-4 rounded-md  bg-color-3 text-app-white">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                    class="text-color-1 bg-color-4 rounded-full w-20 p-2">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M11 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                    <path d="M6 16l3 2" />
-                    <path d="M12 17l8 -12" />
-                    <path d="M17 10l2 1" />
-                    <path
-                        d="M9.592 4.695l3.306 2.104a1.3 1.3 0 0 1 .396 1.8l-3.094 4.811a1.3 1.3 0 0 1 -1.792 .394l-3.306 -2.104a1.3 1.3 0 0 1 -.396 -1.8l3.094 -4.81a1.3 1.3 0 0 1 1.792 -.394z" />
-                </svg>
-                <div class="ml-4">
-                    <p class="text-lg font-light">Total</p>
-                    <span class="text-2xl font-semibold">483</span>
-                </div>
-            </div>
-
-            <!-- juice equipment -->
-            <div  class="flex items-center bg-color-3 text-app-white p-4 rounded-md">
-                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                    class="text-color-1 bg-color-4 rounded-full w-20 p-2">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path
-                        d="M9 21h6a1 1 0 0 0 1 -1v-3.625c0 -1.397 .29 -2.775 .845 -4.025l.31 -.7c.556 -1.25 .845 -2.253 .845 -3.65v-4a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v4c0 1.397 .29 2.4 .845 3.65l.31 .7a9.931 9.931 0 0 1 .845 4.025v3.625a1 1 0 0 0 1 1z" />
-                    <path d="M6 8h12" />
-                </svg>
-                <div class="ml-4">
-                    <p class="text-lg font-light">Juice</p>
-                    <span class="text-2xl font-semibold">273</span>
-                </div>
-            </div>
-
-            <!-- slush equipment -->
-            <div  class="flex items-center bg-color-3 text-app-white p-4 rounded-md">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                    class="text-color-1 bg-color-4 rounded-full w-20 p-2">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path
-                        d="M17.95 9l-1.478 8.69c-.25 1.463 -.374 2.195 -.936 2.631c-1.2 .931 -6.039 .88 -7.172 0c-.562 -.436 -.687 -1.168 -.936 -2.632l-1.478 -8.689" />
-                    <path d="M6 9l.514 -1.286a5.908 5.908 0 0 1 10.972 0l.514 1.286" />
-                    <path d="M5 9h14" />
-                    <path d="M12 9l4 -7" />
-                    <path d="M10.01 14h.01" />
-                    <path d="M11.02 18h.01" />
-                    <path d="M13.02 16h.01" />
-                </svg>
-                <div class="ml-4">
-                    <p class="text-lg font-light">Slush</p>
-                    <span class="text-2xl font-semibold">121</span>
-                </div>
-            </div>
-
-            <!-- soft serve -->
-            <div class="flex items-center bg-color-3 text-app-white p-4 rounded-md">
-                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                    class="text-color-1 bg-color-4 rounded-full w-20 p-2">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M17.657 11a6 6 0 1 0 -11.315 0" />
-                    <path d="M6.342 11l5.658 11l5.657 -11z" />
-                </svg>
-                <div class="ml-4">
-                    <p class="text-lg font-light">Soft Serve</p>
-                    <span class="text-2xl font-semibold">89</span>
+                    <!-- equipment form -->
+                    <div id="equipment-form-container"
+                        class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md ">
+                        <div th:replace="~{layout/forms/new-equipment :: equipment-form}">...</div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
+
 
 
 
@@ -134,69 +75,8 @@
 
 
         <!-- EQUIPMENT TABLE -->
-        <div class="px-4">
-            <div class=" bg-app-white py-4 rounded-md">
-                <h1 class="text-lg font-semibold px-4 pb-4 b">Equipment List</h1>
-                <div>
-                    <table class="w-full toble-fixed border-collapse border border-app-white-40 bg-color-3 text-app-white">
-                        <thead>
-                            <tr class="border border-app-white-40 text-left bg-color-2">
-                                <th class="w-2/5">Name</th>
-                                <th>Serial Number</th>
-                                <th>Property</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- No equipment found -->
-                            <tr th:if="${#lists.isEmpty(userEquipmentList)}">
-                                <td colspan="4" class="text-center py-8">No equipment found</td>
-                            </tr>
-
-                            <!-- Equipment rows -->
-                            <tr th:each="equipment :${userEquipmentList}">
-                                <td>
-                                    <span th:text="${equipment.getModel().getManufacturer().getName()} "></span>
-                                    <span th:text="${equipment.getModel().getDescription()}"></span>
-                                </td>
-                                <td><span th:text="${equipment.getSerialNumber()}"></span></td>
-                                <td><span th:text="${equipment.getLocation().getProperty().getName()}"></span></td>
-                                <td>
-                                    <div class="flex items-center">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-pencil"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div th:replace="~{layout/components/equipment-table :: equipment-table}">...</div>
 
 
-
-                <!-- Pagination -->
-                <nav class="flex justify-between mt-4 px-4 text-sm text-color-2">
-                    <p>Showing 1 to 3 of 483 results</p>
-                    <ul class="inline-flex -space-x-px">
-                        <li>
-                            <a href="#" class="px-3 py-2   hover:bg-color-3/40">Previous</a>
-                        </li>
-                        <li>
-                            <a href="#" class="px-3 py-2  hover:bg-color-3/40">1</a>
-                        </li>
-                        <li>
-                            <a href="#" class="px-3 py-2   hover:bg-color-3/40">2</a>
-                        </li>
-                        <li>
-                            <a href="#" class="px-3 py-2   hover:bg-color-3/40">3</a>
-                        </li>
-                        <li>
-                            <a href="#" class="px-3 py-2   hover:bg-color-3/40">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
     </div>
 </html>

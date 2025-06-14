@@ -3,6 +3,7 @@ package kraine.app.eq_inventory.controller;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,8 @@ import kraine.app.eq_inventory.SessionHandler;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
+import kraine.app.eq_inventory.model.Equipment;
+import kraine.app.eq_inventory.model.Location;
 import kraine.app.eq_inventory.model.LoginAttempt;
 import kraine.app.eq_inventory.model.LoginModel;
 import kraine.app.eq_inventory.model.LoginStatus;
@@ -23,6 +26,7 @@ import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.service.AuthService;
+import kraine.app.eq_inventory.service.EquipmentService;
 import kraine.app.eq_inventory.service.LocationService;
 import kraine.app.eq_inventory.service.LoginAttemptsService;
 import kraine.app.eq_inventory.service.ManufacturerService;
@@ -33,6 +37,12 @@ import kraine.app.eq_inventory.service.RoleService;
 import kraine.app.eq_inventory.service.UserService;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 
 
 
@@ -49,10 +59,12 @@ public class UserController {
     private final LocationService locationService;
     private final ManufacturerService manufacturerService;
     private final ModelService modelService;
+    private final EquipmentService equipmentService;
+    // Constructor injection for services
 
 
 
-    public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService, RegionService regionService, PropertyService propertyService, LocationService locationService, ManufacturerService manufacturerService, ModelService modelService) {
+    public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService, RegionService regionService, PropertyService propertyService, LocationService locationService, ManufacturerService manufacturerService, ModelService modelService, EquipmentService equipmentService) {
         this.us = us;
         this.las = las;
         this.roleService = roleService;
@@ -62,6 +74,7 @@ public class UserController {
         this.locationService = locationService;
         this.manufacturerService = manufacturerService;
         this.modelService = modelService;
+        this.equipmentService = equipmentService;
     }
 
 
@@ -86,8 +99,9 @@ public class UserController {
                 return "update-password";
             }
             // check if user has admin privileges
-            if(authUser.getRole().getRoleType() == RoleType.ADMINISTRATOR) return "redirect:/app/admin";
-            return "redirect:/dashboard";
+            // if (authUser.getRole().getRoleType() == RoleType.ADMINISTRATOR)
+            return "redirect:/app/admin";
+            // return "redirect:/dashboard";
         }
 
         model.addAttribute("loginModel", new LoginModel());
@@ -106,16 +120,76 @@ public class UserController {
 
         // TODO research a more optimized method
 
-        model.addAttribute("userList", us.getUsers());
-        model.addAttribute("regionList", regionService.getAllRegions());
-        model.addAttribute("propertyList", propertyService.getAllProperties());
-        model.addAttribute("locationList", locationService.getAllLocations());
-        model.addAttribute("manufacturerList", manufacturerService.getAllManufacturers());
-        model.addAttribute("modelList", modelService.getAllModels());
-        model.addAttribute("editor","editor");
-        model.addAttribute("admin","admin");
-        model.addAttribute("registerModel", new RegisterModel());
-        return "admin-panel";
+        User authUser = SessionHandler.getAttribute(request, "authUser", User.class);
+
+        // get list of all equipment
+        List<Equipment> equipments = equipmentService.getAllEquipment();
+
+        // filter by user
+        List<Equipment> userEquipmentList = equipments.stream()
+                .filter(equipment -> equipment.getLocation().getProperty().getUser().getId().equals(authUser.getId()))
+                .collect(Collectors.toList());
+
+        // group equipments by Manufacturer
+        Map<String, List<Equipment>> equipmentByManufacturer = userEquipmentList.stream()
+                .collect(Collectors.groupingBy(equipment -> equipment.getModel().getManufacturer().getName()));
+
+
+        // get all locations
+        List<Location> locations = locationService.getAllLocations();
+
+        // filter by user
+        List<Location> userLocations = locations.stream().filter(location -> location.getProperty().getUser().getId().equals(authUser.getId())).collect(Collectors.toList());
+
+        // group locations by property
+        Map<String, List<Location>> locationsByProperty = userLocations.stream().collect(Collectors.groupingBy(location -> location.getProperty().getName()));
+
+        // TODO - logic to sort equipment by product dispensed
+
+
+
+        // Pagination logic for equipment list
+        int page = 0;
+        int size = 10; // amount of rows
+        try {
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                page = Integer.parseInt(pageParam);
+                if (page < 0)
+                    page = 0;
+            }
+        }
+        catch (NumberFormatException ignored) {}
+
+        Page<Equipment> pagedEquipmentList = equipmentService.getPage(page, size);
+        List<Equipment> equipmentList = pagedEquipmentList.getContent();
+        List<Equipment> pagedUserEquipmentList = pagedEquipmentList.getContent().stream()
+                .filter(equipment -> equipment.getLocation().getProperty().getUser().getId().equals(authUser.getId()))
+                .collect(Collectors.toList());
+
+
+        // add model attributes
+        model.addAttribute("userEquipmentList", equipmentByManufacturer);
+        model.addAttribute("pagedUserEquipmentList", pagedUserEquipmentList);
+        model.addAttribute("pagedEquipmentList", pagedEquipmentList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", (int) Math.ceil((double) equipmentList.size() / size));
+        var modelAttributes = Map.of(
+            "regionList", regionService.getAllRegions(),
+            "propertyList", propertyService.getAllProperties(),
+            "locationList", locationsByProperty,
+            "manufacturerList", manufacturerService.getAllManufacturers(),
+            "modelList", modelService.getAllModels(),
+            "equipmentList", equipmentList,
+            "userList", us.getUsers(),
+            "registerModel", new RegisterModel(),
+            "editor", "editor",
+            "admin", "admin"
+        );
+        modelAttributes.forEach(model::addAttribute);
+
+
+        return "main";
     }
 
 

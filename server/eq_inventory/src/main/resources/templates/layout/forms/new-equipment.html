@@ -1,44 +1,73 @@
 
+<div class="absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 bg-transparent backdrop-blur-md  w-screen h-screen ">
+    <div th:fragment="equipment-form" class="bg-app-white flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center w-auto p-8">
+        <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}">
 
-<div th:fragment="equipment-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
-    <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}">
+            <div class="flex flex-col justify-center items-center mb-4">
+                <svg  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-16 aspect-square mb-2 text-color-3 bg-color-3/30 p-2 rounded-full">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12.5 21h-7.5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
+                    <path d="M3 10h18" />
+                    <path d="M10 3v18" />
+                    <path d="M16 19h6" /
+                    ><path d="M19 16v6" />
+                </svg>
+                <h1 class="text-xl font-semibold">Create Equipment</h1>
+                <p class="text-sm">Enter equipment details</p>
+            </div>
 
-        <h1 class="text-3xl font-thin mb-4">Create Equipment</h1>
+            <!-- Equipment model  -->
+            <div class="mb-3">
+                <label for="model">Equipment Model</label>
+                <select name="model" id="model" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
+                    <option value="" hidden>Select Equipment Model</option>
+                    <th:block th:each="manufacturer : ${manufacturerList}">
+                        <optgroup th:label="${manufacturer.name}">
+                            <option th:each="model : ${modelList}" th:if="${model.manufacturer == manufacturer}" th:value="${model.id}" th:text="${manufacturer.name +' - '+model.description}"></option>
+                        </optgroup>
+                    </th:block>
+                </select>
+            </div>
 
-        <div class="mb-4">
-            <label for="serial-number" class="">Serial Number</label>
-            <input type="text" id="equipment-serial-number" name="serialNumber" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
-        </div>
+            <!-- Location -->
+            <div class="mb-3">
+                <label for="location">Location</label>
+                <select name="location" id="location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
+                    <option value="" hidden>Select Location</option>
+                    <th:block th:each="location : ${locationList}">
+                        <optgroup th:label="${location.key}">
+                            <option th:each="location : ${location.value}" th:value="${location.id}" th:text="${location.property.name + ' - ' + location.name}" class="capitalize"></option>
 
-        <div class="mb-4">
-            <label for="model">Model</label>
-            <select name="model" id="model" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
-                <option value="" hidden>Select Model</option>
-                <option th:each="model : ${modelList}" th:value="${model.id}" th:text="${model.description}" class="capitalize"></option>
-            </select>
-        </div>
+                        </optgroup>
 
-        <div class="mb-4">
-            <label for="location">Location</label>
-            <select name="location" id="location" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
-                <option value="" hidden>Select Location</option>
-                <option th:each="location : ${locationList}" th:value="${location.id}" th:text="${location.property.name} + ' -- ' + ${location.name}" class="capitalize"></option>
-            </select>
-        </div>
+                    </th:block>
 
-        <div class="mb-4">
-            <label for="manufactured-date">Manufactured Date</label>
-            <input type="month" id="manufactured-date" name="manufacturedDate" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50">
-        </div>
+                </select>
+            </div>
 
-        <div class="flex justify-end">
-            <button id="equipment-form-submit" type="submit" class="mt-4">Create Equipment</button>
-        </div>
+            <!-- Serial Number -->
+            <div class="mb-3">
+                <label for="serial-number" class="">Serial Number</label>
+                <input type="text" id="equipment-serial-number" name="serialNumber" required class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 uppercase placeholder:normal-case placeholder:text-color-1" placeholder="Enter Serial Number">
+            </div>
 
-        <!-- cancel button -->
-        <div id="close-equipment-form" for="user-form-modal" class="flex justify-center items-center ring-1 ring-app-white font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
-            <span class="text-app-white">Cancel</span>
-        </div>
+            <!-- Manufactured Date -->
+            <div class="mb-3">
+                <label for="manufactured-date">Manufactured Date</label>
+                <input type="month" id="manufactured-date" name="manufacturedDate" required class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 uppercase ">
+            </div>
 
-    </form>
+            <!-- Submit Button -->
+            <div class="mb-4">
+                <button id="equipment-form-submit" type="submit" class="">Create Equipment</button>
+            </div>
+
+            <!-- cancel button -->
+            <div id="close-equipment-form" for="user-form-modal" class=" button flex justify-center items-center cursor-pointer mt- hover:bg-color-2/40">
+                <span class=" ">Cancel</span>
+            </div>
+
+        </form>
+    </div>
+
 </div>

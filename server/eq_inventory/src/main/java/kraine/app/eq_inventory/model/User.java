@@ -66,6 +66,11 @@ public class User {
     @Column(nullable = false)
     private int failedAttempts;
 
-   
+    private Boolean isAdmin;
+
+    public boolean getIsAdmin() {
+        return role.getRoleType() == RoleType.ADMINISTRATOR;
+    }
+
 
 }

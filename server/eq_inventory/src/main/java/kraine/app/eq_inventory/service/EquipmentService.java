@@ -8,8 +8,15 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 /**
  *
@@ -26,7 +33,12 @@ public class EquipmentService {
         return eri.save(equipment);
     }
     
-    public List<Equipment> getAllEquipment(){
+    public List<Equipment> getAllEquipment() {
         return eri.findAll();
     }
+    
+    public Page<Equipment> getPage(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    return eri.findAll(pageable);
+}
 }
