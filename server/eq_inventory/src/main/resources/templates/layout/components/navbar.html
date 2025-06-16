@@ -2,27 +2,69 @@
 
 <div th:fragment="navbar">
     <nav class=" flex justify-between items-center font-medium text-app-white text-sm px-4 py-2 mb-8  bg-color-2  ">
-        <div class="flex justify-between items-center basis-4/5  h-full ">
+        <div class="flex justify-start items-center basis-4/5  h-full ">
             <!-- logo -->
-            <div class="basis-40">
+            <div class="basis-40 e">
                 <img th:src="@{/images/eq_logo_white.png}" alt="logo">
             </div>
 
             <!-- nav links -->
-            <div class="ml-12 h-full space-x-4 flex items-center">
-                <!-- <a href="#" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Dashboard</a> -->
-                <a id="manage-user-btn" href="#" class="flex justify-between space-x-1 hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+
+            <!-- Users -->
+            <div class="ml-12 h-full space-x-4 flex items-center ">
+
+                <!-- Equipment -->
+                <a id="manage-equipment-btn" href="#" th:classappend="${screen == 'equipment'}? 'border-b-2 border-b-color-4 rounded-b-none text-color-4':''" class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                    <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-6 aspect-square">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 3m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
+                        <path d="M12 14m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M8 6h.01" />
+                        <path d="M11 6h.01" />
+                        <path d="M14 6h2" />
+                        <path d="M8 14c1.333 -.667 2.667 -.667 4 0c1.333 .667 2.667 .667 4 0" />
+                    </svg>
+                    <span class="text-sm font-semibold ml-2">Equipment</span>
+                </a>
+                
+                <a id="manage-user-btn" th:if="${session.authUser.isAdmin}" href="#" th:classappend="${screen == 'user'}? 'border-b-2 border-b-color-4 rounded-b-none text-color-4':''" class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="h-6 aspect-square">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
                     </svg>
-                    <span class="text-sm">User</span>
+                    <span class="text-sm font-semibold">Users</span>
                 </a>
-                <a href="#" th:if="${session.authUser.isAdmin}" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Properties</a>
-                <a href="#" th:if="${session.authUser.isAdmin}" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Users</a>
-                <a href="#" class="hover:text-color-2 hover:bg-color-4 px-3 py-2 rounded-md">Reports</a>
+
+                <!-- Properties  -->
+                <a id="manage-property-btn" href="#" th:if="${session.authUser.isAdmin}" th:classappend="${screen == 'property'}? 'border-b-2 border-b-color-4 rounded-b-none text-color-4':''" class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                    <svg  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class=" h-6 aspect-square">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 21l18 0" />
+                        <path d="M5 21v-14l8 -4v18" />
+                        <path d="M19 21v-10l-6 -4" />
+                        <path d="M9 9l0 .01" />
+                        <path d="M9 12l0 .01" />
+                        <path d="M9 15l0 .01" />
+                        <path d="M9 18l0 .01" />
+                    </svg>
+                    <span class="text-sm font-semibold ml-2">Properties</span>
+                </a>
+
+                <!-- Reports -->
+                <a id="manage-report-btn" href="#" th:classappend="${screen == 'report'}? 'border-b-2 border-b-color-4 rounded-b-none text-color-4':''" class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-6 aspect-square">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                        <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                        <path d="M9 12h6" />
+                        <path d="M9 16h6" />
+                    </svg>
+                    <span class="text-sm font-semibold ml-2">Reports</span>
+                </a>
             </div>
         </div>
-        <div class="flex justify-end items-center basis-1/5 space-x-4 px-4   ">
+
+        <!--  -->
+        <div class="flex justify-end items-center basis-1/5 space-x-4   ">
             <span th:text="${session.authUser.firstName}"></span>
             <a th:href="@{/logout}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"

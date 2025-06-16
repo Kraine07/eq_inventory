@@ -1,3 +1,65 @@
-<div>
-    
+<div th:fragment="equipment-management">
+
+    <div class="flex justify-between items-center mb-8 p-4 bg-app-white rounded-md">
+        <div>
+            <h2 class="text-2xl font-semibold">Equipment Management</h2>
+            <p class="text-sm">Track and move equipment across locations.</p>
+        </div>
+
+
+        <!-- equipment button and form -->
+        <div class="flex justify-end items-center">
+
+            <!-- new equipment button -->
+            <label for="equipment-form-modal" class="cursor-pointer bg-color-3 flex w-auto space-x-1 items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg mb-4 mt-8 py-2 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span class="text-sm">New Equipment</span>
+            </label>
+            <input type="checkbox" id="equipment-form-modal" class="peer" hidden>
+
+            <!-- equipment form -->
+            <div id="equipment-form-container"
+                class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md ">
+                <div th:replace="~{layout/forms/new-equipment :: equipment-form}">...</div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- EQUIPMENT SEARCH -->
+    <div class="grid grid-cols-3 gap-6 mb-8 bg-color-2 text-app-white border-2 border-color-3/10 p-4 rounded-md">
+        <div class="flex flex-col space-y-1">
+            <label for="eq-search">Search</label>
+            <input id="eq-search" type="text" class="focus:outline outline-offset-2 outline-2 outline-app-white" placeholder="Equipment Name or Serial Number">
+        </div>
+        <div class="flex flex-col space-y-1">
+            <label for="">Property</label>
+            <select name="" id="">
+                <option class="bg-color-3" value="" selected hidden>Search by Property</option>
+                <option class="bg-color-3" value="">Property 1</option>
+                <option class="bg-color-3" value="">Property 2</option>
+                <option class="bg-color-3" value="">Property 3</option>
+            </select>
+        </div>
+        <div class="flex flex-col space-y-1">
+            <label for="">Model</label>
+            <select name="" id="">
+                <option class="bg-color-3" value="" selected hidden>Search by Model</option>
+                <option class="bg-color-3" value="">Model 1</option>
+                <option class="bg-color-3" value="">Model 2</option>
+                <option class="bg-color-3" value="">Model 3</option>
+            </select>
+        </div>
+    </div>
+
+
+
+    <!-- EQUIPMENT TABLE -->
+    <div th:replace="~{layout/components/equipment-table :: equipment-table}">...</div>
+
+
 </div>

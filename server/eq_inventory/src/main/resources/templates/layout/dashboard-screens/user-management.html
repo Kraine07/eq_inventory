@@ -1,0 +1,34 @@
+
+
+<div th:fragment="user-management">
+
+        <div class="flex justify-between items-center mb-8 p-4 bg-app-white rounded-md">
+            <div>
+                <h2 class="text-2xl font-semibold">User Management</h2>
+                <p class="text-sm">Create, maintain and control user accounts.</p>
+            </div>
+
+
+            <!-- user button and form -->
+            <div class="flex justify-end items-center">
+
+                <!-- new user button -->
+                <label for="user-form-modal" class="cursor-pointer bg-color-3 flex w-auto space-x-1 items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg mb-4 mt-8 py-2 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-[20px] aspect-square">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    <span class="text-sm">New User</span>
+                </label>
+                <input type="checkbox" id="user-form-modal" class="peer" hidden>
+
+                <!-- user form -->
+                <div id="user-form-container" class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md ">
+                    <div th:replace="~{layout/forms/new-user :: user-form}">...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Table -->
+        <div th:replace="~{layout/components/user-table :: user-table}"></div>
+
+</div>

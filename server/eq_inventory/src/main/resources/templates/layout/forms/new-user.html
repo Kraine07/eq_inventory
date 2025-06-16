@@ -6,7 +6,7 @@
 
 
 
-<div th:fragment="user-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
+<div th:fragment="user-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-app-white max-w-[400px] p-6 border border-app-white">
 
     <form id="user-form" action="#" method="post" th:action="@{/app/register}"  th:object="${registerModel}">
 
@@ -17,10 +17,16 @@
             <input type="hidden" name="role" th:value="${admin}">
         </div>
 
-        <h1 id="user-form-heading" th:if="${userList}" class="text-3xl font-thin my-4">Create User</h1>
+        <div class="flex flex-col justify-center items-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-16 aspect-square mb-2 text-color-3 bg-color-3/30 p-2 rounded-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+            </svg>
+            <h1 id="user-form-heading" class="text-xl font-semibold">Create User</h1>
+            <p class="text-sm">Enter user details</p>
+        </div>
 
         <!-- ID -->
-        <input type="hidden" id="id" name="id">
+        <input type="hidden" id="user-id" name="id">
 
 
         <!-- First Name -->
@@ -46,7 +52,7 @@
         <!-- Email -->
         <div id="label-and-email-field" class="mb-2">
             <label for="email">Email</label>
-            <input id="email" name="email" type="email" th:field="*{email}" required>
+            <input id="email" name="email" type="email"  required>
             <!-- <input id="email" type="email" th:field="*{email}" required> -->
             <div th:if="${#fields.hasErrors('email')}" th:each="err : ${#fields.errors('email')}" class="bg-color-3 p-2 mb-4 rounded-b-sm">
                 <span th:text="${err}"  class=" text-color-4 italic text-xs leading-none "></span>
@@ -56,7 +62,7 @@
         <!-- Admin Toggle Switch shown only in the admin panel-->
         <div th:if="${userList}" class="flex justify-between w-full">
             <label for="toggleSwitch" class="inline-flex flex-col items-center cursor-pointer w-auto ">
-                <span class="mr-4 text-app-white">Admin</span>
+                <span class=" ">Admin</span>
                 <div class="relative">
                     <div class="relative">
 
@@ -65,10 +71,10 @@
                         <input type="checkbox" name="role" id="toggleSwitch" class="sr-only peer"  th:value="${admin}">
 
                         <!-- toggle background -->
-                        <div class="w-12 h-6 bg-color-3 peer-checked:bg-color-4 rounded-full peer-focus:ring-2 border-none outline-0 ring-0 transition-all duration-300 ease-in-out"></div>
+                        <div class="w-12 h-6 bg-app-white peer-checked:bg-color-3 rounded-full peer-focus:ring-2 border border-color-3 outline-0 ring-0 transition-all duration-300 ease-in-out"></div>
 
                         <!-- toggle slider -->
-                        <div class="absolute left-0 top-0 w-6 h-6 bg-color-2 border border-color-3 peer-checked:border-color-4 rounded-full transform transition-transform duration-300 ease-in-out peer-checked:translate-x-6  peer-unchecked:translate-x-0 peer-unchecked:bg-color-2"></div>
+                        <div class="absolute left-0 top-0 w-6 h-6 bg-color-2 border border-color-3 peer-checked:border-app-white rounded-full transform transition-transform duration-300 ease-in-out peer-checked:translate-x-6  peer-unchecked:translate-x-0 peer-unchecked:bg-color-2"></div>
                     </div>
                 </div>
             </label>
@@ -77,8 +83,8 @@
         <button id="user-form-submit" class=" mt-4">Create User</button>
 
         <!-- show only in admin panel -->
-        <div id="close-user-form" th:if="${userList}" for="user-form-modal" class="flex justify-center items-center ring-1 ring-app-white font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
-            <span  class=" text-app-white" >Cancel</span>
+        <div id="close-user-form" th:if="${userList}" for="user-form-modal" class="flex justify-center items-center ring-1 ring-color-2 font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
+            <span  class=" text-color-2" >Cancel</span>
         </div>
     </form>
 

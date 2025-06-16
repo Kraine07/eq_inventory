@@ -588,26 +588,20 @@ video {
   }
 }
 
-.button,input,select{
+input,select{
   /* display: block; */
-  background-color: #D9D9D966 !important;
+  /* background-color: theme('colors.app-white-40') !important; */
   color: #041C32 !important;
   font-weight: bold;
   padding: 6px !important;
   font-size: 18px;
   outline: none;
   border: 1px solid #041C3266 !important;
-  /* height: 32px; */
   width: 100%;
   border-radius: 6px;
-  /* margin-bottom: 8px !important; */
 }
 
-div{
-  width: 100%;
-}
-
-button{
+.button,button{
   background-color:#064663 !important;
   color: #D9D9D9 !important;
   font-weight: 600 !important;
@@ -737,10 +731,6 @@ th, td {
   margin-right: 0.5rem;
 }
 
-.mr-4 {
-  margin-right: 1rem;
-}
-
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -833,6 +823,10 @@ th, td {
   height: 100vh;
 }
 
+.h-4 {
+  height: 1rem;
+}
+
 .min-h-full {
   min-height: 100%;
 }
@@ -847,10 +841,6 @@ th, td {
 
 .w-2\/5 {
   width: 40%;
-}
-
-.w-20 {
-  width: 5rem;
 }
 
 .w-3\/5 {
@@ -883,6 +873,18 @@ th, td {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-1 {
+  width: 0.25rem;
+}
+
+.w-1\/12 {
+  width: 8.333333%;
+}
+
+.w-1\/6 {
+  width: 16.666667%;
 }
 
 .max-w-\[400px\] {
@@ -935,10 +937,6 @@ th, td {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
@@ -975,16 +973,8 @@ th, td {
   justify-content: space-around;
 }
 
-.gap-4 {
-  gap: 1rem;
-}
-
 .gap-6 {
   gap: 1.5rem;
-}
-
-.gap-2 {
-  gap: 0.5rem;
 }
 
 .gap-x-0 {
@@ -1000,6 +990,12 @@ th, td {
   --tw-space-x-reverse: 0;
   margin-right: calc(-1px * var(--tw-space-x-reverse));
   margin-left: calc(-1px * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
@@ -1018,12 +1014,6 @@ th, td {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
-}
-
-.space-x-1 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
-  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .rounded {
@@ -1057,12 +1047,30 @@ th, td {
   border-top-right-radius: 0.5rem;
 }
 
+.rounded-b {
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.rounded-b-none {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
 .border {
   border-width: 1px;
 }
 
 .border-2 {
   border-width: 2px;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+}
+
+.border-b-2 {
+  border-bottom-width: 2px;
 }
 
 .border-none {
@@ -1095,6 +1103,11 @@ th, td {
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+}
+
+.border-b-color-4 {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(236 179 101 / var(--tw-border-opacity, 1));
 }
 
 .bg-app-white {
@@ -1372,6 +1385,11 @@ th, td {
   --tw-ring-color: rgb(217 217 217 / var(--tw-ring-opacity, 1));
 }
 
+.ring-color-2 {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(4 41 58 / var(--tw-ring-opacity, 1));
+}
+
 .backdrop-blur-md {
   --tw-backdrop-blur: blur(12px);
   -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
@@ -1504,14 +1522,14 @@ th, td {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.peer:checked ~ .peer-checked\:border-color-4 {
+.peer:checked ~ .peer-checked\:border-app-white {
   --tw-border-opacity: 1;
-  border-color: rgb(236 179 101 / var(--tw-border-opacity, 1));
+  border-color: rgb(217 217 217 / var(--tw-border-opacity, 1));
 }
 
-.peer:checked ~ .peer-checked\:bg-color-4 {
+.peer:checked ~ .peer-checked\:bg-color-3 {
   --tw-bg-opacity: 1;
-  background-color: rgb(236 179 101 / var(--tw-bg-opacity, 1));
+  background-color: rgb(6 70 99 / var(--tw-bg-opacity, 1));
 }
 
 .peer:focus ~ .peer-focus\:ring-2 {

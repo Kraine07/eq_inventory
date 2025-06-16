@@ -169,22 +169,23 @@ public class UserController {
 
 
         // add model attributes
-        model.addAttribute("userEquipmentList", equipmentByManufacturer);
-        model.addAttribute("pagedUserEquipmentList", pagedUserEquipmentList);
-        model.addAttribute("pagedEquipmentList", pagedEquipmentList);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", (int) Math.ceil((double) equipmentList.size() / size));
-        var modelAttributes = Map.of(
-            "regionList", regionService.getAllRegions(),
-            "propertyList", propertyService.getAllProperties(),
-            "locationList", locationsByProperty,
-            "manufacturerList", manufacturerService.getAllManufacturers(),
-            "modelList", modelService.getAllModels(),
-            "equipmentList", equipmentList,
-            "userList", us.getUsers(),
-            "registerModel", new RegisterModel(),
-            "editor", "editor",
-            "admin", "admin"
+        var modelAttributes = Map.ofEntries(
+            Map.entry("userList", us.getUsers()),
+            Map.entry("regionList", regionService.getAllRegions()),
+            Map.entry("propertyList", propertyService.getAllProperties()),
+            Map.entry("locationList", locationsByProperty),
+            Map.entry("manufacturerList", manufacturerService.getAllManufacturers()),
+            Map.entry("modelList", modelService.getAllModels()),
+            Map.entry("equipmentList", equipmentList),
+            Map.entry("userEquipmentList", equipmentByManufacturer),
+            Map.entry("pagedUserEquipmentList", pagedUserEquipmentList),
+            Map.entry("pagedEquipmentList", pagedEquipmentList),
+            Map.entry("currentPage", page),
+            Map.entry("totalPages", (int) Math.ceil((double) equipmentList.size() / size)),
+            Map.entry("registerModel", new RegisterModel()),
+            Map.entry("admin", "admin"),
+            Map.entry("editor", "editor"),
+            Map.entry("screen","equipment")
         );
         modelAttributes.forEach(model::addAttribute);
 

@@ -26,9 +26,9 @@
 
                         <!-- Admin View -->
                         <tr th:if="${session.authUser.isAdmin}" th:each="equipment : ${pagedEquipmentList}">
-                            <td th:text="${equipment.location.property.user.firstName}"></td>
-                            <td th:text="${equipment.location.property.name}"></td>
-                            <td>
+                            <td class="capitalize" th:text="${equipment.location.property.user.firstName}"></td>
+                            <td class="capitalize" th:text="${equipment.location.property.name}"></td>
+                            <td class="capitalize">
                                 <span th:text="${equipment.model.manufacturer.name}"></span>
                                 <span th:text="${equipment.model.description}"></span>
                             </td>

@@ -5,27 +5,23 @@
 
 
 @layer components {
-    .button,input,select{
+    input,select{
         /* display: block; */
-        background-color: theme('colors.app-white-40') !important;
+        /* background-color: theme('colors.app-white-40') !important; */
         color: theme('colors.color-1') !important;
         font-weight: bold;
         padding: 6px !important;
         font-size: 18px;
         outline: none;
         border: 1px solid theme('colors.color-1-40') !important;
-        /* height: 32px; */
         width: 100%;
         border-radius: 6px;
-        /* margin-bottom: 8px !important; */
     }
 
 
-    div{
-        width: 100%;
-    }
 
-    button{
+
+    .button,button{
         background-color:theme('colors.color-3') !important;
         color: theme('colors.app-white') !important;
         font-weight: 600 !important;
