@@ -2,133 +2,133 @@
 
 <div th:fragment="equipment-table">
 
-    <div class="px-4">
-        <div class="bg-app-white py-4 rounded-md">
-            <h1 class="text-lg font-semibold px-4 pb-4">Equipment List</h1>
 
-            <div>
-                <table id="equipment-table" class="w-full table-fixed border-collapse border border-app-white-40 bg-color-3 text-app-white">
-                    <thead>
-                        <tr class="border border-app-white-40 text-left bg-color-2">
-                            <th th:if="${session.authUser.isAdmin}">Technician</th>
-                            <th>Property</th>
-                            <th>Equipment Type</th>
-                            <th>Serial Number</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- No equipment -->
-                        <tr th:if="${#lists.isEmpty(pagedEquipmentList)}">
-                            <td th:colspan="${session.authUser.isAdmin ? 5 : 4}" class="text-center py-8">No equipment found
-                            </td>
-                        </tr>
+    <div class="bg-app-white py-4 rounded-md">
+        <h1 class="text-lg font-semibold px-4 pb-4">Equipment List</h1>
 
-                        <!-- Admin View -->
-                        <tr th:if="${session.authUser.isAdmin}" th:each="equipment : ${pagedEquipmentList}">
-                            <td class="capitalize" th:text="${equipment.location.property.user.firstName}"></td>
-                            <td class="capitalize" th:text="${equipment.location.property.name}"></td>
-                            <td class="capitalize">
-                                <span th:text="${equipment.model.manufacturer.name}"></span>
-                                <span th:text="${equipment.model.description}"></span>
-                            </td>
-                            <td th:text="${equipment.serialNumber}"></td>
-                            <td>
-                                <div class="flex items-center space-x-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                    </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                                        <path d="M13.5 6.5l4 4" />
-                                    </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M4 7l16 0" />
-                                        <path d="M10 11l0 6" />
-                                        <path d="M14 11l0 6" />
-                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
+        <div>
+            <table id="equipment-table" class="w-full table-fixed border-collapse border border-app-white-40 bg-color-3 text-app-white">
+                <thead>
+                    <tr class="border border-app-white-40 text-left bg-color-2">
+                        <th th:if="${session.authUser.isAdmin}">Technician</th>
+                        <th>Property</th>
+                        <th>Equipment Type</th>
+                        <th>Serial Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- No equipment -->
+                    <tr th:if="${#lists.isEmpty(pagedEquipmentList)}">
+                        <td th:colspan="${session.authUser.isAdmin ? 5 : 4}" class="text-center py-8">No equipment found
+                        </td>
+                    </tr>
 
-                        <!-- Non-admin View -->
-                        <tr th:unless="${session.authUser.isAdmin}" th:each="equipment : ${pagedUserEquipmentList}">
-                            <td th:text="${equipment.location.property.name}"></td>
-                            <td>
-                                <span th:text="${equipment.model.manufacturer.name}"></span>
-                                <span th:text="${equipment.model.description}"></span>
-                            </td>
-                            <td th:text="${equipment.serialNumber}"></td>
-                            <td>
-                                <div class="flex items-center space-x-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                    </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                                        <path d="M13.5 6.5l4 4" />
-                                    </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M4 7l16 0" />
-                                        <path d="M10 11l0 6" />
-                                        <path d="M14 11l0 6" />
-                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-    
-            <!-- Pagination -->
-            <nav class="flex justify-between mt-4 px-4 text-sm text-color-2">
-                <p th:text="'Showing ' + (${pagedEquipmentList.number} * ${pagedEquipmentList.size} + 1) + ' to ' 
-                    + (${pagedEquipmentList.number} * ${pagedEquipmentList.size} + ${pagedEquipmentList.numberOfElements}) + ' of ' 
-                    + ${pagedEquipmentList.totalElements} + ' results'">
-                </p>
+                    <!-- Admin View -->
+                    <tr th:if="${session.authUser.isAdmin}" th:each="equipment : ${pagedEquipmentList}">
+                        <td class="capitalize" th:text="${equipment.location.property.user.firstName}"></td>
+                        <td class="capitalize" th:text="${equipment.location.property.name}"></td>
+                        <td class="capitalize">
+                            <span th:text="${equipment.model.manufacturer.name}"></span>
+                            <span th:text="${equipment.model.description}"></span>
+                        </td>
+                        <td th:text="${equipment.serialNumber}"></td>
+                        <td>
+                            <div class="flex items-center space-x-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                    <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                    <path d="M13.5 6.5l4 4" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M4 7l16 0" />
+                                    <path d="M10 11l0 6" />
+                                    <path d="M14 11l0 6" />
+                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                </svg>
+                            </div>
+                        </td>
+                    </tr>
 
-    
-                <ul class="inline-flex -space-x-px">
-
-                    <li th:if="${pagedEquipmentList.hasPrevious()}">
-                        <a th:href="@{/app/admin(page=${pagedEquipmentList.number - 1}) }+ '#equipment-table'" class="px-3 py-2 hover:bg-color-3/40">Previous</a>
-                    </li>
-
-                    <li th:each="i : ${#numbers.sequence(0, pagedEquipmentList.totalPages - 1)}">
-                        <a th:href="@{/app/admin(page=${i})} + '#equipment-table'" th:text="${i + 1}"
-                            th:classappend="${i == pagedEquipmentList.number} ? 'bg-color-3 text-white' : 'hover:bg-color-3/40'"
-                            class="px-3 py-2 rounded"></a>
-                    </li>
-
-                    <li th:if="${pagedEquipmentList.hasNext()}">
-                        <a th:href="@{/app/admin(page=${pagedEquipmentList.number + 1})} + '#equipment-table'" class="px-3 py-2 hover:bg-color-3/40">Next</a>
-                    </li>
-                </ul>
-            </nav>
+                    <!-- Non-admin View -->
+                    <tr th:unless="${session.authUser.isAdmin}" th:each="equipment : ${pagedUserEquipmentList}">
+                        <td th:text="${equipment.location.property.name}"></td>
+                        <td>
+                            <span th:text="${equipment.model.manufacturer.name}"></span>
+                            <span th:text="${equipment.model.description}"></span>
+                        </td>
+                        <td th:text="${equipment.serialNumber}"></td>
+                        <td>
+                            <div class="flex items-center space-x-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                    <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                    <path d="M13.5 6.5l4 4" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M4 7l16 0" />
+                                    <path d="M10 11l0 6" />
+                                    <path d="M14 11l0 6" />
+                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                </svg>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
+        <!-- Pagination -->
+        <nav class="flex justify-between mt-4 px-4 text-sm text-color-2">
+            <p th:text="'Showing ' + (${pagedEquipmentList.number} * ${pagedEquipmentList.size} + 1) + ' to ' 
+                + (${pagedEquipmentList.number} * ${pagedEquipmentList.size} + ${pagedEquipmentList.numberOfElements}) + ' of ' 
+                + ${pagedEquipmentList.totalElements} + ' results'">
+            </p>
+
+
+            <ul class="inline-flex -space-x-px">
+
+                <li th:if="${pagedEquipmentList.hasPrevious()}">
+                    <a th:href="@{/app/admin(page=${pagedEquipmentList.number - 1}) }+ '#equipment-table'" class="px-3 py-2 hover:bg-color-3/40">Previous</a>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(0, pagedEquipmentList.totalPages - 1)}">
+                    <a th:href="@{/app/admin(page=${i})} + '#equipment-table'" th:text="${i + 1}"
+                        th:classappend="${i == pagedEquipmentList.number} ? 'bg-color-3 text-white' : 'hover:bg-color-3/40'"
+                        class="px-3 py-2 rounded"></a>
+                </li>
+
+                <li th:if="${pagedEquipmentList.hasNext()}">
+                    <a th:href="@{/app/admin(page=${pagedEquipmentList.number + 1})} + '#equipment-table'" class="px-3 py-2 hover:bg-color-3/40">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
 </div>

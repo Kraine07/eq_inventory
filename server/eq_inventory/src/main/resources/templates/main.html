@@ -14,17 +14,17 @@
 
 
         <!-- EQUIPMENT SCREENS -->
-        <div id="manage-equipment-screen" th:classappend="${screen == 'equipment'}? 'block':'hidden'" class="">
+        <div id="manage-equipment-screen"  class="">
             <div th:replace="~{layout/dashboard-screens/equipment-management :: equipment-management}"></div>
         </div>
-        <div id="manage-user-screen" th:classappend="${screen == 'user'}? 'block':'hidden'" class="">
+        <div id="manage-user-screen"  class="">
             <div th:replace="~{layout/dashboard-screens/user-management :: user-management}"></div>
         </div>
-        <div id="manage-property-screen" th:classappend="${screen == 'property'}? 'block':'hidden'" class="">
+        <div id="manage-property-screen"  class="">
             <div th:replace="~{layout/dashboard-screens/property-management :: property-management}"></div>
         </div>
 
-        <div id="manage-report-screen" th:classappend="${screen == 'report'}? 'block':'hidden'" class="">
+        <div id="manage-report-screen"  class="">
             <div th:replace="~{layout/dashboard-screens/report-management :: report-management}"></div>
         </div>
     </div>

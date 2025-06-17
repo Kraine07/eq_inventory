@@ -184,8 +184,7 @@ public class UserController {
             Map.entry("totalPages", (int) Math.ceil((double) equipmentList.size() / size)),
             Map.entry("registerModel", new RegisterModel()),
             Map.entry("admin", "admin"),
-            Map.entry("editor", "editor"),
-            Map.entry("screen","equipment")
+            Map.entry("editor", "editor")
         );
         modelAttributes.forEach(model::addAttribute);
 
