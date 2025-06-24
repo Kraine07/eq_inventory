@@ -138,11 +138,16 @@ public class UserController {
         // get all locations
         List<Location> locations = locationService.getAllLocations();
 
+        // group all locations by property
+        Map<String, List<Location>> locationsByProperty = locations.stream()
+                .collect(Collectors.groupingBy(location -> location.getProperty().getName()));
+
         // filter by user
         List<Location> userLocations = locations.stream().filter(location -> location.getProperty().getUser().getId().equals(authUser.getId())).collect(Collectors.toList());
 
-        // group locations by property
-        Map<String, List<Location>> locationsByProperty = userLocations.stream().collect(Collectors.groupingBy(location -> location.getProperty().getName()));
+        // group user locations by property
+        Map<String, List<Location>> userLocationsByProperty = userLocations.stream()
+                .collect(Collectors.groupingBy(location -> location.getProperty().getName()));
 
         // TODO - logic to sort equipment by product dispensed
 
@@ -173,6 +178,7 @@ public class UserController {
             Map.entry("userList", us.getUsers()),
             Map.entry("regionList", regionService.getAllRegions()),
             Map.entry("propertyList", propertyService.getAllProperties()),
+            Map.entry("userLocationList", userLocationsByProperty),
             Map.entry("locationList", locationsByProperty),
             Map.entry("manufacturerList", manufacturerService.getAllManufacturers()),
             Map.entry("modelList", modelService.getAllModels()),

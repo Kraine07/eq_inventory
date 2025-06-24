@@ -10,22 +10,25 @@
     <div layout:fragment="content"  class="container min-h-full w-4/5 mx-auto pb-4 ">
 
         <!-- NAVBAR -->
-        <div th:replace="~{layout/components/navbar :: navbar}">...</div>
+        <div th:insert="~{layout/components/navbar :: navbar}">...</div>
 
 
-        <!-- EQUIPMENT SCREENS -->
-        <div id="manage-equipment-screen"  class="">
-            <div th:replace="~{layout/dashboard-screens/equipment-management :: equipment-management}"></div>
-        </div>
-        <div id="manage-user-screen"  class="">
-            <div th:replace="~{layout/dashboard-screens/user-management :: user-management}"></div>
-        </div>
-        <div id="manage-property-screen"  class="">
-            <div th:replace="~{layout/dashboard-screens/property-management :: property-management}"></div>
+        <!-- SCREENS -->
+        <div>
+            <div  id="manage-equipment-screen"    th:insert="~{layout/dashboard-screens/equipment-management :: equipment-management}"  ></div>
         </div>
 
-        <div id="manage-report-screen"  class="">
-            <div th:replace="~{layout/dashboard-screens/report-management :: report-management}"></div>
+        <div  >
+            <div  id="manage-user-screen"  th:insert="~{layout/dashboard-screens/user-management :: user-management}"   ></div>
         </div>
+
+        <div  >
+            <div id="manage-property-screen"  th:insert="~{layout/dashboard-screens/property-management :: property-management}"   ></div>
+        </div>
+
+        <div >
+            <div  id="manage-report-screen"   th:insert="~{layout/dashboard-screens/report-management :: report-management}"  ></div>
+        </div>
+
     </div>
 </html>

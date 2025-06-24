@@ -2,6 +2,8 @@ package kraine.app.eq_inventory.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,10 +31,12 @@ public class Property implements Serializable{
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "region")
     private Region region;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "\"user\"")
     private User user;
 }

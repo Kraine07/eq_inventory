@@ -1,27 +1,31 @@
-<div th:fragment="model-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
+<div th:fragment="model-form" class=" absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 ">
 
-    <form id="model-form" action="#" method="post" th:action="@{/add-model}" th:object="${modelModel}">
+    <div class="flex justify-end">
+        <svg id="close-model-form-btn" xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square mb-2 cursor-pointer">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+        </svg>
+    </div>
+    <form id="model-form"  class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow "  method="post" th:action="@{/add-model}" th:object="${modelModel}">
         <h1 class="text-3xl font-thin mb-4">Create Model</h1>
 
         <div class="mb-4">
             <label for="manufacturer">Manufacturer</label>
-            <select name="manufacturer" id="manufacturer" class="focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize">
-                <option value="" hidden>Select Manufacturer</option>
+            <select name="manufacturer" id="manufacturer" class="focus:ring focus:ring-color-3 focus:ring-offset-2 focus:ring-opacity-50 capitalize">
+                <option class="" hidden>Select Manufacturer</option>
 
                 <option th:each="manufacturer : ${manufacturerList}" th:value="${manufacturer.id}" th:text="${manufacturer.name}" class="capitalize"></option>
             </select>
         </div>
         <div class="mb-4">
             <label for="description" class="">Description</label>
-            <input type="text" id="description" name="description" required class="mt-1 block w-full  focus:ring focus:ring-app-white focus:ring-opacity-50 capitalize" placeholder="Enter model description" >
-        </div>
-        <div class="flex justify-end">
-            <button id="model-form-submit" type="submit" class="mt-4">Create Model</button>
-        </div>
-
-        <!-- cancel button -->
-        <div id="close-model-form"  for="user-form-modal" class="flex justify-center items-center ring-1 ring-app-white font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
-            <span  class=" text-app-white" >Cancel</span>
+            <input type="text" id="description" name="description" required class="mt-1 block w-full  focus:ring focus:ring-color-3 focus:ring-offset-2 focus:ring-opacity-50 capitalize" placeholder="Enter model description" >
         </div>
     </form>
+
+
+    <div class="flex justify-end">
+        <button id="model-form-submit" form="model-form" type="submit" class="mt-4">Create Model</button>
+    </div>
 </div>

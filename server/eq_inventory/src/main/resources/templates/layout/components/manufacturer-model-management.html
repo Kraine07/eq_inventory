@@ -1,0 +1,33 @@
+
+
+<div th:fragment="manufacturer-model-management">
+    <div id="manufacturer-model-management-modal" class="hidden  absolute bg-app-white-40 backdrop-blur-md w-screen h-screen top-0 left-0">
+        <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col space-y-2">
+            <div class="flex justify-end text-color-1 cursor-pointer">
+                <svg id="close-manufacturer-model-management-btn" xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M18 6l-12 12" />
+                    <path d="M6 6l12 12" />
+                </svg>
+            </div>
+            <div class=" py-4 px-12 w-96  bg-app-white text-color-1 rounded-md overflow-y-auto scrollbar-none">
+                <!-- List of Manufacturers -->
+                <div class="flex flex-col space-y-1 mb-4" th:each="manufacturer : ${manufacturerList}" >
+                    <span class="capitalize text-xl font-semibold pb-2 border-b border-b-color-3-40" th:text="${manufacturer.name}"></span>
+                    <div th:each="model : ${modelList}">
+                        <span th:if="${manufacturer == model.manufacturer}" class="capitalize  italic ml-4 " th:text="${model.description}"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- buttons -->
+            <div class="flex flex-col space-y-1">
+                <button id="open-manufacturer-form-btn">Manufacturer</button>
+                <button id="open-model-form-btn">Model</button>
+            </div>
+
+
+        </div>
+
+</div>

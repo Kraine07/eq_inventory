@@ -1,17 +1,20 @@
-<div th:fragment="manufacturer-form" class="flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center h-auto bg-color-2 max-w-[400px] p-6 border border-app-white">
-    <form id="manufacturer-form"method="post" th:action="@{/add-manufacturer}" >
+<div th:fragment="manufacturer-form" class="  absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 ">
+    <div class="flex justify-end">
+        <svg id="close-manufacturer-form-btn" xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square mb-2 cursor-pointer">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+        </svg>
+    </div>
+    <form id="manufacturer-form" class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow "  method="post" th:action="@{/add-manufacturer}" >
         <h1 class="text-3xl font-thin mb-4">Create Manufacturer</h1>
-        <div class="mb-4">
+        <div class="">
             <label for="name" class="">Manufacturer Name</label>
-            <input type="text" id="name" name="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 capitalize" placeholder="Enter Manufacturer Name" />
-        </div>
-        <div class="flex justify-end">
-            <button id="manufacturer-form-submit" type="submit" class="mt-4">Create Manufacturer</button>
-        </div>
-
-        <!-- show only in admin panel -->
-        <div id="close-manufacturer-form"  for="user-form-modal" class="flex justify-center items-center ring-1 ring-app-white font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
-            <span  class=" text-app-white" >Cancel</span>
+            <input type="text" id="name" name="name" required class="mt-1 block w-full  rounded-md outline-none border-none focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 capitalize" placeholder="Enter Manufacturer Name" />
         </div>
     </form>
+
+    <div class="">
+        <button id="manufacturer-form-submit" form="manufacturer-form" type="submit" class="mt-4">Create Manufacturer</button>
+    </div>
 </div>

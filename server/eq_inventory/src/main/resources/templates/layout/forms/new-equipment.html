@@ -1,7 +1,12 @@
 
-<div class="absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 bg-transparent backdrop-blur-md  w-screen h-screen ">
-    <div th:fragment="equipment-form" class="bg-app-white flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center w-auto p-8">
-        <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}">
+
+
+
+
+
+
+    <div th:fragment="equipment-form" class="bg-app-white flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center w-auto p-6">
+        <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}" class="w-full">
 
             <div class="flex flex-col justify-center items-center mb-4">
                 <svg  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-16 aspect-square mb-2 text-color-3 bg-color-3/30 p-2 rounded-full">
@@ -12,14 +17,17 @@
                     <path d="M16 19h6" /
                     ><path d="M19 16v6" />
                 </svg>
-                <h1 class="text-xl font-semibold">Create Equipment</h1>
+                <h1 id="equipment-form-heading" class="text-xl font-semibold">Create Equipment</h1>
                 <p class="text-sm">Enter equipment details</p>
             </div>
 
+            <!-- Id -->
+            <input id="equipment-id" type="hidden" name="id">
+
             <!-- Equipment model  -->
             <div class="mb-3">
-                <label for="model">Equipment Model</label>
-                <select name="model" id="model" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
+                <label for="equipment-model">Equipment Model</label>
+                <select name="model" id="equipment-model" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
                     <option value="" hidden>Select Equipment Model</option>
                     <th:block th:each="manufacturer : ${manufacturerList}">
                         <optgroup th:label="${manufacturer.name}">
@@ -30,11 +38,26 @@
             </div>
 
             <!-- Location -->
-            <div class="mb-3">
+            <div class="mb-3" th:if="authuser.isAdmin">
+                <label for="equipment-location">Location</label>
+                <select name="location" id="equipment-location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
+                    <option value="" hidden>Select Location</option>
+                    <th:block th:each="location : ${locationList}">
+                        <optgroup th:label="${location.key}">
+                            <option th:each="locationElement : ${location.value}" th:value="${locationElement.id}" th:text="${location.key + ' - ' + locationElement.name}" class="capitalize"></option>
+
+                        </optgroup>
+
+                    </th:block>
+
+                </select>
+            </div>
+
+            <div class="mb-3" th:unless="authuser.isAdmin">
                 <label for="location">Location</label>
                 <select name="location" id="location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
                     <option value="" hidden>Select Location</option>
-                    <th:block th:each="location : ${locationList}">
+                    <th:block th:each="location : ${userLocationList}">
                         <optgroup th:label="${location.key}">
                             <option th:each="location : ${location.value}" th:value="${location.id}" th:text="${location.property.name + ' - ' + location.name}" class="capitalize"></option>
 
@@ -48,13 +71,13 @@
             <!-- Serial Number -->
             <div class="mb-3">
                 <label for="serial-number" class="">Serial Number</label>
-                <input type="text" id="equipment-serial-number" name="serialNumber" required class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 uppercase placeholder:normal-case placeholder:text-color-1" placeholder="Enter Serial Number">
+                <input type="text" id="serial-number" name="serialNumber" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 uppercase placeholder:normal-case placeholder:text-color-1" placeholder="Enter Serial Number">
             </div>
 
             <!-- Manufactured Date -->
             <div class="mb-3">
                 <label for="manufactured-date">Manufactured Date</label>
-                <input type="month" id="manufactured-date" name="manufacturedDate" required class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 uppercase ">
+                <input type="month" id="manufactured-date" name="manufacturedDate"  class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 uppercase ">
             </div>
 
             <!-- Submit Button -->
@@ -70,4 +93,4 @@
         </form>
     </div>
 
-</div>
+

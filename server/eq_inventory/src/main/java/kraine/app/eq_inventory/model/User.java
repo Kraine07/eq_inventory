@@ -2,6 +2,8 @@ package kraine.app.eq_inventory.model;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,6 +56,7 @@ public class User {
     private String password;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "role")
     private Role role;
 
@@ -69,7 +72,8 @@ public class User {
     private Boolean isAdmin;
 
     public boolean getIsAdmin() {
-        return role.getRoleType() == RoleType.ADMINISTRATOR;
+        isAdmin = role.getRoleType() == RoleType.ADMINISTRATOR;
+        return isAdmin;
     }
 
 

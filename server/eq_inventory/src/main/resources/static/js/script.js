@@ -14,51 +14,41 @@ const manageEquipmentScreen = document.querySelector("#manage-equipment-screen")
 const managePropertyScreen = document.querySelector("#manage-property-screen");
 const manageReportScreen = document.querySelector("#manage-report-screen");
 
+// clear active screen from local storage if login form is loaded
+if (document.querySelector(("#login-form"))) {
+    localStorage.removeItem("activeScreen");
+}
+
 
 // handle refresh to same screen
-const screenMap = {
-    "manage-user-screen": {
-        screen: manageUserScreen,
-        button: manageUserButton
-    },
-    "manage-equipment-screen": {
-        screen: manageEquipmentScreen,
-        button: manageEquipmentButton
-    },
-    "manage-property-screen": {
-        screen: managePropertyScreen,
-        button: managePropertyButton
-    },
-    "manage-report-screen": {
-        screen: manageReportScreen,
-        button: manageReportButton
-    }
-};
+const screenMap = {};
+// create entries only if respective screen and button are present
+if (manageUserScreen && manageUserButton)
+    screenMap["manage-user-screen"] = { screen: manageUserScreen, button: manageUserButton };
+if (manageEquipmentScreen && manageEquipmentButton)
+    screenMap["manage-equipment-screen"] = { screen: manageEquipmentScreen, button: manageEquipmentButton };
+if (managePropertyScreen && managePropertyButton)
+    screenMap["manage-property-screen"] = { screen: managePropertyScreen, button: managePropertyButton };
+if (manageReportScreen && manageReportButton)
+    screenMap["manage-report-screen"] = { screen: manageReportScreen, button: manageReportButton };
+
 
 const defaultScreen = "manage-equipment-screen";
 const activeScreenId = localStorage.getItem("activeScreen") || defaultScreen;
 
-Object.keys(screenMap).forEach(id => {
-    screenMap[id].screen.classList.add("hidden");
-    screenMap[id].button.classList.remove("border-2", "border-color-4",  "text-color-4");
+//
+Object.keys(screenMap).forEach(screen => {
+    screenMap[screen].screen.classList.add("hidden");
+    screenMap[screen].button.classList.remove("border-2", "border-color-4",  "text-color-4");
 });
 
-const active = screenMap[activeScreenId];
-active.screen.classList.remove("hidden");
-active.button.classList.add("border-2", "border-color-4",  "text-color-4");
 
-
-
-
-// highlight nav buttona and show screen on reload
-if (!manageEquipmentButton.classList.contains("border-color-4")
-    && !manageUserButton.classList.contains("border-color-4")
-    && !managePropertyButton.classList.contains("border-color-4")
-    && !manageReportButton.classList.contains("border-color-4")) {
-
-    manageEquipmentButton.classList.add("border-2", "border-color-4",  "text-color-4");
-    manageEquipmentScreen.classList.remove("hidden");
+if (screenMap[activeScreenId]) {
+    // If the active screen is defined in the screenMap, show it
+    screenMap[activeScreenId].screen.classList.remove("hidden");
+    screenMap[activeScreenId].button.classList.add("border-2", "border-color-4", "text-color-4");
 }
+
 
 
 
@@ -73,7 +63,7 @@ if (manageUserButton !== null) {
         manageReportScreen.classList.add("hidden");
         manageUserButton.classList.add("border-2", "border-color-4",  "text-color-4");
         manageEquipmentButton.classList.remove("border-2", "border-color-4",  "text-color-4");
-        managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        if(managePropertyButton) managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         manageReportButton.classList.remove("border-2", "border-color-4",  "text-color-4");
     });
 }
@@ -87,9 +77,9 @@ if (manageEquipmentButton !== null) {
         manageUserScreen.classList.add("hidden");
         managePropertyScreen.classList.add("hidden");
         manageReportScreen.classList.add("hidden");
-        manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        if(manageUserButton) manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         manageEquipmentButton.classList.add("border-2", "border-color-4",  "text-color-4");
-        managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        if(managePropertyButton) managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         manageReportButton.classList.remove("border-2", "border-color-4",  "text-color-4");
     });
 }
@@ -103,7 +93,7 @@ if (managePropertyButton !== null) {
         manageEquipmentScreen.classList.add("hidden");
         managePropertyScreen.classList.remove("hidden");
         manageReportScreen.classList.add("hidden");
-        manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        if(manageUserButton) manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         manageEquipmentButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         managePropertyButton.classList.add("border-2", "border-color-4",  "text-color-4");
         manageReportButton.classList.remove("border-2", "border-color-4",  "text-color-4");
@@ -119,9 +109,9 @@ if (manageReportButton !== null) {
         manageEquipmentScreen.classList.add("hidden");
         managePropertyScreen.classList.add("hidden");
         manageReportScreen.classList.remove("hidden");
-        manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        if(manageUserButton) manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         manageEquipmentButton.classList.remove("border-2", "border-color-4",  "text-color-4");
-        managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        if(managePropertyButton) managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         manageReportButton.classList.add("border-2", "border-color-4",  "text-color-4");
     });
 }

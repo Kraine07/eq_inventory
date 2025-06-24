@@ -6,6 +6,7 @@ const userFormContainer = document.getElementById("user-form-container");
 const role = document.getElementById("role");
 const toggleSwitch = document.getElementById("toggleSwitch");
 const closeUserForm = document.querySelector("#close-user-form");
+const openUserForm = document.querySelector("#open-user-form-btn");
 
 const confirmationWindow = document.querySelector("#confirm-window");
 const confirmationQuestion = document.querySelector("#confirm-question");
@@ -16,10 +17,18 @@ const statusConfirmationButton = document.querySelector("#status-confirm-btn");
 
 const changeStatusButton = document.querySelector("#change-status-btn");
 
+// user edit/delete
+const editUserButton = document.querySelectorAll(".edit-user");
+const deleteUserButton = document.querySelectorAll(".delete-user");
+
+
+
 
 // close user form with button
 if (closeUserForm !== null) {
     closeUserForm.addEventListener("click", function () {
+        document.body.classList.remove('overflow-hidden');
+
         userFormContainer.style.display = "none";
         location.reload();
     });
@@ -27,12 +36,17 @@ if (closeUserForm !== null) {
 
 
 // click outside to close user form
-window.onclick = function (event) {
-    if (event.target === userFormContainer) {
+if (userFormContainer !== null) {
+    userFormContainer.addEventListener("click", function () {
+
+        // return scrolling
+        document.body.classList.remove('overflow-hidden');
+        // hide form
         userFormContainer.style.display = "none";
         location.reload();
-    }
-};
+    });
+
+}
 
 
 // change role value
@@ -53,22 +67,31 @@ if (toggleSwitch) {
 }
 
 
+// open user form
+if (openUserForm !== null) {
+    openUserForm.addEventListener("click", function () {
+        // show form
+        document.body.classList.add('overflow-hidden');
+        userFormContainer.style.display = "block";
+    })
+}
 
-// user edit/delete
-const editUserButton = document.querySelectorAll(".edit-user");
-const deleteUserButton = document.querySelectorAll(".delete-user");
+
+//edit & delete
 if(editUserButton.length>0|| deleteUserButton.length>0){
 
     // edit user
-    editUserButton.forEach(editButton =>{
-        const userData = editButton.parentElement.parentElement.parentElement.children;
-        const id = document.querySelector("#user-id");
+    editUserButton.forEach(editButton => {
+
+        // place table row data in form
+        const userRow = editButton.closest("tr").children;
+        const userId = document.querySelector("#user-id");
 
         const firstName = document.querySelector("#firstName");
         const lastName = document.querySelector("#lastName");
         const email = document.querySelector("#email");
 
-        const [firstNameText, lastNameText] = userData[1].textContent.trim().split(" ");
+        const [firstNameText, lastNameText] = userRow[1].textContent.trim().split(" ");
 
         const statusID = document.querySelector("#status-id");
         editButton.addEventListener("click", function () {
@@ -80,24 +103,29 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
             userForm.action = "/update-user";
 
             // populate form
-            id.value = statusID.value = userData[0].textContent;
+            userId.value = statusID.value = userRow[0].textContent;
             lastName.value = lastNameText;
             firstName.value = firstNameText;
-            email.value = userData[2].textContent;
+            email.value = userRow[2].textContent;
 
-            // //hide email field
+            //hide email field
             document.querySelector("#label-and-email-field").style.display = "none";
             //set role value
-            if (userData[3].innerHTML === "ADMINISTRATOR") {
+            if (userRow[3].innerHTML === "ADMINISTRATOR") {
                 toggleSwitch.checked = true;
             }
 
             //show suspend or enable button
-            changeStatusButton.innerHTML = userData[4].children[0].innerHTML === "Active" ? "Suspend" : "Activate";
+            changeStatusButton.value = userRow[4].children[0].innerHTML === "Active" ? "Suspend" : "Activate";
+            changeStatusButton.classList.add(userRow[4].children[0].innerHTML === "Active" ? "bg-color-4" : "bg-color-3");
             changeStatusButton.style.display = "inline-block";
 
             // set submit button text
             document.querySelector("#user-form-submit").innerHTML = "Update User";
+
+            // prevent scrolling
+            document.body.classList.add('overflow-hidden');
+
             // show form
             userFormContainer.style.display = "block";
 
@@ -126,14 +154,14 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
         deleteButton.addEventListener("click", function () {
             console.log("delete")
             const deleteID = document.querySelector("#delete-id");
-            const userData = deleteButton.parentElement.parentElement.parentElement.children;
-            const fullName = userData[1].textContent;
+            const userRow = deleteButton.parentElement.parentElement.parentElement.children;
+            const fullName = userRow[1].textContent;
             // const lastName = deleteButton.parentElement.parentElement.children[0].children[0].innerHTML.slice(0, -1);
             // show confirmation window
             confirmationHeading.innerHTML = "Delete";
             confirmationQuestion.innerHTML = `Deleting this account is permanent. Confirm deletion of '${fullName}'?`;
             deleteConfirmationButton.style.display = "block";
-            deleteID.value = userData[0].textContent;
+            deleteID.value = userRow[0].textContent;
             confirmationWindow.style.display = "block";
             });
     });

@@ -14,7 +14,7 @@
             <div class="ml-12 h-full space-x-4 flex items-center ">
 
                 <!-- Equipment -->
-                <a id="manage-equipment-btn"   class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                <a id="manage-equipment-btn"   class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md cursor-pointer">
                     <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-6 aspect-square">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                         <path d="M5 3m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
@@ -27,7 +27,7 @@
                     <span class="text-sm font-semibold ml-2">Equipment</span>
                 </a>
 
-                <a id="manage-user-btn" th:if="${session.authUser.isAdmin}"   class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                <a id="manage-user-btn" th:if="${session.authUser.isAdmin}"   class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="h-6 aspect-square">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
                     </svg>
@@ -35,7 +35,7 @@
                 </a>
 
                 <!-- Properties  -->
-                <a id="manage-property-btn"  th:if="${session.authUser.isAdmin}"  class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                <a id="manage-property-btn"  th:if="${session.authUser.isAdmin}"  class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md cursor-pointer">
                     <svg  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class=" h-6 aspect-square">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                         <path d="M3 21l18 0" />
@@ -50,7 +50,7 @@
                 </a>
 
                 <!-- Reports -->
-                <a id="manage-report-btn"   class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md">
+                <a id="manage-report-btn"   class="flex justify-center items-center space-x-1 hover:text-color-2 hover:bg-color-4 hover:ronded-md hover:border-b-transparent px-3 py-2 rounded-md cursor-pointer">
                     <svg  xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-6 aspect-square">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                         <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
@@ -64,12 +64,12 @@
         </div>
 
         <!--  -->
-        <div class="flex justify-end items-center basis-1/5 space-x-4   ">
-            <span th:text="${session.authUser.firstName}"></span>
+        <div class="flex justify-end items-center basis-1/5 space-x-2   ">
+            <span class="capitalize italic font-thin text-lg" th:text="${session.authUser.firstName+' '+session.authUser.lastName}"></span>
             <a th:href="@{/logout}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="cursor-pointer hover:text-color-4 ml-4">
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                class="cursor-pointer hover:text-color-4">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                     <path d="M6 21v-2a4 4 0 0 1 4 -4h2.5" />

@@ -1,5 +1,7 @@
 package kraine.app.eq_inventory.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class Location {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "property")
     private Property property;
 }

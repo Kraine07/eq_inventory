@@ -15,7 +15,8 @@ module.exports = {
         "color-3":"#064663",
         "color-3-40":"#06466366",
         "color-4":"#ECB365",
-        "color-4-40":"#ECB36566",
+        "color-4-40": "#ECB36566",
+        "modal-background":"#04293AEA",
 
 
         // "color-1":"#EBFFFB",
@@ -27,9 +28,15 @@ module.exports = {
         // "color-4":"#3161A3",
         // "color-4-40":"#3161A366",
         // "modal-background":"#04293AEA",
-    },
+      },
+      boxShadow: (theme) => ({
+        "app-shadow": `0 0 6px ${theme('colors.color-1-40')}`,
+      }),
     },
   },
-  plugins: [],
+  plugins: [
+    require("tailwind-scrollbar"),
+
+  ],
 }
 

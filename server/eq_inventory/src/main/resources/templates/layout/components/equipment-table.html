@@ -20,38 +20,41 @@
                 <tbody>
                     <!-- No equipment -->
                     <tr th:if="${#lists.isEmpty(pagedEquipmentList)}">
-                        <td th:colspan="${session.authUser.isAdmin ? 5 : 4}" class="text-center py-8">No equipment found
-                        </td>
+                        <td th:colspan="${session.authUser.isAdmin ? 5 : 4}" class="text-center py-8">No equipment found</td>
                     </tr>
 
                     <!-- Admin View -->
                     <tr th:if="${session.authUser.isAdmin}" th:each="equipment : ${pagedEquipmentList}">
+                        <td class="hidden" th:text="${equipment.id}"></td>
                         <td class="capitalize" th:text="${equipment.location.property.user.firstName}"></td>
                         <td class="capitalize" th:text="${equipment.location.property.name}"></td>
+                        <td class="hidden" th:text="${equipment.location.id}"></td>
                         <td class="capitalize">
                             <span th:text="${equipment.model.manufacturer.name}"></span>
+                            <span class="hidden" th:text="${equipment.model.id}"></span>
                             <span th:text="${equipment.model.description}"></span>
                         </td>
                         <td th:text="${equipment.serialNumber}"></td>
+                        <td class="hidden" th:text="${equipment.manufacturedDate}"></td>
                         <td>
                             <div class="flex items-center space-x-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
+                                    class="view-equipment  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                     <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                    class="edit-equipment  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                     <path d="M13.5 6.5l4 4" />
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                    class="delete-equipment  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 7l16 0" />
                                     <path d="M10 11l0 6" />
@@ -73,23 +76,23 @@
                         <td th:text="${equipment.serialNumber}"></td>
                         <td>
                             <div class="flex items-center space-x-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
+                                    class="view-equipment  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                     <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                    class="edit-equipment  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                     <path d="M13.5 6.5l4 4" />
                                 </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                    class="delete-equipment  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 7l16 0" />
                                     <path d="M10 11l0 6" />

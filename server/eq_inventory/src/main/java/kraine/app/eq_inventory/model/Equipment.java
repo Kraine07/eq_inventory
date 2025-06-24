@@ -13,6 +13,8 @@ import kraine.app.eq_inventory.YearMonthConveter;
 
 import java.time.YearMonth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,11 +37,13 @@ public class Equipment {
     private YearMonth manufacturedDate;
 
     @ManyToOne
+    @JsonIgnore
     @NotNull(message = "Model cannot be null")
     @JoinColumn(name = "model") //column in other table this is linked to
     private Model model;
 
     @ManyToOne
+    @JsonIgnore
     @NotNull(message = "Location cannot be null")
     @JoinColumn(name = "location") // column in other table this is linked to
     private Location location;

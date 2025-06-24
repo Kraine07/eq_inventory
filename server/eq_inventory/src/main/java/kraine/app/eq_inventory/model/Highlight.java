@@ -1,5 +1,7 @@
 package kraine.app.eq_inventory.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,7 @@ public class Highlight {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "equipment")
     private Equipment equipment;
 
