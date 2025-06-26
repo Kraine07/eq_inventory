@@ -56,17 +56,17 @@ if (closeEquipmentForm !== null) {
         document.body.classList.remove('overflow-hidden');
 
         equipmentFormContainer.style.display = "none";
-        location.reload();
+        equipmentForm.reset();
     });
 }
 
 
-// click outside to close equipment form
+// click outside to close  form
 window.onclick = function (event) {
     if (event.target === equipmentFormContainer) {
         document.body.classList.remove('overflow-hidden');
         equipmentFormContainer.style.display = "none";
-        location.reload();
+        equipmentForm.reset();
     }
 
     if (event.target === manageManufacturerScreen) {
@@ -77,13 +77,13 @@ window.onclick = function (event) {
     if (event.target === manufacturerForm) {
         document.body.classList.remove('overflow-hidden');
         manufacturerForm.style.display = "none";
-        location.reload();
+        manufacturerForm.reset();
     }
 
     if (event.target === modelForm) {
         document.body.classList.remove('overflow-hidden');
         modelForm.style.display = "none";
-        location.reload();
+        modelForm.reset();
     }
 };
 

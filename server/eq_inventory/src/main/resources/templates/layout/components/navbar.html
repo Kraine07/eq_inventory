@@ -63,9 +63,9 @@
             </div>
         </div>
 
-        <!--  -->
+        <!-- Authorized user -->
         <div class="flex justify-end items-center basis-1/5 space-x-2   ">
-            <span class="capitalize italic font-thin text-lg" th:text="${session.authUser.firstName+' '+session.authUser.lastName}"></span>
+            <span class="capitalize italic font-thin " th:text="${session.authUser.firstName+' '+session.authUser.lastName}"></span>
             <a th:href="@{/logout}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
