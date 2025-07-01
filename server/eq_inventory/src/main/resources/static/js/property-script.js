@@ -4,8 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const propertyForm = document.getElementById('property-form');
     const propertyFormContainer = document.getElementById('property-form-container');
     const openPropertyFormButton = document.getElementById('open-property-form-btn');
-    const closePropertyForm = document.getElementById('close-property-form');
-
+    const closePropertyForm = document.getElementById('close-property-form-btn');
     const editPropertyButton = document.querySelectorAll('.edit-property');
     const deletePropertyButton = document.querySelectorAll('.delete-property');
 
@@ -13,8 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const locationForm = document.getElementById('location-form');
     const locationFormContainer = document.getElementById('location-form-container');
     const openLocationFormButton = document.getElementById('open-location-form-btn');
-    const closeLocationForm = document.getElementById('close-location-form');
-
+    const closeLocationForm = document.getElementById('close-location-form-btn');
     const editLocationButton = document.querySelectorAll('.edit-location');
     const deleteLocationButton = document.querySelectorAll('.delete-location');
 
@@ -25,8 +23,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // scroll to top
             window.scrollTo({ top: 0, behavior: "smooth" });
+            document.querySelector("#property-form-title").textContent = "Create Property";
+            document.querySelector("#property-form-submit").textContent = "Create Property";
             document.body.classList.add('overflow-hidden');
             propertyFormContainer.style.display = "block";
+            propertyForm.action = "/add-property"; // Set the form action to create
             propertyForm.reset(); // Reset the form fields
         });
     }
@@ -75,6 +76,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 document.body.classList.add('overflow-hidden');
 
+                //set the form action to update
+                propertyForm.action = "/edit-property";
+
+                //set form heading and button text
+                document.querySelector("#property-form-title").textContent = "Update Property";
+                document.querySelector("#property-form-submit").textContent = "Update Property";
+
+
                 // Show the form
                 propertyFormContainer.style.display = "block";
             });
@@ -99,8 +108,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // scroll to top
                 window.scrollTo({ top: 0, behavior: "smooth" });
+                document.querySelector("#location-form-title").textContent = "Create Location";
+                document.querySelector("#location-form-submit").textContent = "Create Location";
                 document.body.classList.add('overflow-hidden');
                 locationFormContainer.style.display = "block";
+                locationForm.action = "/add-location"; // Set the form action to create
                 locationForm.reset(); // Reset the form fields
             });
         }
@@ -129,6 +141,13 @@ document.addEventListener('DOMContentLoaded', function () {
                      // scroll to top & disable body scroll
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     document.body.classList.add('overflow-hidden');
+
+                    //set the form action to update
+                    locationForm.action = "/edit-location";
+
+                    //set form heading and button text
+                    document.querySelector("#location-form-title").textContent = "Update Location";
+                    document.querySelector("#location-form-submit").textContent = "Update Location";
 
                     // Show the form
                     locationFormContainer.style.display = "block";

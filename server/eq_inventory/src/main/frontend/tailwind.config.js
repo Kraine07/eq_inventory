@@ -30,7 +30,7 @@ module.exports = {
         // "modal-background":"#04293AEA",
       },
       boxShadow: (theme) => ({
-        "app-shadow": `0 0 6px ${theme('colors.color-1-40')}`,
+        "app-shadow": `0 0 12px ${theme('colors.color-1-40')}`,
       }),
     },
   },

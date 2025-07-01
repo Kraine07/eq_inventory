@@ -3,13 +3,13 @@
 <div th:fragment="equipment-table">
 
 
-    <div class="bg-app-white py-4 rounded-md">
+    <div class="bg-app-white-40 py-4 rounded-md">
         <h1 class="text-lg font-semibold px-4 pb-4">Equipment List</h1>
 
         <div>
-            <table id="equipment-table" class="w-full table-fixed border-collapse border border-app-white-40 bg-color-3 text-app-white">
+            <table id="equipment-table" class="w-full table-fixed border-collapse border border-app-white-40 bg-color-3-40 text-color-1">
                 <thead>
-                    <tr class="border border-app-white-40 text-left bg-color-2">
+                    <tr class="border border-app-white-40 text-left bg-color-2-40">
                         <th th:if="${session.authUser.isAdmin}">Technician</th>
                         <th>Property</th>
                         <th>Equipment Type</th>

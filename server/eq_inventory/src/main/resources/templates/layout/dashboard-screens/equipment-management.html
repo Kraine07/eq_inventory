@@ -1,20 +1,10 @@
 <div th:fragment="equipment-management">
 
 
-    <!-- Manufacturer and Model management -->
-    <div th:replace="~{layout/components/manufacturer-model-management :: manufacturer-model-management}"></div>
-
-    <!-- Manufacturer and Model forms -->
-    <div id="manufacturer-form-modal" class=" hidden absolute bg-app-white-40 backdrop-blur-md w-screen h-screen top-0 left-0">
-        <div th:replace="~{layout/forms/new-manufacturer :: manufacturer-form}">...</div>
-    </div>
-    <div id="model-form-modal" class="hidden  absolute bg-app-white-40 backdrop-blur-md w-screen h-screen top-0 left-0">
-        <div th:replace="~{layout/forms/new-model :: model-form}">...</div>
-    </div>
 
 
     <div th:if="${session.authUser.isAdmin}" class="flex items-center justify-start mb-8 space-x-2 text-app-white">
-        <div id="manufacturer-management-btn" class="  inline-flex items-center bg-color-3 py-2 px-4 rounded-md cursor-pointer  hover:bg-color-4 hover:text-color-1">
+        <div id="manage-manufacturer-btn" class="  inline-flex items-center bg-color-3 py-2 px-4 rounded-md cursor-pointer  hover:bg-color-4 hover:text-color-1">
             <svg  xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square mr-1 ">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                 <path d="M11.445 20.913a1.665 1.665 0 0 1 -1.12 -1.23a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.31 .318 1.643 1.79 .997 2.694" />
@@ -46,7 +36,7 @@
             </div>
 
             <!-- equipment form -->
-            <div id="equipment-form-container" class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md ">
+            <div id="equipment-form-container" class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2  w-screen h-screen bg-transparent backdrop-blur-md ">
                 <div th:replace="~{layout/forms/new-equipment :: equipment-form}">...</div>
             </div>
         </div>

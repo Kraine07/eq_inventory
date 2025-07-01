@@ -1,0 +1,119 @@
+
+
+
+
+<div th:fragment="manufacturer-management">
+
+    <div class="flex justify-between items-center mb-8 p-4 bg-app-white-40 rounded-md">
+        <div>
+            <h2 class="text-2xl font-semibold">Manufacturer Management</h2>
+            <p class="text-sm">Create and update manufacturers and models.</p>
+        </div>
+
+        <div class="flex justify-end items-center space-x-2">
+
+            <!-- manufacturer button and form -->
+            <div class="flex justify-end items-center">
+                <div id="open-manufacturer-form-btn" class="cursor-pointer bg-color-3 flex w-auto space-x-1 items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg mb-4 mt-8 py-2 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 aspect-square">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    <span class="text-sm">New Manufacturer</span>
+                </div>
+
+                <!-- Manufacturer form -->
+                <div id="manufacturer-form-modal" class="z-10 hidden absolute bg-app-white-40 backdrop-blur-md w-screen h-screen  top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2">
+                    <div th:replace="~{layout/forms/new-manufacturer :: manufacturer-form}">...</div>
+                </div>
+            </div>
+
+
+
+            <!-- model button and form -->
+            <div class="flex justify-end items-center">
+                <div id="open-model-form-btn" class="cursor-pointer bg-color-3 flex w-auto space-x-1 items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg mb-4 mt-8 py-2 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 aspect-square">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    <span class="text-sm">New Model</span>
+                </div>
+
+                <!-- model form -->
+                <div id="model-form-modal" class=" hidden absolute bg-app-white-40 backdrop-blur-md w-screen h-screen top-0 left-0">
+                    <div th:replace="~{layout/forms/new-model :: model-form}">...</div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="flex flex-col py-4  text-color-1 rounded-md overflow-y-auto scrollbar-none">
+        <div class="flex  space-x-8 py-8 " th:each="manufacturer : ${manufacturerList}" >
+
+            <!-- manufacturers -->
+            <div class="flex items-start space-x-4 w-1/4">
+
+                <!-- manufacturer edit/delete -->
+                <div class="flex items-center space-x-2">
+                    <div class="flex justify-start  space-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                            class="edit-manufacturer h-5 aspect-square cursor-pointer">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                            <path d="M13.5 6.5l4 4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                            class="delete-manufacturer h-5 aspect-square cursor-pointer">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 7l16 0" />
+                            <path d="M10 11l0 6" />
+                            <path d="M14 11l0 6" />
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                        </svg>
+                    </div>
+                    <span class="hidden" th:text="${manufacturer.id}"></span>
+                    <span class="capitalize text-2xl font-semibold    flex-none " th:text="${manufacturer.name}"></span>
+                </div>
+            </div>
+
+            <!-- models -->
+            <div class="grid grid-cols-3 w-full  gap-2">
+                <div th:each="model : ${modelList}" class="flex justify-between w-full px-6 py-4 bg-color-3-40 rounded-md  " th:if="${manufacturer == model.manufacturer}">
+                    <span class="hidden" th:text="${model.id}"></span>
+                    <span class="hidden" th:text="${model.manufacturer.id}"></span>
+                    <span class="uppercase  italic flex-none" th:text="${model.description}"></span>
+                    <!-- model edit/delete -->
+                    <div class="flex justify-end w-full space-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                            class="edit-model h-5 aspect-square cursor-pointer">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                            <path d="M13.5 6.5l4 4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                            class="delete-model h-5 aspect-square cursor-pointer">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 7l16 0" />
+                            <path d="M10 11l0 6" />
+                            <path d="M14 11l0 6" />
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

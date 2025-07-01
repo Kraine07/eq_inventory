@@ -7,12 +7,16 @@ const manageUserButton = document.querySelector("#manage-user-btn");
 const manageEquipmentButton = document.querySelector("#manage-equipment-btn");
 const managePropertyButton = document.querySelector("#manage-property-btn");
 const manageReportButton = document.querySelector("#manage-report-btn");
+const manageManufacturerButton = document.querySelector("#manage-manufacturer-btn");
+
 
 // screens
 const manageUserScreen = document.querySelector("#manage-user-screen");
 const manageEquipmentScreen = document.querySelector("#manage-equipment-screen");
 const managePropertyScreen = document.querySelector("#manage-property-screen");
 const manageReportScreen = document.querySelector("#manage-report-screen");
+const manageManufacturerScreen = document.querySelector("#manage-manufacturer-screen");
+
 
 // clear active screen from local storage if login form is loaded
 if (document.querySelector(("#login-form"))) {
@@ -27,6 +31,8 @@ if (manageUserScreen && manageUserButton)
     screenMap["manage-user-screen"] = { screen: manageUserScreen, button: manageUserButton };
 if (manageEquipmentScreen && manageEquipmentButton)
     screenMap["manage-equipment-screen"] = { screen: manageEquipmentScreen, button: manageEquipmentButton };
+if (manageManufacturerScreen && manageManufacturerButton)
+    screenMap["manage-manufacturer-screen"] = { screen: manageManufacturerScreen, button: manageEquipmentButton };
 if (managePropertyScreen && managePropertyButton)
     screenMap["manage-property-screen"] = { screen: managePropertyScreen, button: managePropertyButton };
 if (manageReportScreen && manageReportButton)
@@ -57,6 +63,7 @@ if (manageUserButton !== null) {
     manageUserButton.addEventListener("click", function () {
         localStorage.setItem("activeScreen", "manage-user-screen");
 
+        manageManufacturerScreen.classList.add("hidden");
         manageUserScreen.classList.remove("hidden");
         manageEquipmentScreen.classList.add("hidden");
         managePropertyScreen.classList.add("hidden");
@@ -73,8 +80,26 @@ if (manageEquipmentButton !== null) {
     manageEquipmentButton.addEventListener("click", function () {
         localStorage.setItem("activeScreen", "manage-equipment-screen");
 
+        manageManufacturerScreen.classList.add("hidden");
         manageEquipmentScreen.classList.remove("hidden");
         manageUserScreen.classList.add("hidden");
+        managePropertyScreen.classList.add("hidden");
+        manageReportScreen.classList.add("hidden");
+        if(manageUserButton) manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        manageEquipmentButton.classList.add("border-2", "border-color-4",  "text-color-4");
+        if(managePropertyButton) managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+        manageReportButton.classList.remove("border-2", "border-color-4",  "text-color-4");
+    });
+}
+
+// show manufacturer management screen
+if (manageManufacturerButton !== null) {
+    manageManufacturerButton.addEventListener("click", function () {
+        localStorage.setItem("activeScreen", "manage-manufacturer-screen");
+
+        manageManufacturerScreen.classList.remove("hidden");
+        manageUserScreen.classList.add("hidden");
+        manageEquipmentScreen.classList.add("hidden");
         managePropertyScreen.classList.add("hidden");
         manageReportScreen.classList.add("hidden");
         if(manageUserButton) manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
@@ -89,6 +114,7 @@ if (managePropertyButton !== null) {
     managePropertyButton.addEventListener("click", function () {
         localStorage.setItem("activeScreen", "manage-property-screen");
 
+        manageManufacturerScreen.classList.add("hidden");
         manageUserScreen.classList.add("hidden");
         manageEquipmentScreen.classList.add("hidden");
         managePropertyScreen.classList.remove("hidden");
@@ -105,6 +131,7 @@ if (manageReportButton !== null) {
     manageReportButton.addEventListener("click", function () {
         localStorage.setItem("activeScreen", "manage-report-screen");
 
+        manageManufacturerScreen.classList.add("hidden");
         manageUserScreen.classList.add("hidden");
         manageEquipmentScreen.classList.add("hidden");
         managePropertyScreen.classList.add("hidden");
@@ -114,4 +141,5 @@ if (manageReportButton !== null) {
         if(managePropertyButton) managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
         manageReportButton.classList.add("border-2", "border-color-4",  "text-color-4");
     });
+    
 }

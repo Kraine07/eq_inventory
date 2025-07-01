@@ -5,7 +5,7 @@ const userForm = document.getElementById("user-form");
 const userFormContainer = document.getElementById("user-form-container");
 const role = document.getElementById("role");
 const toggleSwitch = document.getElementById("toggleSwitch");
-const closeUserForm = document.querySelector("#close-user-form");
+const closeUserForm = document.querySelector("#close-user-form-btn");
 const openUserForm = document.querySelector("#open-user-form-btn");
 
 const confirmationWindow = document.querySelector("#confirm-window");
@@ -28,25 +28,20 @@ const deleteUserButton = document.querySelectorAll(".delete-user");
 if (closeUserForm !== null) {
     closeUserForm.addEventListener("click", function () {
         document.body.classList.remove('overflow-hidden');
-
         userFormContainer.style.display = "none";
-        location.reload();
+        userForm.reset();
     });
 }
 
 
-// click outside to close user form
-if (userFormContainer !== null) {
-    userFormContainer.addEventListener("click", function () {
-
-        // return scrolling
+// click outside user form to close
+document.addEventListener("click", function (event) {
+    if( event.target === userFormContainer) {
         document.body.classList.remove('overflow-hidden');
-        // hide form
         userFormContainer.style.display = "none";
-        location.reload();
-    });
-
-}
+        userForm.reset();
+    }
+});
 
 
 // change role value
@@ -70,7 +65,15 @@ if (toggleSwitch) {
 // open user form
 if (openUserForm !== null) {
     openUserForm.addEventListener("click", function () {
+
+        //set form action
+        userForm.action = "/app/register";
+
+        // set submit button & heading text
+        document.querySelector("#user-form-heading").innerHTML = "Create User";
+        document.querySelector("#user-form-submit").innerHTML = "Create User";
         // show form
+        window.scrollTo({ top: 0, behavior: "smooth" });
         document.body.classList.add('overflow-hidden');
         userFormContainer.style.display = "block";
     })
@@ -120,11 +123,13 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
             changeStatusButton.classList.add(userRow[4].children[0].innerHTML === "Active" ? "bg-color-4" : "bg-color-3");
             changeStatusButton.style.display = "inline-block";
 
-            // set submit button text
+            // set submit button & heading text
+            document.querySelector("#user-form-heading").innerHTML = "Update User";
             document.querySelector("#user-form-submit").innerHTML = "Update User";
 
             // prevent scrolling
             document.body.classList.add('overflow-hidden');
+            window.scrollTo({ top: 0, behavior: "smooth" });
 
             // show form
             userFormContainer.style.display = "block";

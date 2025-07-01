@@ -6,9 +6,19 @@
 
 
 
-<div th:fragment="user-form" class="bg-app-white flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center w-96 p-6">
+<div th:fragment="user-form" class=" flex flex-col absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 ">
 
-    <form id="user-form" method="post" th:action="@{/app/register}"  th:object="${registerModel}" class="w-full">
+    <!-- Close button -->
+    <div th:if="${userList}" class="inline-flex justify-end w-auto self-end">
+        <svg id="close-user-form-btn" xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square mb-2 cursor-pointer">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+        </svg>
+    </div>
+
+    <!-- User Form -->
+    <form id="user-form" class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow " method="post" th:action="@{/app/register}"  th:object="${registerModel}" >
 
         <!-- show only in initial setup -->
         <div th:unless="${userList}" class="my-4">
@@ -16,15 +26,16 @@
             <p class="text-sm italic mb-4">Please enter a name and a valid email address to initialize the application. A temporary password will be sent to the email address provided.</p>
             <input type="hidden" name="role" th:value="${admin}">
         </div>
-
+<!--
         <div class="flex flex-col justify-center items-center mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-16 aspect-square mb-2 text-color-3 bg-color-3/30 p-2 rounded-full">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
             </svg>
-            <h1 id="user-form-heading" class="text-xl font-semibold">Create User</h1>
+
             <p class="text-sm">Enter user details</p>
         </div>
-
+-->
+        <h1 id="user-form-heading" class="text-3xl font-light mb-4">Create User</h1>
         <!-- ID -->
         <input type="hidden" id="user-id" name="id">
 
@@ -84,14 +95,9 @@
             <div class="">
                 <input type="submit" form="willNotSubmitAForm" id="change-status-btn" class="hidden"></input>
             </div>
-        <button id="user-form-submit" class=" mt-4">Create User</button>
-
-        <!-- show only in admin panel -->
-        <div id="close-user-form" th:if="${userList}" for="user-form-modal" class="flex justify-center items-center ring-1 ring-color-2 font-semibold h-8 rounded my-4 w-full text-center cursor-pointer">
-            <span  class=" text-color-2" >Cancel</span>
-        </div>
     </form>
-
+    <!-- create user button -->
+    <button id="user-form-submit" for="user-form" class=" mt-4">Create User</button>
     <!-- suspend/activate form -->
     <form action="#" id="status-form" th:action="@{/change-status}" method="post" class="hidden">
         <input type="hidden" id="status-id" name="id">

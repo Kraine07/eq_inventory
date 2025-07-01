@@ -23,7 +23,6 @@ public class PropertyController {
     @PostMapping("/add-property")
     public String addProperty(@Valid Property property, BindingResult result, Model model) throws BindException {
 
-System.out.println("####################"+property.toString());
         if (result.hasErrors()) {
             throw new BindException(result);
         }

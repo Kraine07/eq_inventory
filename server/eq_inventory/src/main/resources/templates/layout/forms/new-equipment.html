@@ -5,9 +5,19 @@
 
 
 
-    <div th:fragment="equipment-form" class="bg-app-white flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center w-auto p-6">
-        <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}" class="w-full">
+    <div th:fragment="equipment-form" class=" flex flex-col absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 ">
 
+        <div class="inline-flex justify-end w-auto self-end">
+            <svg id="close-equipment-form-btn" xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square mb-2 cursor-pointer">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+            </svg>
+        </div>
+
+        <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}" class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow">
+
+            <!--
             <div class="flex flex-col justify-center items-center mb-4">
                 <svg  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-16 aspect-square mb-2 text-color-3 bg-color-3/30 p-2 rounded-full">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -17,10 +27,10 @@
                     <path d="M16 19h6" /
                     ><path d="M19 16v6" />
                 </svg>
-                <h1 id="equipment-form-heading" class="text-xl font-semibold">Create Equipment</h1>
                 <p class="text-sm">Enter equipment details</p>
             </div>
-
+        -->
+            <h1 id="equipment-form-heading" class="text-3xl font-thin mb-4">Create Equipment</h1>
             <!-- Id -->
             <input id="equipment-id" type="hidden" name="id">
 
@@ -80,17 +90,8 @@
                 <input type="month" id="manufactured-date" name="manufacturedDate"  class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2 uppercase placeholder:normal-case placeholder:text-color-1" placeholder="Select Manufactured Date">
             </div>
 
-            <!-- Submit Button -->
-            <div class="mb-4">
-                <button id="equipment-form-submit" type="submit" class="">Create Equipment</button>
-            </div>
-
-            <!-- cancel button -->
-            <div id="close-equipment-form" for="user-form-modal" class="flex justify-center items-center cursor-pointer ring-1 ring-color-2 font-semibold h-8 rounded my-4 w-full text-center">
-                <span class="text-color-1 ">Cancel</span>
-            </div>
-
         </form>
+        <button id="equipment-form-submit" for="equipment-form" type="submit" class="mt-4">Create Equipment</button>
     </div>
 
 

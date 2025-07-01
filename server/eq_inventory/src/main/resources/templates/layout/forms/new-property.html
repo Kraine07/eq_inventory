@@ -1,7 +1,16 @@
-<div th:fragment="property-form" class="bg-app-white flex absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 rounded-lg items-center justify-center w-auto p-6">
-    <form id="property-form" action="#" method="post" th:action="@{/add-property}" th:object="${propertyModel}">
+<div th:fragment="property-form" class=" flex flex-col absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 ">
 
-        <h1 class="text-3xl font-thin mb-4">Create Property</h1>
+    <!-- Close button -->
+    <div class="inline-flex justify-end w-auto self-end">
+        <svg id="close-property-form-btn" xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square mb-2 cursor-pointer">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+        </svg>
+    </div>
+    <form id="property-form" class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow" method="post" th:action="@{/add-property}" th:object="${propertyModel}">
+
+        <h1 id="property-form-title" class="text-3xl font-thin mb-4">Create Property</h1>
 
         <!-- Region -->
         <div class="mb-4">
@@ -29,14 +38,6 @@
             </select>
         </div>
 
-        <div class="mb-4">
-            <button id="property-form-submit" type="submit" class="mt-4">Create Property</button>
-        </div>
-
-        <!-- cancel button -->
-        <div id="close-property-form" for="property-form-modal" class=" flex justify-center items-center cursor-pointer ring-1 ring-color-2 font-semibold h-8 rounded my-4 w-full text-center">
-            <span >Cancel</span>
-        </div>
-
     </form>
+    <button id="property-form-submit" type="submit" class="mt-4">Create Property</button>
 </div>
