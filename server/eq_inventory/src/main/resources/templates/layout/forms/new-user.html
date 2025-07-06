@@ -96,10 +96,14 @@
                 <input type="submit" form="willNotSubmitAForm" id="change-status-btn" class="hidden"></input>
             </div>
     </form>
+
+
     <!-- create user button -->
-    <button id="user-form-submit" for="user-form" class=" mt-4">Create User</button>
+    <button id="user-form-submit" form="user-form" class=" mt-4">Create User</button>
+
+
     <!-- suspend/activate form -->
-    <form action="#" id="status-form" th:action="@{/change-status}" method="post" class="hidden">
+    <form  id="status-form" th:action="@{/change-status}" method="post" class="hidden">
         <input type="hidden" id="status-id" name="id">
     </form>
 

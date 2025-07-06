@@ -23,33 +23,39 @@
                     </tr>
 
                     <!-- rows -->
-                    <tr th:if="${session.authUser.isAdmin}" th:each="user : ${userList}">
+                    <tr th:if="${session.authUser.isAdmin}" th:each="user : ${userList}" th:class="${user.isSuspended}? 'bg-color-4-40 text-color-1-40 italic ':''">
                         <td th:text="${user.id}" class="hidden"></td>
-                        <td class="capitalize" th:text="${user.firstName +' '+ user.lastName}"></td>
+                        <td class="capitalize" th:text="${user.lastName +', '+ user.firstName}"></td>
                         <td th:text="${user.email}"></td>
                         <td class="text-sm" th:text="${user.role.roleType}"></td>
                         <td>
-                            <span th:if="${user.isSuspended}">Suspended</span>
-                            <span th:unless="${user.isSuspended}">Active</span>
+                            <span id="user-status" th:if="${user.isSuspended}">Suspended</span>
+                            <span id="user-status" th:unless="${user.isSuspended}">Active</span>
                         </td>
                         <td class="flex justify-center">
-                            <div class="flex items-center space-x-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                                    class="view-user  h-6 aspect-square cursor-pointer">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                    <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                            <div class="flex items-center space-x-2 text-color-1">
+                                <svg th:if="${user.isSuspended}"  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="user-status  h-6 aspect-square cursor-pointer">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M8.18 8.189a4.01 4.01 0 0 0 2.616 2.627m3.507 -.545a4 4 0 1 0 -5.59 -5.552" />
+                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4c.412 0 .81 .062 1.183 .178m2.633 2.618c.12 .38 .184 .785 .184 1.204v2" />
+                                    <path d="M3 3l18 18" />
                                 </svg>
+                                <svg th:unless="${user.isSuspended}"  xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="user-status  h-6 aspect-square cursor-pointer">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+                                    <path d="M15 19l2 2l4 -4" />
+                                </svg>
+
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
                                     class="edit-user  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                     <path d="M13.5 6.5l4 4" />
                                 </svg>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
                                     class="delete-user  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M4 7l16 0" />

@@ -17,6 +17,14 @@ const managePropertyScreen = document.querySelector("#manage-property-screen");
 const manageReportScreen = document.querySelector("#manage-report-screen");
 const manageManufacturerScreen = document.querySelector("#manage-manufacturer-screen");
 
+//confirmation window
+export const confirmationWindow = document.querySelector("#confirm-window");
+export const confirmationQuestion = document.querySelector("#confirm-question");
+export const confirmationHeading = document.querySelector("#confirm-heading");
+export const closeConfirmationWindow = document.querySelector("#confirm-close");
+export const statusConfirmationButton = document.querySelector("#status-confirm-btn");
+export const confimationNoButton = document.querySelector("#confirm-no");
+
 
 // clear active screen from local storage if login form is loaded
 if (document.querySelector(("#login-form"))) {
@@ -136,10 +144,19 @@ if (manageReportButton !== null) {
         manageEquipmentScreen.classList.add("hidden");
         managePropertyScreen.classList.add("hidden");
         manageReportScreen.classList.remove("hidden");
-        if(manageUserButton) manageUserButton.classList.remove("border-2", "border-color-4",  "text-color-4");
-        manageEquipmentButton.classList.remove("border-2", "border-color-4",  "text-color-4");
-        if(managePropertyButton) managePropertyButton.classList.remove("border-2", "border-color-4",  "text-color-4");
-        manageReportButton.classList.add("border-2", "border-color-4",  "text-color-4");
+        if (manageUserButton) manageUserButton.classList.remove("border-2", "border-color-4", "text-color-4");
+        manageEquipmentButton.classList.remove("border-2", "border-color-4", "text-color-4");
+        if (managePropertyButton) managePropertyButton.classList.remove("border-2", "border-color-4", "text-color-4");
+        manageReportButton.classList.add("border-2", "border-color-4", "text-color-4");
     });
-    
+
 }
+
+// close confimation window
+document.addEventListener("click", function (event) {
+    if (event.target === confirmationWindow || event.target === confimationNoButton || closeConfirmationWindow.contains(event.target)) {
+        // return scrolling
+        document.body.classList.remove('overflow-hidden');
+        confirmationWindow.style.display = "none";
+    }
+});

@@ -1,5 +1,10 @@
 
-
+import { closeConfirmationWindow } from "./script.js";
+import { confimationNoButton } from "./script.js";
+import { confirmationQuestion } from "./script.js";
+import { confirmationHeading } from "./script.js";
+import { confirmationWindow } from "./script.js";
+import { statusConfirmationButton } from "./script.js";
 
 const userForm = document.getElementById("user-form");
 const userFormContainer = document.getElementById("user-form-container");
@@ -8,39 +13,29 @@ const toggleSwitch = document.getElementById("toggleSwitch");
 const closeUserForm = document.querySelector("#close-user-form-btn");
 const openUserForm = document.querySelector("#open-user-form-btn");
 
-const confirmationWindow = document.querySelector("#confirm-window");
-const confirmationQuestion = document.querySelector("#confirm-question");
-const confirmationHeading = document.querySelector("#confirm-heading");
-const closeConfirmationWindow = document.querySelector("#confirm-close");
-const deleteConfirmationButton = document.querySelector("#delete-confirm-btn");
-const statusConfirmationButton = document.querySelector("#status-confirm-btn");
 
-const changeStatusButton = document.querySelector("#change-status-btn");
+const userStatusButton = document.querySelectorAll(".user-status")
 
 // user edit/delete
 const editUserButton = document.querySelectorAll(".edit-user");
 const deleteUserButton = document.querySelectorAll(".delete-user");
+const deleteConfirmationButton = document.querySelector("#delete-confirm-btn");
 
 
 
 
-// close user form with button
-if (closeUserForm !== null) {
-    closeUserForm.addEventListener("click", function () {
-        document.body.classList.remove('overflow-hidden');
-        userFormContainer.style.display = "none";
-        userForm.reset();
-    });
-}
 
 
-// click outside user form to close
+// click to close
 document.addEventListener("click", function (event) {
-    if( event.target === userFormContainer) {
+
+    //click outside userform
+    if( event.target === userFormContainer || closeUserForm.contains(event.target)) {
         document.body.classList.remove('overflow-hidden');
         userFormContainer.style.display = "none";
         userForm.reset();
     }
+
 });
 
 
@@ -66,6 +61,7 @@ if (toggleSwitch) {
 if (openUserForm !== null) {
     openUserForm.addEventListener("click", function () {
 
+        
         //set form action
         userForm.action = "/app/register";
 
@@ -81,7 +77,7 @@ if (openUserForm !== null) {
 
 
 //edit & delete
-if(editUserButton.length>0|| deleteUserButton.length>0){
+if(editUserButton.length>0 || deleteUserButton.length>0 ||userStatusButton.length>0){
 
     // edit user
     editUserButton.forEach(editButton => {
@@ -94,7 +90,7 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
         const lastName = document.querySelector("#lastName");
         const email = document.querySelector("#email");
 
-        const [firstNameText, lastNameText] = userRow[1].textContent.trim().split(" ");
+        const [lastNameText, firstNameText] = userRow[1].textContent.trim().split(", ");
 
         const statusID = document.querySelector("#status-id");
         editButton.addEventListener("click", function () {
@@ -118,11 +114,6 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
                 toggleSwitch.checked = true;
             }
 
-            //show suspend or enable button
-            changeStatusButton.value = userRow[4].children[0].innerHTML === "Active" ? "Suspend" : "Activate";
-            changeStatusButton.classList.add(userRow[4].children[0].innerHTML === "Active" ? "bg-color-4" : "bg-color-3");
-            changeStatusButton.style.display = "inline-block";
-
             // set submit button & heading text
             document.querySelector("#user-form-heading").innerHTML = "Update User";
             document.querySelector("#user-form-submit").innerHTML = "Update User";
@@ -141,15 +132,29 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
     });
 
     // activate/suspend
-    if (changeStatusButton !== null) {
-        changeStatusButton.addEventListener("click", () => {
+
+    userStatusButton.forEach(statusButton => {
+        statusButton.addEventListener("click", () => {
+            const userStatus = document.querySelector("#user-status");
+            const statusId = document.querySelector("#status-id");
+
+            statusId.value = statusButton.parentElement.parentElement.parentElement.children[0].textContent;
+
+            confirmationHeading.textContent = "Status Update";
+            confirmationQuestion.textContent = `This action will change account status to ${ userStatus.textContent == 'Active' ? 'Suspended':'Active'}. Do you want to proceed?`
+
+            deleteConfirmationButton.style.display = "none";
+
+            // prevent scrolling
+            document.body.classList.add('overflow-hidden');
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
             // show confirmation window
-            confirmationHeading.innerHTML = `${changeStatusButton.innerHTML}`;
-            confirmationQuestion.innerHTML = `This action will ${changeStatusButton.innerHTML.toLowerCase()} this account. Do you want to continue?`;
             statusConfirmationButton.style.display = "block";
             confirmationWindow.style.display = "block";
         });
-    }
+    });
+
 
 
 
@@ -157,27 +162,27 @@ if(editUserButton.length>0|| deleteUserButton.length>0){
     // delete user
     deleteUserButton.forEach(deleteButton =>{
         deleteButton.addEventListener("click", function () {
-            console.log("delete")
+
             const deleteID = document.querySelector("#delete-id");
             const userRow = deleteButton.parentElement.parentElement.parentElement.children;
             const fullName = userRow[1].textContent;
+            const [lastName, firstName] = fullName.split(", ").map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase().trim());
             // const lastName = deleteButton.parentElement.parentElement.children[0].children[0].innerHTML.slice(0, -1);
             // show confirmation window
-            confirmationHeading.innerHTML = "Delete";
-            confirmationQuestion.innerHTML = `Deleting this account is permanent. Confirm deletion of '${fullName}'?`;
+            confirmationHeading.innerHTML = "Delete Confirmation";
+            confirmationQuestion.innerHTML = `Deleting this account is permanent. Please confirm deletion of '${firstName} ${lastName}'?`;
+            statusConfirmationButton.style.display = "none";
             deleteConfirmationButton.style.display = "block";
             deleteID.value = userRow[0].textContent;
+            // prevent scrolling
+            document.body.classList.add('overflow-hidden');
+            window.scrollTo({ top: 0, behavior: "smooth" });
             confirmationWindow.style.display = "block";
             });
     });
 
 
-    // confirmation window close
-    if (closeConfirmationWindow !== null) {
-        closeConfirmationWindow.addEventListener("click", function(){
-            confirmationWindow.style.display = "none";
-        });
-    }
+
 
 }
 

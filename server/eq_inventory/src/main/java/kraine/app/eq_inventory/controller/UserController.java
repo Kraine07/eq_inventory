@@ -22,6 +22,7 @@ import kraine.app.eq_inventory.model.Location;
 import kraine.app.eq_inventory.model.LoginAttempt;
 import kraine.app.eq_inventory.model.LoginModel;
 import kraine.app.eq_inventory.model.LoginStatus;
+import kraine.app.eq_inventory.model.Manufacturer;
 import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
@@ -38,9 +39,10 @@ import kraine.app.eq_inventory.service.UserService;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -128,19 +130,35 @@ public class UserController {
         // filter by user
         List<Equipment> userEquipmentList = equipments.stream()
                 .filter(equipment -> equipment.getLocation().getProperty().getUser().getId().equals(authUser.getId()))
+                .sorted(Comparator.comparing(equipment -> equipment.getModel().getManufacturer().getName()))
                 .collect(Collectors.toList());
 
-        // group equipments by Manufacturer
+        // group equipments by Manufacturer and sort
         Map<String, List<Equipment>> equipmentByManufacturer = userEquipmentList.stream()
                 .collect(Collectors.groupingBy(equipment -> equipment.getModel().getManufacturer().getName()));
 
 
-        // get all locations
-        List<Location> locations = locationService.getAllLocations();
+        // get all locations and sort
+        List<Location> locations = locationService.getAllLocations()
+                .stream()
+                .sorted(Comparator.comparing(Location::getName))
+                .collect(Collectors.toList());
 
-        // group all locations by property
+        // group all locations by property and sort by property name
         Map<String, List<Location>> locationsByProperty = locations.stream()
-                .collect(Collectors.groupingBy(location -> location.getProperty().getName()));
+        .collect(Collectors.groupingBy(location -> location.getProperty().getName()))
+        .entrySet().stream()
+        .sorted(Map.Entry.comparingByKey())
+        .collect(Collectors.toMap(
+            Map.Entry::getKey,
+            Map.Entry::getValue,
+            (a, b) -> a,
+            LinkedHashMap::new
+        ));
+
+
+        // Map<String, List<Location>> locationsByProperty = locations.stream()
+        //         .collect(Collectors.groupingBy(location -> location.getProperty().getName()));
 
         // filter by user
         List<Location> userLocations = locations.stream().filter(location -> location.getProperty().getUser().getId().equals(authUser.getId())).collect(Collectors.toList());
@@ -175,14 +193,19 @@ public class UserController {
 
         // add model attributes
         var modelAttributes = Map.ofEntries(
-            Map.entry("userList", us.getUsers()),
+            Map.entry("userList", us.getUsers().stream().sorted(Comparator.comparing(User::getLastName).thenComparing(User::getFirstName)).collect(Collectors.toList())), // sort alphabetically by last name then first name
             Map.entry("regionList", regionService.getAllRegions()),
             Map.entry("propertyList", propertyService.getAllProperties()),
             Map.entry("userLocationList", userLocationsByProperty),
             Map.entry("locationList", locations),
             Map.entry("locationsByProperty", locationsByProperty),
-            Map.entry("manufacturerList", manufacturerService.getAllManufacturers()),
-            Map.entry("modelList", modelService.getAllModels()),
+            Map.entry("manufacturerList", manufacturerService.getAllManufacturers().stream()
+            .sorted(Comparator.comparing(Manufacturer::getName))
+            .collect(Collectors.toList())),
+            Map.entry("modelList", modelService.getAllModels().stream()
+            .sorted(Comparator.comparing(
+                                kraine.app.eq_inventory.model.Model::getDescription))
+            .collect(Collectors.toList())),
             Map.entry("equipmentList", equipmentList),
             Map.entry("userEquipmentList", equipmentByManufacturer),
             Map.entry("pagedUserEquipmentList", pagedUserEquipmentList),
