@@ -24,6 +24,7 @@ export const confirmationHeading = document.querySelector("#confirm-heading");
 export const closeConfirmationWindow = document.querySelector("#confirm-close");
 export const statusConfirmationButton = document.querySelector("#status-confirm-btn");
 export const confimationNoButton = document.querySelector("#confirm-no");
+export const deleteConfirmationButton = document.querySelector("#delete-confirm-btn");
 
 
 // clear active screen from local storage if login form is loaded

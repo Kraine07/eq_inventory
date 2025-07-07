@@ -8,12 +8,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.validation.constraints.NotNull;
 import kraine.app.eq_inventory.YearMonthConveter;
 
 import java.time.YearMonth;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +26,52 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+
+
+@NamedEntityGraphs({
+    @NamedEntityGraph(
+        name = "Equipment.fullDetails",
+        attributeNodes = {
+            @NamedAttributeNode(value = "model", subgraph = "model.manufacturer"),
+            @NamedAttributeNode(value = "location", subgraph = "location.property")
+        },
+        subgraphs = {
+            @NamedSubgraph(
+                name = "model.manufacturer",
+                attributeNodes = @NamedAttributeNode("manufacturer")
+            ),
+            @NamedSubgraph(
+                name = "location.property",
+                attributeNodes = {
+                    @NamedAttributeNode("property"),
+                    @NamedAttributeNode(value = "property", subgraph = "property.regionAndUser")
+                }
+            ),
+            @NamedSubgraph(
+                name = "property.regionAndUser",
+                attributeNodes = {
+                    @NamedAttributeNode("region"),
+                    @NamedAttributeNode(value = "user", subgraph = "user.role")
+                }
+            ),
+            @NamedSubgraph(
+                name="user.role",
+                attributeNodes = @NamedAttributeNode("role")
+            )
+
+        }
+    ),
+    @NamedEntityGraph(
+        name = "Equipment.basicDetails",
+        attributeNodes = {
+            @NamedAttributeNode("model"),
+            @NamedAttributeNode("location")
+        }
+    )
+})
+
+
+
 public class Equipment {
 
     @Id
@@ -37,13 +86,13 @@ public class Equipment {
     private YearMonth manufacturedDate;
 
     @ManyToOne
-    @JsonIgnore
+    // @JsonIgnore
     @NotNull(message = "Model cannot be null")
     @JoinColumn(name = "model") //column in other table this is linked to
     private Model model;
 
     @ManyToOne
-    @JsonIgnore
+    // @JsonIgnore
     @NotNull(message = "Location cannot be null")
     @JoinColumn(name = "location") // column in other table this is linked to
     private Location location;

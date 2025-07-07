@@ -17,22 +17,22 @@
 
         <form id="equipment-form" method="post" th:action="@{/add-equipment}" th:object="${equipmentModel}" class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow">
 
-            <!--
-            <div class="flex flex-col justify-center items-center mb-4">
-                <svg  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="h-16 aspect-square mb-2 text-color-3 bg-color-3/30 p-2 rounded-full">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M12.5 21h-7.5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
-                    <path d="M3 10h18" />
-                    <path d="M10 3v18" />
-                    <path d="M16 19h6" /
-                    ><path d="M19 16v6" />
-                </svg>
-                <p class="text-sm">Enter equipment details</p>
-            </div>
-        -->
             <h1 id="equipment-form-heading" class="text-3xl font-thin mb-4">Create Equipment</h1>
             <!-- Id -->
             <input id="equipment-id" type="hidden" name="id">
+
+            <!-- Location -->
+            <div class="mb-3" th:if="authuser.isAdmin">
+                <label for="equipment-location">Location</label>
+                <select name="location" id="equipment-location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
+                    <option value="" hidden>Select Location</option>
+                    <th:block th:each="location : ${locationsByProperty}">
+                        <optgroup th:label="${location.key}">
+                            <option th:each="locationElement : ${location.value}" th:value="${locationElement.id}" th:text="${location.key + ' - ' + locationElement.name}" class="capitalize"></option>
+                        </optgroup>
+                    </th:block>
+                </select>
+            </div>
 
             <!-- Equipment model  -->
             <div class="mb-3">
@@ -47,21 +47,6 @@
                 </select>
             </div>
 
-            <!-- Location -->
-            <div class="mb-3" th:if="authuser.isAdmin">
-                <label for="equipment-location">Location</label>
-                <select name="location" id="equipment-location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
-                    <option value="" hidden>Select Location</option>
-                    <th:block th:each="location : ${locationsByProperty}">
-                        <optgroup th:label="${location.key}">
-                            <option th:each="locationElement : ${location.value}" th:value="${locationElement.id}" th:text="${location.key + ' - ' + locationElement.name}" class="capitalize"></option>
-
-                        </optgroup>
-
-                    </th:block>
-
-                </select>
-            </div>
 
             <div class="mb-3" th:unless="authuser.isAdmin">
                 <label for="location">Location</label>
@@ -92,6 +77,12 @@
 
         </form>
         <button id="equipment-form-submit" form="equipment-form" type="submit" class="mt-4">Create Equipment</button>
+
+
+        <!-- Delete equipment -->
+        <form id="delete-equipment" th:action="@{/delete-equipment}" method="post">
+            <input type="hidden" name="id" id="delete-equipment-id">
+        </form>
     </div>
 
 

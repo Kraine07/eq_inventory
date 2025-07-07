@@ -33,7 +33,7 @@ public class Location {
     private String name;
 
     @ManyToOne
-    @JsonIgnore
+    // @JsonIgnore
     @JoinColumn(name = "property")
     private Property property;
 }

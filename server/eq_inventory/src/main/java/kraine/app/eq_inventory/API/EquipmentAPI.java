@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import kraine.app.eq_inventory.service.EquipmentService;
+import kraine.app.eq_inventory.DTO.EquipmentDTO;
 import kraine.app.eq_inventory.model.Equipment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 
 
 @RestController
@@ -21,8 +23,13 @@ public class EquipmentAPI {
 
     @GetMapping("/get-all-equipment")
     List<Equipment> findAllEquipment() {
-        List<Equipment> result = equipmentService.getAllEquipment();
-        System.out.println("############################"+result);
-        return  result;
+        return equipmentService.getAllWithFullDetails();
     }
+
+
+    @GetMapping("/get-all-equipment-dto")
+    public List<EquipmentDTO> getAllEquipmentDTO() {
+        return equipmentService.getAllEquipmentDTOs();
+    }
+
 }

@@ -1,3 +1,14 @@
+
+
+import { confirmationQuestion } from "./script.js";
+import { confirmationHeading } from "./script.js";
+import { confirmationWindow } from "./script.js";
+import { statusConfirmationButton } from "./script.js";
+
+import { deleteConfirmationButton } from "./script.js";
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
     //
@@ -132,7 +143,28 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
+
+
         // DELETE EQUIPMENT
+        deleteEquipmentButton.forEach(deleteButton => {
+            deleteButton.addEventListener("click", function () {
+                const deleteIdValue = deleteButton.closest("tr").firstElementChild.textContent;
+                const deleteIdInput = document.querySelector("#delete-equipment-id");
+
+
+                statusConfirmationButton.style.display = "none";
+                deleteConfirmationButton.style.display = "block";
+                confirmationHeading.textContent = "Delete Confirmation";
+                confirmationQuestion.textContent = "Please note, this action is irreversible. Are you sure you want to delete this equipment?";
+
+                deleteConfirmationButton.setAttribute("form", "delete-equipment");
+                deleteIdInput.value = deleteIdValue;
+                // prevent scrolling
+                document.body.classList.add('overflow-hidden');
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                confirmationWindow.style.display = "block";
+            });
+        })
 
     }
 

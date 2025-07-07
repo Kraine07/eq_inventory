@@ -125,7 +125,7 @@ public class UserController {
         User authUser = SessionHandler.getAttribute(request, "authUser", User.class);
 
         // get list of all equipment
-        List<Equipment> equipments = equipmentService.getAllEquipment();
+        List<Equipment> equipments = equipmentService.getAllWithFullDetails();
 
         // filter by user
         List<Equipment> userEquipmentList = equipments.stream()
@@ -157,17 +157,12 @@ public class UserController {
         ));
 
 
-        // Map<String, List<Location>> locationsByProperty = locations.stream()
-        //         .collect(Collectors.groupingBy(location -> location.getProperty().getName()));
-
         // filter by user
         List<Location> userLocations = locations.stream().filter(location -> location.getProperty().getUser().getId().equals(authUser.getId())).collect(Collectors.toList());
 
         // group user locations by property
         Map<String, List<Location>> userLocationsByProperty = userLocations.stream()
                 .collect(Collectors.groupingBy(location -> location.getProperty().getName()));
-
-        // TODO - logic to sort equipment by product dispensed
 
 
 

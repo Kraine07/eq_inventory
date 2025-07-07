@@ -1,10 +1,10 @@
 
-import { closeConfirmationWindow } from "./script.js";
-import { confimationNoButton } from "./script.js";
+
 import { confirmationQuestion } from "./script.js";
 import { confirmationHeading } from "./script.js";
 import { confirmationWindow } from "./script.js";
 import { statusConfirmationButton } from "./script.js";
+import { deleteConfirmationButton } from "./script.js";
 
 const userForm = document.getElementById("user-form");
 const userFormContainer = document.getElementById("user-form-container");
@@ -19,7 +19,6 @@ const userStatusButton = document.querySelectorAll(".user-status")
 // user edit/delete
 const editUserButton = document.querySelectorAll(".edit-user");
 const deleteUserButton = document.querySelectorAll(".delete-user");
-const deleteConfirmationButton = document.querySelector("#delete-confirm-btn");
 
 
 
@@ -61,7 +60,6 @@ if (toggleSwitch) {
 if (openUserForm !== null) {
     openUserForm.addEventListener("click", function () {
 
-        
         //set form action
         userForm.action = "/app/register";
 
@@ -140,6 +138,7 @@ if(editUserButton.length>0 || deleteUserButton.length>0 ||userStatusButton.lengt
 
             statusId.value = statusButton.parentElement.parentElement.parentElement.children[0].textContent;
 
+            statusButton.setAttribute("form","status-form")
             confirmationHeading.textContent = "Status Update";
             confirmationQuestion.textContent = `This action will change account status to ${ userStatus.textContent == 'Active' ? 'Suspended':'Active'}. Do you want to proceed?`
 
@@ -167,6 +166,8 @@ if(editUserButton.length>0 || deleteUserButton.length>0 ||userStatusButton.lengt
             const userRow = deleteButton.parentElement.parentElement.parentElement.children;
             const fullName = userRow[1].textContent;
             const [lastName, firstName] = fullName.split(", ").map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase().trim());
+
+            deleteConfirmationButton.setAttribute("form","delete-user")
             // const lastName = deleteButton.parentElement.parentElement.children[0].children[0].innerHTML.slice(0, -1);
             // show confirmation window
             confirmationHeading.innerHTML = "Delete Confirmation";

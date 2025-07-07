@@ -28,7 +28,7 @@ public class Model {
     private String description;
 
     @ManyToOne
-    @JsonIgnore
+    // @JsonIgnore
     @JoinColumn(name = "manufacturer") //column in other table this is linked to
     private Manufacturer manufacturer;
 }

@@ -31,12 +31,12 @@ public class Property implements Serializable{
     private String name;
 
     @ManyToOne
-    @JsonIgnore
+    // @JsonIgnore
     @JoinColumn(name = "region")
     private Region region;
 
     @ManyToOne
-    @JsonIgnore
+    // @JsonIgnore
     @JoinColumn(name = "\"user\"")
     private User user;
 }

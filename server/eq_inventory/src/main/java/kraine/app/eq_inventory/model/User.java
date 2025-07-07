@@ -31,6 +31,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @DynamicUpdate
 
+
+
 @Table(name= "\"user\"")
 public class User {
 
@@ -51,12 +53,13 @@ public class User {
     @Email(message = "Invalid email.")
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^*&()]).{8,}$", message = "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character")
     private String password;
 
     @ManyToOne
-    @JsonIgnore
+    // @JsonIgnore
     @JoinColumn(name = "role")
     private Role role;
 
