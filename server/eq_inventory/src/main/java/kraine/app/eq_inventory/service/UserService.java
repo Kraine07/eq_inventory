@@ -3,6 +3,10 @@ package kraine.app.eq_inventory.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,7 @@ import kraine.app.eq_inventory.repository.UserRepoInterface;
 
 @Service
 @Transactional
+@CacheConfig(cacheNames = "user")
 public class UserService {
 
     @Autowired
@@ -70,7 +75,7 @@ public class UserService {
 
 
 
-
+    @CachePut(key = "#user.id")
     public User updateUser(User user) throws UserNotFoundException{
         // prevent a new user form being created
         if(user == null || user.getId() == null || !userRepo.existsById(user.getId())) throw new UserNotFoundException("This user does not exist.");
@@ -97,10 +102,12 @@ public class UserService {
     }
 
 
+    @Cacheable
     public List<User> getUsers() {
-        return userRepo.findAll();
+        return userRepo.findAllWithDetails();
     }
 
+    @CacheEvict(key = "#id")
     public void deleteUser(Long id) {
         userRepo.deleteById(id);
     }

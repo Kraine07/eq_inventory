@@ -1,5 +1,6 @@
 package kraine.app.eq_inventory.model;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -17,6 +18,8 @@ import kraine.app.eq_inventory.YearMonthConveter;
 
 import java.time.YearMonth;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,49 +29,50 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+// @Cacheable
+// @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 
+// @NamedEntityGraphs({
+//     @NamedEntityGraph(
+//         name = "Equipment.fullDetails",
+//         attributeNodes = {
+//             @NamedAttributeNode(value = "model", subgraph = "model.manufacturer"),
+//             @NamedAttributeNode(value = "location", subgraph = "location.property")
+//         },
+//         subgraphs = {
+//             @NamedSubgraph(
+//                 name = "model.manufacturer",
+//                 attributeNodes = @NamedAttributeNode("manufacturer")
+//             ),
+//             @NamedSubgraph(
+//                 name = "location.property",
+//                 attributeNodes = {
+//                     @NamedAttributeNode("property"),
+//                     @NamedAttributeNode(value = "property", subgraph = "property.regionAndUser")
+//                 }
+//             ),
+//             @NamedSubgraph(
+//                 name = "property.regionAndUser",
+//                 attributeNodes = {
+//                     @NamedAttributeNode("region"),
+//                     @NamedAttributeNode(value = "user", subgraph = "user.role")
+//                 }
+//             ),
+//             @NamedSubgraph(
+//                 name="user.role",
+//                 attributeNodes = @NamedAttributeNode("role")
+//             )
 
-@NamedEntityGraphs({
-    @NamedEntityGraph(
-        name = "Equipment.fullDetails",
-        attributeNodes = {
-            @NamedAttributeNode(value = "model", subgraph = "model.manufacturer"),
-            @NamedAttributeNode(value = "location", subgraph = "location.property")
-        },
-        subgraphs = {
-            @NamedSubgraph(
-                name = "model.manufacturer",
-                attributeNodes = @NamedAttributeNode("manufacturer")
-            ),
-            @NamedSubgraph(
-                name = "location.property",
-                attributeNodes = {
-                    @NamedAttributeNode("property"),
-                    @NamedAttributeNode(value = "property", subgraph = "property.regionAndUser")
-                }
-            ),
-            @NamedSubgraph(
-                name = "property.regionAndUser",
-                attributeNodes = {
-                    @NamedAttributeNode("region"),
-                    @NamedAttributeNode(value = "user", subgraph = "user.role")
-                }
-            ),
-            @NamedSubgraph(
-                name="user.role",
-                attributeNodes = @NamedAttributeNode("role")
-            )
-
-        }
-    ),
-    @NamedEntityGraph(
-        name = "Equipment.basicDetails",
-        attributeNodes = {
-            @NamedAttributeNode("model"),
-            @NamedAttributeNode("location")
-        }
-    )
-})
+//         }
+//     ),
+//     @NamedEntityGraph(
+//         name = "Equipment.basicDetails",
+//         attributeNodes = {
+//             @NamedAttributeNode("model"),
+//             @NamedAttributeNode("location")
+//         }
+//     )
+// })
 
 
 

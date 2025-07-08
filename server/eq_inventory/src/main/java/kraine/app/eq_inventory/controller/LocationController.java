@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.Valid;
 import kraine.app.eq_inventory.model.Location;
 import kraine.app.eq_inventory.service.LocationService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class LocationController {
@@ -20,7 +23,7 @@ public class LocationController {
     private LocationService locationService;
 
     @PostMapping("/add-location")
-    public String addLocation(@Valid Location location, BindingResult bindingResult, Model model) throws BindException{
+    public String addLocation(@Valid Location location, BindingResult bindingResult, Model model) throws BindException {
 
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
@@ -28,4 +31,6 @@ public class LocationController {
         locationService.addLocation(location);
         return "redirect:/";
     }
+
+
 }

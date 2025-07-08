@@ -4,6 +4,7 @@
  */
 package kraine.app.eq_inventory.service;
 
+
 import jakarta.transaction.Transactional;
 import java.util.List;
 
@@ -22,6 +23,10 @@ import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Page;
@@ -36,32 +41,38 @@ import org.springframework.data.domain.Sort;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "equipment")
 public class EquipmentService {
 
 
     @Autowired
     EquipmentRepositoryInterface eri;
 
-
+    @CacheEvict(allEntries = true) // Clear entire cache when adding new equipment
     public Equipment addEquipment(Equipment equipment){
         return eri.saveAndFlush(equipment);
     }
 
 
+    @Cacheable // Cache the result of this expensive query
     public List<Equipment> getAllWithFullDetails() {
         return eri.findAllWithFullDetails();
     }
 
 
+    @CachePut(key = "#equipment.id") // Update the cache for this specific equipment
     public Equipment updateEquipment(Equipment equipment) {
         return eri.saveAndFlush(equipment);
     }
 
+
+    @CacheEvict(key = "#id") // Remove specific equipment from cache when deleted
     public boolean deleteEquipment(Long id) {
         return eri.deleteEquipmentById(id);
     }
 
 
+    @Cacheable(key = "{#page, #size}") // Cache paginated results
     public Page<Equipment> getPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         return eri.findAll(pageable);
@@ -70,6 +81,8 @@ public class EquipmentService {
 
 
     // DTOs
+
+    @Cacheable("equipmentDTOs") // Cache DTOs separately
     public List<EquipmentDTO> getAllEquipmentDTOs() {
         return eri.findAllWithFullDetails().stream()
                 .map(this::convertToDTO)

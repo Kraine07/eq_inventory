@@ -9,6 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
@@ -20,7 +23,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint( columnNames = {"name", "property"} ) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "property" }) }) // make name and property composite keys
+
+@NamedEntityGraph(name="Location.fullDetails",
+        attributeNodes = {
+            @NamedAttributeNode(value = "property", subgraph="property.regionAndUser")
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "property.regionAndUser", attributeNodes = {
+                        @NamedAttributeNode("region"),
+                        @NamedAttributeNode(value = "user", subgraph = "user.role")
+                }),
+                @NamedSubgraph(name = "user.role", attributeNodes = @NamedAttributeNode("role"))
+
+        })
+
+
+
 
 
 public class Location {

@@ -25,13 +25,18 @@ public interface EquipmentRepositoryInterface extends JpaRepository<Equipment, L
 
     // @EntityGraph(attributePaths = { "model", "model.manufacturer", "location", "location.property", "location.property.region", "location.property.user" })
 
+    @EntityGraph(value = "Equipment.fullDetails", type = EntityGraph.EntityGraphType.LOAD)
+    List<Equipment> findAll();
+
     @Query("SELECT e FROM Equipment e " +
         "LEFT JOIN FETCH e.model m " +
         "LEFT JOIN FETCH m.manufacturer " +
         "LEFT JOIN FETCH e.location l " +
         "LEFT JOIN FETCH l.property p " +
         "LEFT JOIN FETCH p.region " +
-        "LEFT JOIN FETCH p.user")
+        "LEFT JOIN FETCH p.user u " +
+        "LEFT JOIN FETCH u.role "
+        )
     List<Equipment> findAllWithFullDetails();
 
 
