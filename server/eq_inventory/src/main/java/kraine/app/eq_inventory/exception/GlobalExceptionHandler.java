@@ -7,7 +7,6 @@ package kraine.app.eq_inventory.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import kraine.app.eq_inventory.SessionHandler;
 
-import java.lang.reflect.Executable;
 
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -59,10 +58,20 @@ public class GlobalExceptionHandler {
 
     // Special handler for duplicate user errors
     @ExceptionHandler(DuplicateUserException.class)
-    public String handleDuplicateUserException(DuplicateUserException ex, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String handleDuplicateUserException(DuplicateUserException ex, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", true);
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
 
-        return SessionHandler.hasSessionAttribute(request, "authUser")? "redirect:/app/admin" : "setup";
+        return SessionHandler.hasSessionAttribute(request, "authUser") ? "redirect:/app/admin" : "setup";
+    }
+
+    // when manufacturer cannot be deleted because it has related equipment
+    @ExceptionHandler(DeleteManufacturerException.class)
+    public String handleDeleteManufacturerException(DeleteManufacturerException ex, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", true);
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/";
     }
 }

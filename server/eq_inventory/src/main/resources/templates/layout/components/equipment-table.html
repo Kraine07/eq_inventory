@@ -28,10 +28,8 @@
                         <td class="hidden" th:text="${equipment.id}"></td>
                         <td class="capitalize" th:text="${equipment.location.property.user.firstName}"></td>
                         <td class="capitalize" th:text="${equipment.location.property.name}"></td>
-                        <td class="hidden" th:text="${equipment.location.id}"></td>
                         <td class="capitalize">
                             <span th:text="${equipment.model.manufacturer.name}"></span>
-                            <span class="hidden" th:text="${equipment.model.id}"></span>
                             <span th:text="${equipment.model.description}"></span>
                         </td>
                         <td th:text="${equipment.serialNumber}"></td>

@@ -40,6 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const deleteManufacturerButton = document.querySelectorAll(".delete-manufacturer");
 
     // manufacturer form fields
+    const manufacturerId = document.querySelector("#manufacturer-id");
+    const manufacturerName = document.querySelector("#manufacturer-name");
+
+    const manufacturerFormSubmit = document.querySelector("#manufacturer-form-submit");
+    const manufacturerFormHeading = document.querySelector("#manufacturer-form-heading");
 
 
 
@@ -123,6 +128,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             editButton.addEventListener("click", function () {
+                //change action
+                equipmentForm.setAttribute("action", "/update-equipment");
+                document.querySelector("#equipment-form-submit").textContent = document.querySelector("#equipment-form-heading").textContent = "Update Equipment";
+
+                //set id
+                equipmentId.value = equipmentRow[0].textContent;
 
                 // set model
                 equipmentModel.value = equipmentRow[4].children[1].textContent;
@@ -148,8 +159,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // DELETE EQUIPMENT
         deleteEquipmentButton.forEach(deleteButton => {
             deleteButton.addEventListener("click", function () {
-                const deleteIdValue = deleteButton.closest("tr").firstElementChild.textContent;
-                const deleteIdInput = document.querySelector("#delete-equipment-id");
+                const deleteEquipmentIdValue = deleteButton.closest("tr").firstElementChild.textContent;
+                const deleteEquipmentIdInput = document.querySelector("#delete-equipment-id");
 
 
                 statusConfirmationButton.style.display = "none";
@@ -158,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 confirmationQuestion.textContent = "Please note, this action is irreversible. Are you sure you want to delete this equipment?";
 
                 deleteConfirmationButton.setAttribute("form", "delete-equipment");
-                deleteIdInput.value = deleteIdValue;
+                deleteEquipmentIdInput.value = deleteEquipmentIdValue;
                 // prevent scrolling
                 document.body.classList.add('overflow-hidden');
                 window.scrollTo({ top: 0, behavior: "smooth" });
@@ -198,31 +209,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // edit manufacturer
-    if (editManufacturerButton.length > 0) {
+    if (editManufacturerButton.length > 0 && deleteManufacturerButton.length > 0) {
         editManufacturerButton.forEach(editButton => {
 
             editButton.addEventListener("click", function () {
+                // change action
+                manufacturerForm.action="/update-manufacturer";
+                manufacturerFormHeading.textContent = manufacturerFormSubmit.textContent = "Update Manufacturer"
+
 
                 // set id
-                document.querySelector("#manufacturer-id").value = editButton.parentElement.nextElementSibling.textContent;
+                manufacturerId.value = editButton.parentElement.nextElementSibling.textContent;
 
                 // set manufacturer name
-                document.querySelector("#manufacturer-name").value = editButton.parentElement.nextElementSibling.nextElementSibling.textContent;
+                manufacturerName.value = editButton.parentElement.nextElementSibling.nextElementSibling.textContent;
 
                 // show form
                 document.body.classList.add('overflow-hidden');
                 window.scrollTo({ top: 0, behavior: "smooth" });
-                manufacturerForm.action = "/edit-manufacturer"; // Set the form action to edit
-                document.querySelector("#manufacturer-form-submit").textContent = "Edit Manufacturer";
-                document.querySelector("#manufacturer-form-heading").textContent = "Edit Manufacturer";
                 manufacturerFormModal.style.display = "block";
             });
         });
+
+
+
+
+        // delete manufacturer
+        deleteManufacturerButton.forEach(deleteButton => {
+            deleteButton.addEventListener("click", function () {
+
+                //set id
+                document.querySelector("#delete-manufacturer-id").value = deleteButton.parentElement.nextElementSibling.textContent;
+                deleteConfirmationButton.setAttribute("form", "delete-manufacturer");
+
+                statusConfirmationButton.style.display = "none";
+                deleteConfirmationButton.style.display = "block";
+                confirmationHeading.textContent = "Delete Confirmation";
+                confirmationQuestion.textContent = "Please note, this action is irreversible and will fail if a related equipment is found. Do you want to delete this manufacturer and all its models?";
+
+
+                document.body.classList.add('overflow-hidden');
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                confirmationWindow.style.display = "block";
+            });
+        });
+
+
     }
 
 
-
-    // delete manufacturer
 
 
 

@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +48,7 @@ public class EquipmentService {
     EquipmentRepositoryInterface eri;
 
     @CacheEvict(allEntries = true) // Clear entire cache when adding new equipment
-    public Equipment addEquipment(Equipment equipment){
+    public Equipment addEquipment(Equipment equipment) {
         return eri.saveAndFlush(equipment);
     }
 
@@ -60,15 +59,15 @@ public class EquipmentService {
     }
 
 
-    @CachePut(key = "#equipment.id") // Update the cache for this specific equipment
+    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
     public Equipment updateEquipment(Equipment equipment) {
         return eri.saveAndFlush(equipment);
     }
 
 
-    @CacheEvict(key = "#id") // Remove specific equipment from cache when deleted
-    public boolean deleteEquipment(Long id) {
-        return eri.deleteEquipmentById(id);
+    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+    public void deleteEquipment(Long id) {
+        eri.deleteById(id);
     }
 
 
@@ -101,7 +100,6 @@ public class EquipmentService {
 
     private ModelDTO convertModelToDTO(Model model) {
         return new ModelDTO(
-                model.getId(),
                 model.getDescription(),
                 new ManufacturerDTO(
                     model.getManufacturer().getId(), 
@@ -111,7 +109,6 @@ public class EquipmentService {
 
     private LocationDTO convertLocationToDTO(Location location) {
         return new LocationDTO(
-                location.getId(),
                 location.getName(),
                 new PropertyDTO(
                     location.getProperty().getId(),

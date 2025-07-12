@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.model.Model;
+import kraine.app.eq_inventory.model.ModelId;
 import kraine.app.eq_inventory.repository.ModelRepositoryInterface;
 
 @Service
@@ -20,7 +21,7 @@ public class ModelService {
     @Autowired
     private ModelRepositoryInterface modelRepository;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(cacheNames = {"model"},allEntries = true)
     public Model createModel(Model model) {
         return modelRepository.save(model);
     }
@@ -30,4 +31,7 @@ public class ModelService {
         return modelRepository.findAllWithDetails();
     }
 
+    public Model findByManufacturerIdAndDescription(ModelId modelId) {
+        return modelRepository.findByManufacturerIdAndDescription(modelId.getManufacturer(), modelId.getDescription());
+    }
 }

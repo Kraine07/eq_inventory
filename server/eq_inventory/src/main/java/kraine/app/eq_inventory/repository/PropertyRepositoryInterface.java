@@ -21,4 +21,11 @@ public interface PropertyRepositoryInterface extends JpaRepository<Property, Lon
     List<Property> findAllWithDetails();
 
 
+
+
+
+    // @Query("SELECT p FROM Property p LEFT JOIN FETCH p.locations WHERE p.id = :id")
+    Property findPropertyById(Long id);
+
+
 }

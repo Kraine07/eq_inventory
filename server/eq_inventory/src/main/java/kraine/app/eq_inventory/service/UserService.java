@@ -75,7 +75,7 @@ public class UserService {
 
 
 
-    @CachePut(key = "#user.id")
+    @CacheEvict(cacheNames = { "user", "property" }, allEntries = true)
     public User updateUser(User user) throws UserNotFoundException{
         // prevent a new user form being created
         if(user == null || user.getId() == null || !userRepo.existsById(user.getId())) throw new UserNotFoundException("This user does not exist.");

@@ -1,12 +1,11 @@
 package kraine.app.eq_inventory.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
@@ -18,17 +17,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Model {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+@IdClass(ModelId.class) // Composite key class
 
+
+public class Model {
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "manufacturer_id", nullable = false)
+    private Manufacturer manufacturer;
+
+
+
+    @Id
     @NotBlank(message = "Model name cannot be blank")
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String description;
 
-    @ManyToOne
-    // @JsonIgnore
-    @JoinColumn(name = "manufacturer") //column in other table this is linked to
-    private Manufacturer manufacturer;
+
+
 }

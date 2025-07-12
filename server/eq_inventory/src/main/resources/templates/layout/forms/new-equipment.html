@@ -21,27 +21,36 @@
             <!-- Id -->
             <input id="equipment-id" type="hidden" name="id">
 
+
+
+
+
+                <!-- Location dropdown for admin -->
+                <div class="mb-3" >
+                    <label for="equipment-location">Location</label>
+                    <select name="location" id="equipment-location" required>
+                        <option value="" hidden>Select Location</option>
+                        <th:block th:each="propertyLocations : ${locationsByProperty}">
+                            <optgroup th:label="${propertyLocations.key}">
+                                <option th:each="location : ${propertyLocations.value}"
+                                    th:value="${location.property.id + ',' + location.name}"
+                                    th:text="${location.property.name + ' - ' + location.name}">
+                                </option>
+                            </optgroup>
+                        </th:block>
+                    </select>
+                </div>
+
+
+
             <!-- Location -->
-            <div class="mb-3" th:if="authuser.isAdmin">
+            <!-- <div class="mb-3" th:if="authuser.isAdmin">
                 <label for="equipment-location">Location</label>
                 <select name="location" id="equipment-location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
                     <option value="" hidden>Select Location</option>
                     <th:block th:each="location : ${locationsByProperty}">
                         <optgroup th:label="${location.key}">
-                            <option th:each="locationElement : ${location.value}" th:value="${locationElement.id}" th:text="${location.key + ' - ' + locationElement.name}" class="capitalize"></option>
-                        </optgroup>
-                    </th:block>
-                </select>
-            </div>
-
-            <!-- Equipment model  -->
-            <div class="mb-3">
-                <label for="equipment-model">Equipment Model</label>
-                <select name="model" id="equipment-model" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
-                    <option value="" hidden>Select Equipment Model</option>
-                    <th:block th:each="manufacturer : ${manufacturerList}">
-                        <optgroup th:label="${manufacturer.name}">
-                            <option th:each="model : ${modelList}" th:if="${model.manufacturer == manufacturer}" th:value="${model.id}" th:text="${manufacturer.name +' - '+model.description}"></option>
+                            <option th:each="locationElement : ${location.value}" th:value="${locationElement.p}" th:text="${location.key + ' - ' + locationElement.name}" class="capitalize"></option>
                         </optgroup>
                     </th:block>
                 </select>
@@ -61,7 +70,26 @@
                     </th:block>
 
                 </select>
+            </div> -->
+
+
+
+
+
+            <!-- Equipment model  -->
+            <div class="mb-3">
+                <label for="equipment-model">Equipment Model</label>
+                <select name="model" id="equipment-model" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
+                    <option value="" hidden>Select Equipment Model</option>
+                    <th:block th:each="manufacturer : ${manufacturerList}">
+                        <optgroup th:label="${manufacturer.name}">
+                            <option th:each="model : ${modelList}" th:if="${model.manufacturer.id == manufacturer.id}" th:value="${model.manufacturer.id +',' + model.description}" th:text="${manufacturer.name +' - '+model.description}"></option>
+                        </optgroup>
+                    </th:block>
+                </select>
             </div>
+
+
 
             <!-- Serial Number -->
             <div class="mb-3">

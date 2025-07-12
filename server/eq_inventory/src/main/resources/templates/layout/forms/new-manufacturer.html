@@ -18,4 +18,9 @@
     <div class="">
         <button id="manufacturer-form-submit" form="manufacturer-form" type="submit" class="mt-4">Create Manufacturer</button>
     </div>
+
+    <!-- Delete Manufacturer -->
+    <form id="delete-manufacturer" th:action="@{/delete-manufacturer}" method="post">
+        <input type="hidden" name="id" id="delete-manufacturer-id">
+    </form>
 </div>

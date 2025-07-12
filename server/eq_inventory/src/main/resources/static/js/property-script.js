@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Set the form fields with the property data
                 propertyName.value = editButton.parentElement.previousElementSibling.textContent.trim();
-                propertyRegion.value =editButton.parentElement.parentElement.nextElementSibling.firstElementChild.children[0].textContent.trim();
+                propertyRegion.value = editButton.parentElement.parentElement.nextElementSibling.firstElementChild.children[0].textContent.trim();
                 propertyUser.value = editButton.parentElement.parentElement.nextElementSibling.firstElementChild.children[1].textContent.trim();
 
-                 // scroll to top & disable body scroll
+                // scroll to top & disable body scroll
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 document.body.classList.add('overflow-hidden');
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-
+    }
 
         // LOCATION
         //open location form
@@ -163,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-    }
 
 
 });

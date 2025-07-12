@@ -21,7 +21,7 @@ public class PropertyService {
     private PropertyRepositoryInterface propertyRepository;
 
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(cacheNames = {"property","location"}, allEntries = true)
     public Property addProperty(Property property) {
         return propertyRepository.save(property);
     }
@@ -29,5 +29,9 @@ public class PropertyService {
     @Cacheable
     public List<Property> getAllProperties() {
         return propertyRepository.findAllWithDetails();
+    }
+
+    public Property findById(Long id) {
+        return propertyRepository.findById(id).orElse(null);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.Valid;
 
 
+
 @Controller
 public class ManufacturerController {
 
@@ -21,12 +22,31 @@ public class ManufacturerController {
 
 
     @PostMapping("/add-manufacturer")
-    public String addManufacturer(@Valid Manufacturer manufacturer, BindingResult result, Model model) throws BindException {
+    public String addManufacturer(@Valid Manufacturer manufacturer, BindingResult result, Model model)
+            throws BindException {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
         manufacturerService.addManufacturer(manufacturer);
         return "redirect:/";
     }
+
+
+    @PostMapping("/update-manufacturer")
+    public String updateManufacturer(@Valid Manufacturer manufacturer, BindingResult result, Model model) throws BindException{
+        if (result.hasErrors()) {
+            throw new BindException(result);
+        }
+        manufacturerService.updateManufacturer(manufacturer);
+        return "redirect:/";
+    }
+
+
+    @PostMapping("/delete-manufacturer")
+    public String deleteManufacturer(Long id) {
+        manufacturerService.deleteManufacturer(id);
+        return "redirect:/";
+    }
+
 
 }

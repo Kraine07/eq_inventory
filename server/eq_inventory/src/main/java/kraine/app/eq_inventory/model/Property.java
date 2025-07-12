@@ -1,16 +1,20 @@
 package kraine.app.eq_inventory.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,13 +35,18 @@ public class Property implements Serializable{
     private String name;
 
     @ManyToOne
-    // @JsonIgnore
     @JoinColumn(name = "region")
     private Region region;
 
     @ManyToOne
-    // @JsonIgnore
     @JoinColumn(name = "\"user\"")
     private User user;
+
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Location> locations = new ArrayList<>();
+
+
+
 }
 

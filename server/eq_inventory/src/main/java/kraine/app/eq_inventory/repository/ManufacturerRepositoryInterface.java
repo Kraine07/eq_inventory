@@ -10,4 +10,7 @@ import kraine.app.eq_inventory.model.Manufacturer;
 @Transactional
 public interface ManufacturerRepositoryInterface extends JpaRepository<Manufacturer, Long> {
 
+
+    Manufacturer findManufacturerById(Long id);
+
 }

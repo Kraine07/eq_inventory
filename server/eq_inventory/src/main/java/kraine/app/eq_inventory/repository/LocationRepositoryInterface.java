@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.model.Location;
+import kraine.app.eq_inventory.model.LocationId;
 
 @Repository
 @Transactional
-public interface LocationRepositoryInterface extends JpaRepository<Location, Long> {
+public interface LocationRepositoryInterface extends JpaRepository<Location, LocationId> {
 
 
     @Query("SELECT l FROM Location l " +
@@ -20,4 +21,8 @@ public interface LocationRepositoryInterface extends JpaRepository<Location, Lon
         "LEFT JOIN FETCH p.user u " +
         "LEFT JOIN FETCH u.role")
     List<Location> findAllWithFullDetails();
+
+    Location findByPropertyIdAndName(Long property, String name);
+
+
 }
