@@ -86,10 +86,9 @@
 
             <!-- models -->
             <div class="grid grid-cols-3 w-full  gap-2">
-                <div th:each="model : ${modelList}" class="flex justify-between w-full px-6 py-4 bg-color-3-40 rounded-md  " th:if="${manufacturer == model.manufacturer}">
-                    <span class="hidden" th:text="${model.id}"></span>
+                <div th:each="model : ${modelList}" class="flex justify-between w-full px-6 py-4 bg-color-3-40 rounded-md  " th:if="${manufacturer.id == model.manufacturer.id}">
                     <span class="hidden" th:text="${model.manufacturer.id}"></span>
-                    <span class="uppercase  italic flex-none" th:text="${model.description}"></span>
+                    <span class="uppercase text-sm italic flex-none" th:text="${model.description}"></span>
                     <!-- model edit/delete -->
                     <div class="flex justify-end w-full space-x-1">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"

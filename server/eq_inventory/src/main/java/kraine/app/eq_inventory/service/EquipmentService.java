@@ -47,11 +47,6 @@ public class EquipmentService {
     @Autowired
     EquipmentRepositoryInterface eri;
 
-    @CacheEvict(allEntries = true) // Clear entire cache when adding new equipment
-    public Equipment addEquipment(Equipment equipment) {
-        return eri.saveAndFlush(equipment);
-    }
-
 
     @Cacheable // Cache the result of this expensive query
     public List<Equipment> getAllWithFullDetails() {
@@ -60,7 +55,7 @@ public class EquipmentService {
 
 
     @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
-    public Equipment updateEquipment(Equipment equipment) {
+    public Equipment saveEquipment(Equipment equipment) {
         return eri.saveAndFlush(equipment);
     }
 

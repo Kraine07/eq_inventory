@@ -1,6 +1,6 @@
 package kraine.app.eq_inventory.model;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -30,8 +30,7 @@ public class Manufacturer {
 
 
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Model> models = new ArrayList<>();
-
+    private List<Model> models ;
 
 
 }

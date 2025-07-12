@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.exception.DeleteManufacturerException;
+import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Manufacturer;
 import kraine.app.eq_inventory.model.Model;
+import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import kraine.app.eq_inventory.repository.ManufacturerRepositoryInterface;
 import kraine.app.eq_inventory.repository.ModelRepositoryInterface;
 
@@ -27,7 +29,7 @@ public class ManufacturerService {
     private ManufacturerRepositoryInterface manufacturerRepository;
 
     @Autowired
-    private ModelRepositoryInterface modelRepositoryInterface;
+    private EquipmentRepositoryInterface equipmentRepositoryInterface;
 
 
 
@@ -47,18 +49,21 @@ public class ManufacturerService {
 
     @CacheEvict(cacheNames = {"manufacturer", "equipment", "model"}, allEntries = true)
     public Manufacturer updateManufacturer(Manufacturer manufacturer) {
-        return manufacturerRepository.saveAndFlush(manufacturer);
+        Manufacturer existingManufacturer = manufacturerRepository.findById(manufacturer.getId()).orElse(null);
+
+        existingManufacturer.setName(manufacturer.getName());
+        return manufacturerRepository.saveAndFlush(existingManufacturer);
     }
 
 
 
     @CacheEvict(cacheNames = {"manufacturer",  "model"}, allEntries = true)
     public void deleteManufacturer(Long id) {
-        List<Model> models = modelRepositoryInterface.findAll();
-        models.forEach(model -> {
-            if (model.getManufacturer().getId() == id) {
-                throw new DeleteManufacturerException(
-                        "Cannot delete manufacturer until all related equipment are removed.");
+
+        List<Equipment> equipment = equipmentRepositoryInterface.findAll();
+        equipment.forEach(eq -> {
+            if (eq.getModel().getManufacturer().getId() == id) {
+                throw new DeleteManufacturerException("Cannot delete manufacturer because related equipment exists.");
             }
         });
         manufacturerRepository.deleteById(id);

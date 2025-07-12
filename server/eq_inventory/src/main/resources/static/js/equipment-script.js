@@ -128,24 +128,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             editButton.addEventListener("click", function () {
-                //change action
-                equipmentForm.setAttribute("action", "/update-equipment");
+
+                // update title and button text
                 document.querySelector("#equipment-form-submit").textContent = document.querySelector("#equipment-form-heading").textContent = "Update Equipment";
 
                 //set id
                 equipmentId.value = equipmentRow[0].textContent;
 
                 // set model
-                equipmentModel.value = equipmentRow[4].children[1].textContent;
+                const manufacturerId = equipmentRow[3].children[0].textContent;
+                const modelDescription = equipmentRow[3].children[2].textContent;
+                equipmentModel.value = `${manufacturerId},${modelDescription}`;
 
                 //set location
-                equipmentLocation.value = equipmentRow[3].textContent;
+                const propertyId = equipmentRow[2].children[0].textContent;
+                const locationName = equipmentRow[2].children[1].textContent.split("-")[1];
+                equipmentLocation.value = `${propertyId},${locationName}`;
 
                 //set serial number
-                serialNumber.value = equipmentRow[5].textContent;
+                serialNumber.value = equipmentRow[4].textContent;
 
                 // set manufactured date
-                manufacturedDate.value = equipmentRow[6].textContent;
+                manufacturedDate.value = equipmentRow[5].textContent;
 
                 // show form
                 window.scrollTo({ top: 0, behavior: "smooth" });

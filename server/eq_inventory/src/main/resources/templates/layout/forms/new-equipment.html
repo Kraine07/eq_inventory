@@ -43,39 +43,6 @@
 
 
 
-            <!-- Location -->
-            <!-- <div class="mb-3" th:if="authuser.isAdmin">
-                <label for="equipment-location">Location</label>
-                <select name="location" id="equipment-location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
-                    <option value="" hidden>Select Location</option>
-                    <th:block th:each="location : ${locationsByProperty}">
-                        <optgroup th:label="${location.key}">
-                            <option th:each="locationElement : ${location.value}" th:value="${locationElement.p}" th:text="${location.key + ' - ' + locationElement.name}" class="capitalize"></option>
-                        </optgroup>
-                    </th:block>
-                </select>
-            </div>
-
-
-            <div class="mb-3" th:unless="authuser.isAdmin">
-                <label for="location">Location</label>
-                <select name="location" id="location" class="mt-1   focus:ring focus:ring-color-3 focus:ring-opacity-50 focus:ring-offset-2  capitalize">
-                    <option value="" hidden>Select Location</option>
-                    <th:block th:each="location : ${userLocationList}">
-                        <optgroup th:label="${location.key}">
-                            <option th:each="location : ${location.value}" th:value="${location.id}" th:text="${location.property.name + ' - ' + location.name}" class="capitalize"></option>
-
-                        </optgroup>
-
-                    </th:block>
-
-                </select>
-            </div> -->
-
-
-
-
-
             <!-- Equipment model  -->
             <div class="mb-3">
                 <label for="equipment-model">Equipment Model</label>

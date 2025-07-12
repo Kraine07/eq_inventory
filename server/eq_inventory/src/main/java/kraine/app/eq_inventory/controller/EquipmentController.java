@@ -4,7 +4,6 @@
  */
 package kraine.app.eq_inventory.controller;
 
-import jakarta.validation.Valid;
 
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Location;
@@ -74,29 +73,10 @@ public class EquipmentController {
         }
 
 
-        es.addEquipment(equipment);
+        es.saveEquipment(equipment);
         return "redirect:/";
     }
 
-
-
-
-
-
-
-    @PostMapping("/update-equipment")
-    public String updateEquipment(@Valid Equipment equipment, BindingResult bindingResult, Model model)
-            throws BindException {
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
-        //change blank serial number to null
-        if (equipment.getSerialNumber() == "") {
-            equipment.setSerialNumber(null);
-        }
-        es.updateEquipment(equipment);
-        return "redirect:/";
-    }
 
 
 
