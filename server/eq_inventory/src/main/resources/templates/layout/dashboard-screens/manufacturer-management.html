@@ -23,7 +23,7 @@
 
                 <!-- Manufacturer form -->
                 <div id="manufacturer-form-modal" class="z-10 hidden absolute bg-app-white-40 backdrop-blur-md w-screen h-screen  top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2">
-                    <div th:replace="~{layout/forms/new-manufacturer :: manufacturer-form}">...</div>
+                    <div th:replace="~{layout/forms/manufacturer-forms :: manufacturer-form}">...</div>
                 </div>
             </div>
 
@@ -40,7 +40,7 @@
 
                 <!-- model form -->
                 <div id="model-form-modal" class=" hidden absolute bg-app-white-40 backdrop-blur-md w-screen h-screen top-0 left-0">
-                    <div th:replace="~{layout/forms/new-model :: model-form}">...</div>
+                    <div th:replace="~{layout/forms/model-forms :: model-form}">...</div>
                 </div>
             </div>
         </div>
@@ -52,11 +52,11 @@
 
 
 
-    <div class="flex flex-col py-4  text-color-1 rounded-md overflow-y-auto scrollbar-none">
-        <div class="flex  space-x-8 py-8 " th:each="manufacturer : ${manufacturerList}" >
+    <div class="flex flex-col space-y-8  text-color-1 ">
+        <div class="flex items-center space-x-8 px-4 py-8 shadow-app-shadow rounded-md" th:each="manufacturer : ${manufacturerList}" >
 
             <!-- manufacturers -->
-            <div class="flex items-start space-x-4 w-1/4">
+            <div class="flex items-start space-x-4 w-1/4 self-start  ">
 
                 <!-- manufacturer edit/delete -->
                 <div class="flex items-center space-x-2">
@@ -85,7 +85,7 @@
             </div>
 
             <!-- models -->
-            <div class="grid grid-cols-3 w-full  gap-2">
+            <div class="grid grid-cols-3 xl:grid-cols-4 w-full  gap-2">
                 <div th:each="model : ${modelList}" class="flex justify-between w-full px-6 py-4 bg-color-3-40 rounded-md  " th:if="${manufacturer.id == model.manufacturer.id}">
                     <span class="hidden" th:text="${model.manufacturer.id}"></span>
                     <span class="uppercase text-sm italic flex-none" th:text="${model.description}"></span>

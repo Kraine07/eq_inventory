@@ -24,6 +24,5 @@ public interface ModelRepositoryInterface extends JpaRepository<Model,ModelId> {
 
     Model findByManufacturerIdAndDescription(Long manufacturer, String description);
 
-    // @Query("select m from Model m where m.manufacturer = :manufacturer and m.description = :description")
-    // Model findModelById(@Param("manufacturer") Manufacturer manufacturer, @Param("description") String description);
+
 }

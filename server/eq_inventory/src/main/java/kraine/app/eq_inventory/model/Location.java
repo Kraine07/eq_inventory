@@ -37,5 +37,8 @@ public class Location {
 
 
 
+        public LocationId getLocationId() {
+                return new LocationId(property.getId(), name);
+        }
 
 }

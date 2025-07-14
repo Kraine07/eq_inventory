@@ -8,14 +8,19 @@ module.exports = {
       colors: {
         "app-white":"#D9D9D9",
         "app-white-40":"#D9D9D966",
+        "app-white-20":"#D9D9D933",
         "color-1":"#041C32",
         "color-1-40":"#041C3266",
+        "color-1-20":"#041C3233",
         "color-2":"#04293A",
         "color-2-40":"#04293A66",
+        "color-2-20":"#04293A33",
         "color-3":"#064663",
         "color-3-40":"#06466366",
+        "color-3-20":"#06466333",
         "color-4":"#ECB365",
-        "color-4-40": "#ECB36566",
+        "color-4-40":"#ECB36566",
+        "color-4-20":"#ECB36533",
         "modal-background":"#04293AEA",
 
 
@@ -30,7 +35,7 @@ module.exports = {
         // "modal-background":"#04293AEA",
       },
       boxShadow: (theme) => ({
-        "app-shadow": `0 0 12px ${theme('colors.color-1-40')}`,
+        "app-shadow": `0 0 12px ${theme('colors.color-1-20')}`,
       }),
     },
   },

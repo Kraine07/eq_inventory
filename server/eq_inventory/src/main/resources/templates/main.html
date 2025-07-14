@@ -7,10 +7,10 @@
 
 <!DOCTYPE html>
 <html layout:decorate="~{layout/defaultLayout}" xmlns:th="http://www.thymeleaf.org">
-    <div layout:fragment="content"  class="container min-h-full w-4/5 mx-auto pb-4 ">
+    <div layout:fragment="content"  class="container min-h-full w-4/5 mx-auto pb-4 scroll-smooth">
 
         <!-- NAVBAR -->
-        <div th:insert="~{layout/components/navbar :: navbar}">...</div>
+        <div th:insert="~{layout/components/navbar :: navbar}" class="sticky top-0">...</div>
 
 
         <!-- SCREENS -->

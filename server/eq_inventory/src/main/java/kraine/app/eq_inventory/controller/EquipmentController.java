@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-
-
-
 /**
  *
  * @author Kraine
@@ -61,12 +58,13 @@ public class EquipmentController {
         ModelId modelId = new ModelId(Long.valueOf(modelParts[0]), modelParts[1]);
 
         Location equimentLocation = ls.findByPropertyIdAndName(locationId);
-        kraine.app.eq_inventory.model.Model equipmentModel = ms.findByManufacturerIdAndDescription(modelId);
+        kraine.app.eq_inventory.model.Model equipmentModel = ms.findByModelId(modelId);
 
 
         // set model and location
         equipment.setLocation(equimentLocation);
         equipment.setModel(equipmentModel);
+
         // change blank serial number to null
         if (equipment.getSerialNumber() == "") {
             equipment.setSerialNumber(null);

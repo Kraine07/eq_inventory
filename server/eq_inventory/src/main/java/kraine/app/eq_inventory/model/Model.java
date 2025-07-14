@@ -36,4 +36,8 @@ public class Model {
 
 
 
+    public ModelId getModelId() {
+        return new ModelId(manufacturer.getId(),description);
+    }
+
 }

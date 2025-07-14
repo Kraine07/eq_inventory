@@ -32,7 +32,7 @@
                             <span id="user-status" th:if="${user.isSuspended}">Suspended</span>
                             <span id="user-status" th:unless="${user.isSuspended}">Active</span>
                         </td>
-                        <td class="flex justify-center">
+                        <td class="flex justify-center" th:unless="${session.authUser.id == user.id}">
                             <div class="flex items-center space-x-2 text-color-1">
                                 <svg th:if="${user.isSuspended}"  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="user-status  h-6 aspect-square cursor-pointer">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>

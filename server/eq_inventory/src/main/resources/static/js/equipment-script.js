@@ -248,8 +248,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 statusConfirmationButton.style.display = "none";
                 deleteConfirmationButton.style.display = "block";
-                confirmationHeading.textContent = "Delete Confirmation";
-                confirmationQuestion.textContent = "Please note, this action is irreversible and will fail if a related equipment is found. Do you want to delete this manufacturer and all its models?";
+                confirmationHeading.textContent = "Delete Manufacturer";
+                confirmationQuestion.textContent = "Please note, this action is irreversible and will fail if related equipment are found. Do you want to delete this manufacturer and all its models?";
 
 
                 document.body.classList.add('overflow-hidden');
@@ -299,22 +299,25 @@ document.addEventListener("DOMContentLoaded", function () {
         editModelButton.forEach(editButton => {
 
             editButton.addEventListener("click", function () {
+                const manufacturerValue = this.parentElement.previousElementSibling.previousElementSibling.textContent;
+                const descriptionValue = this.parentElement.previousElementSibling.textContent;
 
-                // set id
-                document.querySelector("#model-id").value = editButton.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
+                //set modelId
+                document.querySelector("#model-id").value = manufacturerValue + "," + descriptionValue;
 
                 // set manufacturer
-                document.querySelector("#model-manufacturer").value = editButton.parentElement.previousElementSibling.previousElementSibling.textContent;
+                document.querySelector("#model-manufacturer").value = manufacturerValue;
 
                 // set model description
-                document.querySelector("#model-description").value = editButton.parentElement.previousElementSibling.textContent;
+                document.querySelector("#model-description").value = descriptionValue;
 
-                // show form
+                // stop scrolling
                 document.body.classList.add('overflow-hidden');
                 window.scrollTo({ top: 0, behavior: "smooth" });
-                modelForm.action = "/edit-model"; // Set the form action to edit
+                // update title and button texts
                 document.querySelector("#model-form-submit").textContent = "Edit Model";
                 document.querySelector("#model-form-heading").textContent = "Edit Model";
+                //show form
                 modelFormModal.style.display = "block";
             });
         });
@@ -322,5 +325,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // delete model
+    if (deleteModelButton) {
+        deleteModelButton.forEach(deleteButton => {
+            deleteButton.addEventListener("click", function () {
+
+                const manufacturerValue = this.parentElement.previousElementSibling.previousElementSibling.textContent;
+                const descriptionValue = this.parentElement.previousElementSibling.textContent;
+
+                //set modelId
+                document.querySelector("#delete-model-id").value = manufacturerValue + "," + descriptionValue;
+
+                //set texts
+                confirmationHeading.textContent = "Delete Model";
+                confirmationQuestion.textContent = "This action is permanent. Do you want to delete this model?";
+
+                deleteConfirmationButton.setAttribute("form", "delete-model");
+
+                statusConfirmationButton.style.display = "none";
+                deleteConfirmationButton.style.display = "block";
+
+
+                document.body.classList.add('overflow-hidden');
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                confirmationWindow.style.display = "block";
+            });
+        });
+    }
 
 });
