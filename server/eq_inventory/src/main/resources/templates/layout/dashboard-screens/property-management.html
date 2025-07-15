@@ -59,12 +59,13 @@
         <div class="flex flex-col w-full ">
             <h1 class="text-2xl font-semibold ">Properties and Locations</h1>
 
-            <div th:each="property : ${locationsByProperty}"    class="flex flex-col justify-between capitalize w-full px-4 py-4 my-4 shadow-app-shadow rounded-md">
+            <div th:each="property : ${propertyList}"    class="flex flex-col justify-between capitalize w-full px-4 py-4 my-4 shadow-app-shadow rounded-md">
 
                 <div class="flex items-center mb-8 space-x-6">
 
                     <!-- properties -->
-                    <div th:text="${property.key}"  class=" flex-none  text-xl font-semibold  " ></div>
+                    <div class="hidden" th:text="${property.id}"></div>
+                    <div th:text="${property.name}"  class=" flex-none  text-xl font-semibold  " ></div>
 
                     <!-- property edit/delete -->
                     <div class="flex justify-start w-full space-x-2">
@@ -91,7 +92,7 @@
                 <div class="grid grid-cols-4 gap-4 w-full">
 
                     <!-- locations -->
-                    <div  th:each="location : ${property.value}" class="flex justify-between bg-color-3-40 rounded-md  group">
+                    <div  th:each="location : ${property.locations}" class="flex justify-between bg-color-3-40 rounded-md  group">
                         <span th:text="${location.property.region.id}"  class=" hidden" ></span>
                         <span th:text="${location.property.user.id}"  class=" hidden" ></span>
                         <span th:text="${location.property.id}"  class=" hidden" ></span>

@@ -4,10 +4,7 @@ package kraine.app.eq_inventory.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 
-import kraine.app.eq_inventory.model.Model;
 import kraine.app.eq_inventory.model.ModelId;
 import kraine.app.eq_inventory.service.ModelService;
 

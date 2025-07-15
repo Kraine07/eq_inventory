@@ -23,6 +23,7 @@ import kraine.app.eq_inventory.model.LoginAttempt;
 import kraine.app.eq_inventory.model.LoginModel;
 import kraine.app.eq_inventory.model.LoginStatus;
 import kraine.app.eq_inventory.model.Manufacturer;
+import kraine.app.eq_inventory.model.Property;
 import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.RoleType;
 import kraine.app.eq_inventory.model.User;
@@ -137,6 +138,10 @@ public class UserController {
         Map<String, List<Equipment>> equipmentByManufacturer = userEquipmentList.stream()
                 .collect(Collectors.groupingBy(equipment -> equipment.getModel().getManufacturer().getName()));
 
+        // get and sort properties
+        List<Property> propertyList = propertyService.getAllProperties().stream()
+        .sorted(Comparator.comparing(Property :: getName))
+                .collect(Collectors.toList());
 
         // get all locations and sort
         List<Location> locations = locationService.getAllLocations()
@@ -145,16 +150,16 @@ public class UserController {
                 .collect(Collectors.toList());
 
         // group all locations by property and sort by property name
-        Map<String, List<Location>> locationsByProperty = locations.stream()
-        .collect(Collectors.groupingBy(location -> location.getProperty().getName()))
-        .entrySet().stream()
-        .sorted(Map.Entry.comparingByKey())
-        .collect(Collectors.toMap(
-            Map.Entry::getKey,
-            Map.Entry::getValue,
-            (a, b) -> a,
-            LinkedHashMap::new
-        ));
+        // Map<String, List<Location>> locationsByProperty = locations.stream()
+        // .collect(Collectors.groupingBy(location -> location.getProperty().getName()))
+        // .entrySet().stream()
+        // .sorted(Map.Entry.comparingByKey())
+        // .collect(Collectors.toMap(
+        //     Map.Entry::getKey,
+        //     Map.Entry::getValue,
+        //     (a, b) -> a,
+        //     LinkedHashMap::new
+        // ));
 
 
         // filter by user
@@ -190,10 +195,10 @@ public class UserController {
         var modelAttributes = Map.ofEntries(
             Map.entry("userList", us.getUsers().stream().sorted(Comparator.comparing(User::getLastName).thenComparing(User::getFirstName)).collect(Collectors.toList())), // sort alphabetically by last name then first name
             Map.entry("regionList", regionService.getAllRegions()),
-            Map.entry("propertyList", propertyService.getAllProperties()),
+            Map.entry("propertyList", propertyList),
             Map.entry("userLocationList", userLocationsByProperty),
             Map.entry("locationList", locations),
-            Map.entry("locationsByProperty", locationsByProperty),
+            // Map.entry("locationsByProperty", locationsByProperty),
             Map.entry("manufacturerList", manufacturerService.getAllManufacturers().stream()
             .sorted(Comparator.comparing(Manufacturer::getName))
             .collect(Collectors.toList())),

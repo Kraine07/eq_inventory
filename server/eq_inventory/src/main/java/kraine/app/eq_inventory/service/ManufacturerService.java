@@ -12,10 +12,8 @@ import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.exception.DeleteManufacturerException;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Manufacturer;
-import kraine.app.eq_inventory.model.Model;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import kraine.app.eq_inventory.repository.ManufacturerRepositoryInterface;
-import kraine.app.eq_inventory.repository.ModelRepositoryInterface;
 
 @Service
 @Transactional
@@ -33,11 +31,6 @@ public class ManufacturerService {
 
 
 
-    @CacheEvict(cacheNames = {"manufacturer","equipment", "model"}, allEntries = true)
-    public Manufacturer addManufacturer(Manufacturer manufacturer) {
-        return manufacturerRepository.saveAndFlush(manufacturer);
-    }
-
 
 
     @Cacheable
@@ -48,21 +41,29 @@ public class ManufacturerService {
 
 
     @CacheEvict(cacheNames = {"manufacturer", "equipment", "model"}, allEntries = true)
-    public Manufacturer updateManufacturer(Manufacturer manufacturer) {
-        Manufacturer existingManufacturer = manufacturerRepository.findById(manufacturer.getId()).orElse(null);
+    public Manufacturer saveManufacturer(Manufacturer manufacturer) {
 
-        existingManufacturer.setName(manufacturer.getName());
-        return manufacturerRepository.saveAndFlush(existingManufacturer);
+        Manufacturer existingManufacturer = null;
+        if (manufacturer.getId() != null) {
+            existingManufacturer = findById(manufacturer.getId());
+        }
+
+        if (existingManufacturer != null) {
+            existingManufacturer.setName(manufacturer.getName());
+            return manufacturerRepository.saveAndFlush(existingManufacturer);
+        }
+        return manufacturerRepository.saveAndFlush(manufacturer);
     }
 
 
 
-    @CacheEvict(cacheNames = {"manufacturer",  "model"}, allEntries = true)
+    @CacheEvict(cacheNames = {"manufacturer",  "model", "equipment"}, allEntries = true)
     public void deleteManufacturer(Long id) {
 
+        // check if manufacturer has related equipment
         List<Equipment> equipment = equipmentRepositoryInterface.findAll();
         equipment.forEach(eq -> {
-            if (eq.getModel().getManufacturer().getId() == id) {
+            if (eq.getModel().getManufacturer().getId().equals(id)) {
                 throw new DeleteManufacturerException("Cannot delete manufacturer because related equipment exists.");
             }
         });

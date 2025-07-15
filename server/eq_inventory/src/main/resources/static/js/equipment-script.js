@@ -217,16 +217,14 @@ document.addEventListener("DOMContentLoaded", function () {
         editManufacturerButton.forEach(editButton => {
 
             editButton.addEventListener("click", function () {
-                // change action
-                manufacturerForm.action="/update-manufacturer";
                 manufacturerFormHeading.textContent = manufacturerFormSubmit.textContent = "Update Manufacturer"
 
 
                 // set id
-                manufacturerId.value = editButton.parentElement.nextElementSibling.textContent;
+                manufacturerId.value = this.parentElement.nextElementSibling.textContent;
 
                 // set manufacturer name
-                manufacturerName.value = editButton.parentElement.nextElementSibling.nextElementSibling.textContent;
+                manufacturerName.value = this.parentElement.nextElementSibling.nextElementSibling.textContent;
 
                 // show form
                 document.body.classList.add('overflow-hidden');
@@ -243,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
             deleteButton.addEventListener("click", function () {
 
                 //set id
-                document.querySelector("#delete-manufacturer-id").value = deleteButton.parentElement.nextElementSibling.textContent;
+                document.querySelector("#delete-manufacturer-id").value = this.parentElement.nextElementSibling.textContent;
                 deleteConfirmationButton.setAttribute("form", "delete-manufacturer");
 
                 statusConfirmationButton.style.display = "none";

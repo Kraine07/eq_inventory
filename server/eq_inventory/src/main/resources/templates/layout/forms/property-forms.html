@@ -12,6 +12,9 @@
 
         <h1 id="property-form-title" class="text-3xl font-thin mb-4">Create Property</h1>
 
+        <!-- Id (hidden) -->
+        <input type="hidden" name="id" id="property-id">
+
         <!-- Region -->
         <div class="mb-4">
             <label for="property-region">Region</label>
@@ -40,4 +43,9 @@
 
     </form>
     <button id="property-form-submit" form="property-form" type="submit" class="mt-4">Create Property</button>
+
+    <!-- Delete form -->
+    <form id="delete-property" th:action="@{/delete-property}" method="post">
+        <input type="hidden" name="id" id="delete-property-id">
+    </form>
 </div>

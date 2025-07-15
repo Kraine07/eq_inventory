@@ -931,10 +931,6 @@ th, td {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .flex-row {
   flex-direction: row;
 }
@@ -949,10 +945,6 @@ th, td {
 
 .items-center {
   align-items: center;
-}
-
-.justify-normal {
-  justify-content: normal;
 }
 
 .justify-start {
@@ -1462,10 +1454,6 @@ th, td {
 
 .placeholder\:text-color-1-40::placeholder {
   color: #041C3266;
-}
-
-.hover\:flex:hover {
-  display: flex;
 }
 
 .hover\:border-color-4:hover {

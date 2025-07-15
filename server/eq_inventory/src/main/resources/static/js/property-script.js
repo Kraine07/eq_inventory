@@ -1,3 +1,17 @@
+
+
+
+import { confirmationQuestion } from "./script.js";
+import { confirmationHeading } from "./script.js";
+import { confirmationWindow } from "./script.js";
+import { statusConfirmationButton } from "./script.js";
+
+import { deleteConfirmationButton } from "./script.js";
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
 
     // property
@@ -63,21 +77,20 @@ document.addEventListener('DOMContentLoaded', function () {
         // Edit property
         editPropertyButton.forEach(editButton => {
             editButton.addEventListener('click', function () {
+                const propertyId = document.getElementById('property-id');
                 const propertyRegion = document.getElementById('property-region');
                 const propertyName = document.getElementById('property-name');
                 const propertyUser = document.getElementById('property-user');
 
                 // Set the form fields with the property data
-                propertyName.value = editButton.parentElement.previousElementSibling.textContent.trim();
-                propertyRegion.value = editButton.parentElement.parentElement.nextElementSibling.firstElementChild.children[0].textContent.trim();
-                propertyUser.value = editButton.parentElement.parentElement.nextElementSibling.firstElementChild.children[1].textContent.trim();
+                propertyId.value = this.parentElement.previousElementSibling.previousElementSibling.textContent.trim();
+                propertyName.value = this.parentElement.previousElementSibling.textContent.trim();
+                propertyRegion.value = this.parentElement.parentElement.nextElementSibling.firstElementChild.children[0].textContent.trim();
+                propertyUser.value = this.parentElement.parentElement.nextElementSibling.firstElementChild.children[1].textContent.trim();
 
                 // scroll to top & disable body scroll
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 document.body.classList.add('overflow-hidden');
-
-                //set the form action to update
-                propertyForm.action = "/edit-property";
 
                 //set form heading and button text
                 document.querySelector("#property-form-title").textContent = "Update Property";
@@ -94,8 +107,23 @@ document.addEventListener('DOMContentLoaded', function () {
         // Delete property
         deletePropertyButton.forEach(deleteButton => {
             deleteButton.addEventListener("click", function () {
+                const deleteId = document.querySelector("#delete-property-id");
 
                 // delete property logic
+                deleteId.value = this.parentElement.previousElementSibling.previousElementSibling.textContent.trim();
+
+                deleteConfirmationButton.setAttribute("form", "delete-property");
+
+                statusConfirmationButton.style.display = "none";
+                deleteConfirmationButton.style.display = "block";
+                confirmationHeading.textContent = "Delete Property";
+                confirmationQuestion.textContent = "Please note, this action is irreversible and will fail if equipment exist on the property. Do you want to delete this property and all its locations?";
+
+
+                document.body.classList.add('overflow-hidden');
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                confirmationWindow.style.display = "block";
+
             });
         });
 

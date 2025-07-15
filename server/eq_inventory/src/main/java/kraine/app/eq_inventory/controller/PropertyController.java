@@ -3,6 +3,7 @@ package kraine.app.eq_inventory.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,14 +22,22 @@ public class PropertyController {
     private PropertyService propertyService;
 
     @PostMapping("/add-property")
-    public String addProperty(@Valid Property property, BindingResult result, Model model) throws BindException {
+    public String saveProperty(@Valid Property property, BindingResult result, Model model) throws BindException {
 
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        propertyService.addProperty(property);
-        // TODO: Add a success message to the model if needed
-        return "redirect:/"; // Redirect to a page that lists all properties
+
+
+        propertyService.save(property);
+        return "redirect:/";
     }
 
+
+
+    @PostMapping("/delete-property")
+    public String deleteProperty(@Param("id")String id){
+        propertyService.deleteProperty(Long.valueOf(id));
+        return "redirect:/";
+    }
 }

@@ -3,31 +3,48 @@ package kraine.app.eq_inventory.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-import jakarta.validation.Valid;
-import kraine.app.eq_inventory.model.Location;
+import kraine.app.eq_inventory.model.LocationId;
 import kraine.app.eq_inventory.service.LocationService;
+
 
 
 @Controller
 public class LocationController {
+
+
     @Autowired
     private LocationService locationService;
 
-    @PostMapping("/add-location")
-    public String addLocation(@Valid Location location, BindingResult bindingResult, Model model) throws BindException {
 
-        if (bindingResult.hasErrors()) {
-            System.out.println("LOCATION BINDING ERROR");
-            throw new BindException(bindingResult);
-        }
-        locationService.addLocation(location);
+    private LocationId createLocationId(String id) {
+        String[] idParts = id.split(",");
+        LocationId locationId = new LocationId(Long.valueOf(idParts[0]), idParts[1]);
+        return locationId;
+    }
+
+
+
+    @PostMapping("/add-location")
+    public String addLocation(@Param("property") String property, @Param("name") String name,
+            @Param("id") String id) {
+
+        LocationId locationId = createLocationId(id);
+        locationService.saveLocation(property, name, locationId);
+        return "redirect:/";
+    }
+
+
+
+    @PostMapping("/delete-location")
+    public String deleteLocation(@Param("id") String id) {
+
+        LocationId locationId = createLocationId(id);
+        locationService.deleteLocation(locationId);
         return "redirect:/";
     }
 

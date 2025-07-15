@@ -29,7 +29,6 @@ public class Location {
         private Property property;
 
 
-
         @Id
         @Column(nullable = false)
         @NotBlank(message = "Location name cannot be blank")

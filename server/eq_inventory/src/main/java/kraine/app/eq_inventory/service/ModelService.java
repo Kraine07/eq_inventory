@@ -21,7 +21,7 @@ public class ModelService {
 
     @Autowired
     private ModelRepositoryInterface modelRepository;
-    
+
     @Autowired
     private ManufacturerRepositoryInterface mri;
 
