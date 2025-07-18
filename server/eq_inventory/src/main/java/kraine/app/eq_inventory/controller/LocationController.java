@@ -30,7 +30,7 @@ public class LocationController {
 
 
     @PostMapping("/add-location")
-    public String addLocation(@Param("property") String property, @Param("name") String name,
+    public String saveLocation(@Param("property") String property, @Param("name") String name,
             @Param("id") String id) {
 
         LocationId locationId = createLocationId(id);

@@ -6,6 +6,8 @@ package kraine.app.eq_inventory.repository;
 
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.model.Equipment;
+import kraine.app.eq_inventory.model.Location;
+import kraine.app.eq_inventory.model.Model;
 
 import java.util.List;
 
@@ -33,6 +35,12 @@ public interface EquipmentRepositoryInterface extends JpaRepository<Equipment, L
         "LEFT JOIN FETCH u.role "
         )
     List<Equipment> findAllWithFullDetails();
+
+
+
+    List<Equipment> findByModel(Model model);
+
+    List<Equipment> findByLocation(Location location);
 
 
 }

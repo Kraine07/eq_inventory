@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@IdClass(LocationId.class) // Composite key class
+@IdClass(LocationId.class) // Composite key classz
 
 
 public class Location {

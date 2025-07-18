@@ -9,8 +9,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import kraine.app.eq_inventory.model.Equipment;
+import kraine.app.eq_inventory.model.Manufacturer;
 import kraine.app.eq_inventory.model.Model;
 import kraine.app.eq_inventory.model.ModelId;
+import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import kraine.app.eq_inventory.repository.ManufacturerRepositoryInterface;
 import kraine.app.eq_inventory.repository.ModelRepositoryInterface;
 
@@ -25,24 +28,34 @@ public class ModelService {
     @Autowired
     private ManufacturerRepositoryInterface mri;
 
+    @Autowired
+    EquipmentRepositoryInterface equipmentRepositoryInterface;
 
 
 
 
-    @CacheEvict(cacheNames = {"model"},allEntries = true)
+
+    @CacheEvict(cacheNames = {"model","equipment","manufacturer"},allEntries = true)
     public Model saveModel(String manufacturer, String description, ModelId modelId) {
+
         Model existingModel = findByModelId(modelId);
 
+        Model newModel = new Model(mri.findManufacturerById(Long.valueOf(manufacturer)), description);
+        Model result = modelRepository.saveAndFlush(newModel);
         if (existingModel != null) {
+
+            List<Equipment> equipmentList = equipmentRepositoryInterface.findByModel(existingModel);
+
+            for (Equipment eq : equipmentList) {
+                eq.setModel(newModel);
+            }
+            equipmentRepositoryInterface.saveAllAndFlush(equipmentList);
             modelRepository.delete(existingModel);
+
         }
-        Model newModel = new Model();
-        newModel.setManufacturer(mri.findManufacturerById(Long.valueOf(manufacturer)));
-        newModel.setDescription(description);
 
-        return modelRepository.save(newModel);
+        return result;
     }
-
 
 
 
@@ -56,14 +69,17 @@ public class ModelService {
 
 
     public Model findByModelId(ModelId modelId) {
-        return modelRepository.findByManufacturerIdAndDescription(modelId.getManufacturer(), modelId.getDescription());
+        return modelRepository.findById(modelId).orElse(null);
+        // return modelRepository.findByManufacturerIdAndDescription(modelId.getManufacturer(), modelId.getDescription());
     }
 
 
 
-
-    @CacheEvict(cacheNames = { "model" }, allEntries = true)
-    public void deleteModel(ModelId id){
+    @CacheEvict(cacheNames = { "model","equipment","manufacturer" }, allEntries = true)
+    public void deleteModel(ModelId id) {
+        Model model = findByModelId(id);
+        Manufacturer manufacturer = model.getManufacturer();
+        manufacturer.getModels().remove(model);
         modelRepository.deleteById(id);
     }
 }

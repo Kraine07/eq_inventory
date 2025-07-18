@@ -161,17 +161,21 @@ document.addEventListener('DOMContentLoaded', function () {
             editLocationButton.forEach(editButton => {
                 editButton.addEventListener('click', function () {
                     const locationName = document.getElementById('location-name');
-                    const locationProperty= document.getElementById('location-property');
+                    const locationProperty = document.getElementById('location-property');
+
+                    const propertyIdValue = this.parentElement.parentElement.children[2].textContent;
+                    const locationNameValue = this.parentElement.parentElement.children[3].textContent;
+
+                    //set id
+                    document.querySelector("#location-id").value = propertyIdValue + "," + locationNameValue;
 
                     // Set the form fields with the location data
-                    locationName.value = editButton.parentElement.parentElement.children[3].textContent.trim();
-                    locationProperty.value = editButton.parentElement.parentElement.children[2].textContent.trim();
+                    locationName.value = this.parentElement.parentElement.children[3].textContent.trim();
+                    locationProperty.value = this.parentElement.parentElement.children[2].textContent.trim();
                      // scroll to top & disable body scroll
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     document.body.classList.add('overflow-hidden');
 
-                    //set the form action to update
-                    locationForm.action = "/edit-location";
 
                     //set form heading and button text
                     document.querySelector("#location-form-title").textContent = "Update Location";
@@ -186,7 +190,25 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteLocationButton.forEach(deleteButton => {
                 deleteButton.addEventListener("click", function () {
 
-                    // delete location logic
+                    const propertyIdValue = this.parentElement.parentElement.children[2].textContent;
+                    const locationNameValue = this.parentElement.parentElement.children[3].textContent;
+
+                    //set id
+                    document.querySelector("#delete-location-id").value = propertyIdValue + "," + locationNameValue;
+
+                    //set texts
+                    confirmationHeading.textContent = "Delete Location";
+                    confirmationQuestion.textContent = "This action is permanent. Do you want to delete this location?";
+
+                    deleteConfirmationButton.setAttribute("form", "delete-location");
+
+                    statusConfirmationButton.style.display = "none";
+                    deleteConfirmationButton.style.display = "block";
+
+
+                    document.body.classList.add('overflow-hidden');
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    confirmationWindow.style.display = "block";
                 });
             });
         }

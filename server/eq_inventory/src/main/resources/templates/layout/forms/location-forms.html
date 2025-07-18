@@ -15,6 +15,7 @@
     </div>
     <form id="location-form"  method="post" th:action="@{/add-location}"  class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow" th:object="${locationModel}">
 
+        <input type="hidden" name="id" id="location-id" value="0,0" />
         <h1 id="location-form-title" class="text-3xl font-thin mb-4">Create Location</h1>
 
         <div class="mb-4">
@@ -34,5 +35,11 @@
 
     </form>
     <button id="location-form-submit" form="location-form" type="submit" class="mt-4">Create Location</button>
+
+
+    <!-- Delete form -->
+    <form id="delete-location" th:action="@{/delete-location}" method="post">
+        <input type="hidden" name="id" id="delete-location-id">
+    </form>
 </div>
 

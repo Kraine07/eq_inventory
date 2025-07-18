@@ -57,7 +57,7 @@ public class EquipmentController {
         String[] modelParts = modelComposite.split(",");
         ModelId modelId = new ModelId(Long.valueOf(modelParts[0]), modelParts[1]);
 
-        Location equimentLocation = ls.findByPropertyId(locationId);
+        Location equimentLocation = ls.findByLocationId(locationId);
         kraine.app.eq_inventory.model.Model equipmentModel = ms.findByModelId(modelId);
 
 

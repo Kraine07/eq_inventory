@@ -30,7 +30,7 @@ public class ModelController {
 
 
     @PostMapping("/add-model")
-    public String addModel(@Param("manufacturer") String manufacturer, @Param("description") String description,
+    public String saveModel(@Param("manufacturer") String manufacturer, @Param("description") String description,
             @Param("id") String id) {
 
         ModelId modelId = createModelId(id);

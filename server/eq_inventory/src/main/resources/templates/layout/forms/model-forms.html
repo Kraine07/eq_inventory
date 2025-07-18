@@ -14,7 +14,7 @@
         <div class="mb-4">
             <label for="model-manufacturer">Manufacturer</label>
             <select name="manufacturer" id="model-manufacturer" class="focus:ring focus:ring-color-3 focus:ring-offset-2 focus:ring-opacity-50 capitalize">
-                <option class="" hidden>Select Manufacturer</option>
+                <option class="" hidden disabled selected>Select Manufacturer</option>
 
                 <option th:each="manufacturer : ${manufacturerList}" th:value="${manufacturer.id}" th:text="${manufacturer.name}" class="capitalize"></option>
             </select>
@@ -25,10 +25,10 @@
         </div>
     </form>
 
-        <button id="model-form-submit" form="model-form" type="submit" class="mt-4">Create Model</button>
+    <button id="model-form-submit" form="model-form" type="submit" class="mt-4">Create Model</button>
 
-        <!-- Delete form -->
-        <form id="delete-model" th:action="@{/delete-model}" method="post">
-            <input type="hidden" name="id" id="delete-model-id">
-        </form>
+    <!-- Delete form -->
+    <form id="delete-model" th:action="@{/delete-model}" method="post">
+        <input type="hidden" name="id" id="delete-model-id">
+    </form>
 </div>
