@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // location
     const locationForm = document.getElementById('location-form');
     const locationFormContainer = document.getElementById('location-form-container');
-    const openLocationFormButton = document.getElementById('open-location-form-btn');
+    const addLocationButtons = document.querySelectorAll(".add-location-btn");
     const closeLocationForm = document.getElementById('close-location-form-btn');
     const editLocationButton = document.querySelectorAll('.edit-location');
     const deleteLocationButton = document.querySelectorAll('.delete-location');
@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Set the form fields with the property data
                 propertyId.value = this.parentElement.previousElementSibling.previousElementSibling.textContent.trim();
                 propertyName.value = this.parentElement.previousElementSibling.textContent.trim();
-                propertyRegion.value = this.parentElement.parentElement.nextElementSibling.firstElementChild.children[0].textContent.trim();
-                propertyUser.value = this.parentElement.parentElement.nextElementSibling.firstElementChild.children[1].textContent.trim();
+                propertyRegion.value = this.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.children[0].textContent.trim();
+                propertyUser.value = this.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.children[1].textContent.trim();
 
                 // scroll to top & disable body scroll
                 window.scrollTo({ top: 0, behavior: "smooth" });
@@ -131,18 +131,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // LOCATION
         //open location form
-        if (openLocationFormButton !== null) {
-            openLocationFormButton.addEventListener("click", function () {
+    if (addLocationButtons !== null) {
+        addLocationButtons.forEach(addButton => {
+            addButton.addEventListener("click", function () {
+                const propertyValue = addButton.previousElementSibling.firstElementChild.textContent;
+                const propertyName = addButton.previousElementSibling.firstElementChild.nextElementSibling.textContent;
+
 
                 // scroll to top
                 window.scrollTo({ top: 0, behavior: "smooth" });
-                document.querySelector("#location-form-title").textContent = "Create Location";
-                document.querySelector("#location-form-submit").textContent = "Create Location";
                 document.body.classList.add('overflow-hidden');
+
+                //set form texts
+                document.querySelector("#location-form-title").textContent = `Add Location to ${propertyName.toUpperCase()}`;
+                document.querySelector("#location-form-submit").textContent = "Add Location";
+
+                //set property value
+                document.querySelector("#location-property").value = propertyValue;
+                document.querySelector("#property-container").style.display = "none";
+
+                //show form
                 locationFormContainer.style.display = "block";
                 locationForm.action = "/add-location"; // Set the form action to create
-                locationForm.reset(); // Reset the form fields
             });
+        });
+
         }
 
         // Close location form

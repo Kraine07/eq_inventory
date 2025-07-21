@@ -43,13 +43,14 @@ public class ModelService {
         Model newModel = new Model(mri.findManufacturerById(Long.valueOf(manufacturer)), description);
         Model result = modelRepository.saveAndFlush(newModel);
         if (existingModel != null) {
-
+            Manufacturer existingManufacturer = existingModel.getManufacturer();
             List<Equipment> equipmentList = equipmentRepositoryInterface.findByModel(existingModel);
 
             for (Equipment eq : equipmentList) {
                 eq.setModel(newModel);
             }
             equipmentRepositoryInterface.saveAllAndFlush(equipmentList);
+            existingManufacturer.getModels().remove(existingModel);
             modelRepository.delete(existingModel);
 
         }

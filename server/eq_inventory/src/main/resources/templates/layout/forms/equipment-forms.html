@@ -26,15 +26,15 @@
 
 
                 <!-- Location dropdown for admin -->
-                <div class="mb-3" >
+                <div class="mb-3"  >
                     <label for="equipment-location">Location</label>
-                    <select name="location" id="equipment-location" required>
+                    <select name="location" id="equipment-location"  class="capitalize" required>
                         <option value="" hidden>Select Location</option>
                         <th:block th:each="propertyLocations : ${locationsByProperty}">
                             <optgroup th:label="${propertyLocations.key}">
                                 <option th:each="location : ${propertyLocations.value}"
                                     th:value="${location.property.id + ',' + location.name}"
-                                    th:text="${location.property.name + ' - ' + location.name}">
+                                    th:text="${ location.name}">
                                 </option>
                             </optgroup>
                         </th:block>

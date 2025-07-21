@@ -48,7 +48,7 @@ public class EquipmentService {
     EquipmentRepositoryInterface eri;
 
 
-    @Cacheable // Cache the result of this expensive query
+    @Cacheable
     public List<Equipment> getAllWithFullDetails() {
         return eri.findAllWithFullDetails();
     }
@@ -66,7 +66,7 @@ public class EquipmentService {
     }
 
 
-    @Cacheable(key = "{#page, #size}") // Cache paginated results
+    @Cacheable(key = "{#page, #size}")
     public Page<Equipment> getPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         return eri.findAll(pageable);

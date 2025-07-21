@@ -15,7 +15,7 @@
 
 
     </div>
-    <div class="flex justify-between items-center mb-12 p-4 bg-app-white rounded-md">
+    <div class="flex justify-between items-center mb-12 p-4 bg-app-white-40 rounded-md">
         <div>
             <h2 class="text-2xl font-semibold">Property/Location Management</h2>
             <p class="text-sm">Create, update and remove properties and locations.</p>
@@ -25,13 +25,6 @@
         <!-- NEW PROPERTY/LOCATION BUTTON AND FORM -->
         <div class="flex justify-end items-center space-x-2">
 
-            <!-- new location button -->
-            <div id="open-location-form-btn" class="cursor-pointer bg-color-3 flex w-auto space-x-1 items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg mb-4 mt-8 py-2 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 aspect-square">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                <span class="text-sm">New Location</span>
-            </div>
 
             <!-- location form -->
             <div id="location-form-container" class=" hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 peer-checked:block  w-screen h-screen bg-transparent backdrop-blur-md ">
@@ -57,36 +50,49 @@
     <!-- property/location list -->
     <div class="flex ">
         <div class="flex flex-col w-full ">
-            <h1 class="text-2xl font-semibold ">Properties and Locations</h1>
+            <h1 class="text-2xl font-semibold ">Property List</h1>
 
-            <div th:each="property : ${propertyList}"    class="flex flex-col justify-between capitalize w-full px-4 py-4 my-4 shadow-app-shadow rounded-md">
+            <div th:each="property : ${propertyList}"    class="flex flex-col justify-between capitalize w-full p-4 my-6 shadow-app-shadow rounded-md">
 
-                <div class="flex items-center mb-8 space-x-6">
+                <div class="flex items-center justify-between mb-4   ">
 
-                    <!-- properties -->
-                    <div class="hidden" th:text="${property.id}"></div>
-                    <div th:text="${property.name}"  class=" flex-none  text-xl font-semibold  " ></div>
+                    <div class="flex items-center justify-between">
+                        <!-- properties -->
+                        <div class="hidden" th:text="${property.id}"></div>
+                        <div th:text="${property.name}"  class=" flex-none  text-xl font-semibold  " ></div>
 
-                    <!-- property edit/delete -->
-                    <div class="flex justify-start w-full space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                            class="edit-property h-8 aspect-square cursor-pointer">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                            <path d="M13.5 6.5l4 4" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                            class="delete-property h-8 aspect-square cursor-pointer">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M4 7l16 0" />
-                            <path d="M10 11l0 6" />
-                            <path d="M14 11l0 6" />
-                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                        </svg>
+                        <!-- property edit/delete -->
+                        <div class="flex justify-start w-auto ml-4 space-x-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                class="edit-property h-5 aspect-square cursor-pointer">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                <path d="M13.5 6.5l4 4" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                class="delete-property h-5 aspect-square cursor-pointer">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 7l16 0" />
+                                <path d="M10 11l0 6" />
+                                <path d="M14 11l0 6" />
+                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                            </svg>
+                        </div>
                     </div>
+
+
+                    <!-- add location button -->
+                    <div  class="  add-location-btn     cursor-pointer bg-color-3  flex  space-x-1 items-center justify-between text-md text-app-white font-semibold outline-none border-2 border-color-3 rounded-lg  py-2 px-4 hover:bg-color-4 hover:text-color-1 hover:border-color-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 aspect-square">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        <span class="text-sm">Add Location</span>
+                    </div>
+
+
                 </div>
 
                 <div class="grid grid-cols-4 gap-4 w-full">
@@ -102,14 +108,14 @@
                         <div class="flex flex-col justify-evenly px-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                class="edit-location hidden group-hover:inline  h-6 aspect-square cursor-pointer">
+                                class="edit-location hidden group-hover:inline  h-5 aspect-square cursor-pointer">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                 <path d="M13.5 6.5l4 4" />
                             </svg>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                                class="delete-location hidden group-hover:inline  h-6 aspect-square cursor-pointer">
+                                class="delete-location hidden group-hover:inline  h-5 aspect-square cursor-pointer">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M4 7l16 0" />
                                 <path d="M10 11l0 6" />

@@ -3,6 +3,8 @@ package kraine.app.eq_inventory.controller;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -150,16 +152,16 @@ public class UserController {
                 .collect(Collectors.toList());
 
         // group all locations by property and sort by property name
-        // Map<String, List<Location>> locationsByProperty = locations.stream()
-        // .collect(Collectors.groupingBy(location -> location.getProperty().getName()))
-        // .entrySet().stream()
-        // .sorted(Map.Entry.comparingByKey())
-        // .collect(Collectors.toMap(
-        //     Map.Entry::getKey,
-        //     Map.Entry::getValue,
-        //     (a, b) -> a,
-        //     LinkedHashMap::new
-        // ));
+        Map<String, List<Location>> locationsByProperty = locations.stream()
+        .collect(Collectors.groupingBy(location -> location.getProperty().getName()))
+        .entrySet().stream()
+        .sorted(Map.Entry.comparingByKey())
+        .collect(Collectors.toMap(
+            Map.Entry::getKey,
+            Map.Entry::getValue,
+            (a, b) -> a,
+            LinkedHashMap::new
+        ));
 
 
         // filter by user
@@ -198,7 +200,7 @@ public class UserController {
             Map.entry("propertyList", propertyList),
             Map.entry("userLocationList", userLocationsByProperty),
             Map.entry("locationList", locations),
-            // Map.entry("locationsByProperty", locationsByProperty),
+            Map.entry("locationsByProperty", locationsByProperty),
             Map.entry("manufacturerList", manufacturerService.getAllManufacturers().stream()
             .sorted(Comparator.comparing(Manufacturer::getName))
             .collect(Collectors.toList())),
@@ -435,9 +437,20 @@ public class UserController {
     }
 
 
+    @Autowired
+    CacheManager cacheManager;
+
     @GetMapping("/logout")
-    public String logout (HttpServletRequest request){
+    public String logout(HttpServletRequest request) {
+
+        // clear session
         SessionHandler.clearSession(request);
+
+        // clear all caches
+        for (String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).clear();
+        }
+
         return "redirect:/";
     }
 
