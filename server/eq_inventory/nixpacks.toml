@@ -5,10 +5,10 @@ builder = "java-maven"
 nixPkgs = ["jdk17", "maven"]
 
 [phases.build]
-workingDirectory = "server"
+workingDirectory = "server/eq_inventory"
 cmds = [
   "mvn clean package -DskipTests"
 ]
 
 [start]
-cmd = "java -jar target/eq-inventory-0.0.1-SNAPSHOT.jar"
+cmd = "java -jar server/eq_inventory/target/eq-inventory-0.0.1-SNAPSHOT.jar"
