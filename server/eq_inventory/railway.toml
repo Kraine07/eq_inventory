@@ -1,0 +1,14 @@
+[build]
+builder = "java-maven"
+
+[phases.setup]
+nixPkgs = ["jdk21", "maven"]
+
+
+[phases.build]
+cmds = [
+  "cd server/eq_inventory && mvn clean package -DskipTests && cp target/eq-inventory-0.0.1-SNAPSHOT.jar /app/app.jar"
+]
+
+[start]
+cmd = "java -jar app.jar"
