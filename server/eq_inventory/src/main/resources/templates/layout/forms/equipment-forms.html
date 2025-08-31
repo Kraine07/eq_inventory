@@ -26,11 +26,27 @@
 
 
                 <!-- Location dropdown for admin -->
-                <div class="mb-3"  >
+                <div class="mb-3" th:if="${session.authUser.isAdmin}" >
                     <label for="equipment-location">Location</label>
                     <select name="location" id="equipment-location"  class="capitalize" required>
                         <option value="" hidden>Select Location</option>
                         <th:block th:each="propertyLocations : ${locationsByProperty}">
+                            <optgroup th:label="${propertyLocations.key}">
+                                <option th:each="location : ${propertyLocations.value}"
+                                    th:value="${location.property.id + ',' + location.name}"
+                                    th:text="${ location.name}">
+                                </option>
+                            </optgroup>
+                        </th:block>
+                    </select>
+                </div>
+
+                <!-- Location dropdown for non-admin -->
+                <div class="mb-3" th:unless="${session.authUser.isAdmin}" >
+                    <label for="equipment-location">Location</label>
+                    <select name="location" id="equipment-location"  class="capitalize" required>
+                        <option value="" hidden>Select Location</option>
+                        <th:block th:each="propertyLocations : ${userLocationList}">
                             <optgroup th:label="${propertyLocations.key}">
                                 <option th:each="location : ${propertyLocations.value}"
                                     th:value="${location.property.id + ',' + location.name}"

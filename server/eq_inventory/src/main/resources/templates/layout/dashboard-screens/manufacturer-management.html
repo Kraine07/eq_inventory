@@ -2,7 +2,7 @@
 
 
 
-<div th:fragment="manufacturer-management">
+<div th:fragment="manufacturer-management" th:if="${session.authUser.isAdmin}">
 
     <div class="flex justify-between items-center mb-8 p-4 bg-app-white-40 rounded-md">
         <div>

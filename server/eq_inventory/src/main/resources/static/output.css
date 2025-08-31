@@ -675,10 +675,6 @@ th, td {
   margin: 0.5rem;
 }
 
-.m-4 {
-  margin: 1rem;
-}
-
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -687,11 +683,6 @@ th, td {
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
-}
-
-.my-5 {
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
 }
 
 .my-6 {
@@ -719,6 +710,10 @@ th, td {
   margin-bottom: 1rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .mb-8 {
   margin-bottom: 2rem;
 }
@@ -729,6 +724,10 @@ th, td {
 
 .ml-2 {
   margin-left: 0.5rem;
+}
+
+.ml-4 {
+  margin-left: 1rem;
 }
 
 .mr-1 {
@@ -745,10 +744,6 @@ th, td {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.ml-4 {
-  margin-left: 1rem;
 }
 
 .block {
@@ -827,10 +822,6 @@ th, td {
   height: 100vh;
 }
 
-.h-4 {
-  height: 1rem;
-}
-
 .min-h-full {
   min-height: 100%;
 }
@@ -879,6 +870,10 @@ th, td {
   width: 24rem;
 }
 
+.w-\[600px\] {
+  width: 600px;
+}
+
 .w-\[900px\] {
   width: 900px;
 }
@@ -903,14 +898,6 @@ th, td {
   flex: none;
 }
 
-.flex-1 {
-  flex: 1 1 0%;
-}
-
-.grow {
-  flex-grow: 1;
-}
-
 .basis-1\/2 {
   flex-basis: 50%;
 }
@@ -925,18 +912,6 @@ th, td {
 
 .basis-40 {
   flex-basis: 10rem;
-}
-
-.basis-1 {
-  flex-basis: 0.25rem;
-}
-
-.basis-full {
-  flex-basis: 100%;
-}
-
-.basis-auto {
-  flex-basis: auto;
 }
 
 .table-fixed {
@@ -1045,12 +1020,6 @@ th, td {
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
-.space-x-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
 .space-x-8 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(2rem * var(--tw-space-x-reverse));
@@ -1081,10 +1050,6 @@ th, td {
 
 .self-end {
   align-self: flex-end;
-}
-
-.justify-self-end {
-  justify-self: end;
 }
 
 .scroll-smooth {
@@ -1161,11 +1126,6 @@ th, td {
 .border-color-4 {
   --tw-border-opacity: 1;
   border-color: rgb(236 179 101 / var(--tw-border-opacity, 1));
-}
-
-.border-red-500 {
-  --tw-border-opacity: 1;
-  border-color: rgb(239 68 68 / var(--tw-border-opacity, 1));
 }
 
 .bg-app-white {

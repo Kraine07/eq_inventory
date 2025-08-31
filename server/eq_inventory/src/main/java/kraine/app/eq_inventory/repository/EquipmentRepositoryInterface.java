@@ -10,7 +10,11 @@ import kraine.app.eq_inventory.model.Location;
 import kraine.app.eq_inventory.model.Model;
 
 import java.util.List;
+import kraine.app.eq_inventory.model.Property;
+import kraine.app.eq_inventory.model.User;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -41,6 +45,13 @@ public interface EquipmentRepositoryInterface extends JpaRepository<Equipment, L
     List<Equipment> findByModel(Model model);
 
     List<Equipment> findByLocation(Location location);
+    
+    List<Equipment> findByLocation_Property(Property property);
+    
+    Page<Equipment> findByLocation_Property_User(User user, Pageable pageable);
+    
+
+    // Page<Equipment> findByLocation_Property_User(User user, Pageable pageable);
 
 
 }

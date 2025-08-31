@@ -29,11 +29,14 @@ const deleteUserButton = document.querySelectorAll(".delete-user");
 document.addEventListener("click", function (event) {
 
     //click outside userform
-    if( event.target === userFormContainer || closeUserForm.contains(event.target)) {
-        document.body.classList.remove('overflow-hidden');
-        userFormContainer.style.display = "none";
-        userForm.reset();
+    if (userFormContainer || closeUserForm) {
+        if( event.target === userFormContainer || closeUserForm.contains(event.target)) {
+            document.body.classList.remove('overflow-hidden');
+            userFormContainer.style.display = "none";
+            userForm.reset();
+        }
     }
+    
 
 });
 

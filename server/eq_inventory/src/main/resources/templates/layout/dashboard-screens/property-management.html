@@ -1,6 +1,6 @@
 
 
-<div th:fragment="property-management">
+<div th:fragment="property-management" th:if="${session.authUser.isAdmin}">
 
     <div class="flex items-center justify-start mb-8 space-x-2 text-app-white">
         <div class="  inline-flex items-center bg-color-3 py-2 px-4 rounded-md cursor-pointer  hover:bg-color-4 hover:text-color-1">

@@ -5,9 +5,11 @@
 package kraine.app.eq_inventory.service;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.util.List;
 
+import kraine.app.eq_inventory.SessionHandler;
 import kraine.app.eq_inventory.DTO.EquipmentDTO;
 import kraine.app.eq_inventory.DTO.LocationDTO;
 import kraine.app.eq_inventory.DTO.ManufacturerDTO;
@@ -19,6 +21,8 @@ import kraine.app.eq_inventory.DTO.UserDTO;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Location;
 import kraine.app.eq_inventory.model.Model;
+import kraine.app.eq_inventory.model.Property;
+import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 
@@ -66,11 +70,29 @@ public class EquipmentService {
     }
 
 
-    @Cacheable(key = "{#page, #size}")
-    public Page<Equipment> getPage(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return eri.findAll(pageable);
+
+    @Cacheable( key = "{#page, #size}")
+    public Page<Equipment> getPage(int page, int size, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("location.property.name").ascending());
+        User user = SessionHandler.getAttribute(request, "authUser", User.class);
+        if(user.getIsAdmin()) {
+            return eri.findAll(pageable);
+        }
+        return eri.findByLocation_Property_User(user, pageable);
     }
+
+
+
+    public List<Equipment> getByProperty(Property property){
+        return eri.findByLocation_Property(property);
+    }
+
+    public Page<Equipment> findByUser(User user) {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("location.property.name").ascending());
+        return eri.findByLocation_Property_User(user, pageable);
+    }
+
+
 
 
 

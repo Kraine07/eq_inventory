@@ -186,11 +186,9 @@ public class UserController {
         }
         catch (NumberFormatException ignored) {}
 
-        Page<Equipment> pagedEquipmentList = equipmentService.getPage(page, size);
-        List<Equipment> equipmentList = pagedEquipmentList.getContent();
-        List<Equipment> pagedUserEquipmentList = pagedEquipmentList.getContent().stream()
-                .filter(equipment -> equipment.getLocation().getProperty().getUser().getId().equals(authUser.getId()))
-                .collect(Collectors.toList());
+        Page<Equipment> pagedEquipment = equipmentService.getPage(page, size, request);
+
+        List<Equipment> equipmentList = pagedEquipment.getContent();
 
 
         // add model attributes
@@ -208,10 +206,9 @@ public class UserController {
             .sorted(Comparator.comparing(
                                 kraine.app.eq_inventory.model.Model::getDescription))
             .collect(Collectors.toList())),
-            Map.entry("equipmentList", equipmentList),
+            // Map.entry("equipmentList", equipmentList),
             Map.entry("userEquipmentList", equipmentByManufacturer),
-            Map.entry("pagedUserEquipmentList", pagedUserEquipmentList),
-            Map.entry("pagedEquipmentList", pagedEquipmentList),
+            Map.entry("pagedEquipmentList", pagedEquipment),
             Map.entry("currentPage", page),
             Map.entry("totalPages", (int) Math.ceil((double) equipmentList.size() / size)),
             Map.entry("registerModel", new RegisterModel()),

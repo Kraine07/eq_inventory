@@ -119,6 +119,45 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+    // view equipment card
+    const equipmentCard = document.querySelector("#equipment-card-container");
+    const equipmentCardCloseButton = document.querySelector("#close-equipment-card-btn");
+    const viewEquipmentButtons = document.querySelectorAll(".view-equipment");
+
+    if (viewEquipmentButtons.length > 0) {
+        viewEquipmentButtons.forEach(viewButton => {
+            viewButton.addEventListener("click", function () {
+                // scroll to top
+                window.scrollTo({ top: 0, behavior: "smooth" });
+
+                // stop scrolling
+                document.body.classList.add('overflow-hidden');
+
+
+                // set values in the card
+                const equipmentRow = viewButton.closest("tr").children;
+                document.querySelector("#equipment-card-manufacturer").textContent = equipmentRow[3].children[1].textContent;
+                document.querySelector("#equipment-card-model").textContent = equipmentRow[3].children[2].textContent;
+                document.querySelector("#equipment-card-property").textContent = equipmentRow[2].lastElementChild.textContent.split("-")[0];
+                document.querySelector("#equipment-card-location").textContent = equipmentRow[2].lastElementChild.textContent.split("-")[1];
+                document.querySelector("#equipment-card-serial-number").textContent = equipmentRow[4].textContent;
+                // document.querySelector("#equipment-card-manufactured-date").textContent = equipmentRow[5].textContent;
+
+                // show equipment card
+                equipmentCard.style.display = "block";
+            });
+        });
+
+        // close equipment card with button
+        if (equipmentCardCloseButton !== null) {
+            equipmentCardCloseButton.addEventListener("click", function () {
+                document.body.classList.remove('overflow-hidden');
+                equipmentCard.style.display = "none";
+            });
+        }
+        
+    }
+
     // edit & delete equipment
     if (editEquipmentButton.length > 0 || deleteEquipmentButton.length > 0) {
 
