@@ -2,12 +2,12 @@
 builder = "java-maven"
 
 [phases.setup]
-nixPkgs = ["jdk17", "maven"]
+nixPkgs = ["jdk21", "maven"]
 
 [phases.build]
-workingDirectory = "server/eq_inventory"
+# explicitly cd into where pom.xml is
 cmds = [
-  "mvn clean package -DskipTests"
+  "cd server/eq_inventory && mvn clean package -DskipTests"
 ]
 
 [start]
