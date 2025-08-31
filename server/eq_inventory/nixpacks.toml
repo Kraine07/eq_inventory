@@ -5,7 +5,7 @@ builder = "java-maven"
 nixPkgs = ["jdk17", "maven"]
 
 [phases.build]
-workingDirectory = "eq_inventory"
+workingDirectory = "server"
 cmds = [
   "mvn clean package -DskipTests"
 ]
