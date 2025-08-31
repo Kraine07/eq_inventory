@@ -8,6 +8,6 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21
 WORKDIR /app
-COPY --from=build /app/target/eq-inventory-0.0.1-SNAPSHOT.jar .
+COPY --from=build /app/target/eq_inventory-0.0.1-SNAPSHOT.jar .
 EXPOSE 3000
-CMD ["java", "-jar", "eq-inventory-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "eq_inventory-0.0.1-SNAPSHOT.jar"]
