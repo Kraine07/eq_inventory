@@ -1,5 +1,6 @@
 package kraine.app.eq_inventory.API;
 
+import kraine.app.eq_inventory.DTO.UserDTO;
 import kraine.app.eq_inventory.model.LoginModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,14 @@ public class UserAPI {
 
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginAPI(@RequestBody LoginModel loginModel) {
-        System.out.println("#################################### " + loginModel);
-        User retrievedUser = us.attemptLogin(loginModel);
-        return new ResponseEntity<>(retrievedUser, HttpStatus.OK) ;
+    public ResponseEntity<UserDTO> loginAPI(@RequestBody LoginModel loginModel) {
+        User retrievedUser;
+        try{
+            retrievedUser = us.attemptLogin(loginModel);
+            return new ResponseEntity<>(UserDTO.from(retrievedUser), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
     }
 }

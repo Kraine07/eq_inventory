@@ -50,7 +50,6 @@ public class UserService {
 
         if (retrievedUser == null) {
             throw new UserNotFoundException("This user does not exist.");
-//            return null;
         }
 
         // increment failed attempts if password does not match
@@ -62,7 +61,6 @@ public class UserService {
             updateUser(retrievedUser);
 
             throw new UserNotFoundException("This user does not exist.");
-//            return null;
         }
 
 
