@@ -6,7 +6,17 @@ public record UserDTO(Long id, String firstName, String lastName, String email, 
 
     public static UserDTO from(User u) {
 
-        return new UserDTO(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), RoleDTO.from(u.getRole()), u.getIsTemporaryPassword(), u.getIsSuspended(), u.getFailedAttempts(), u.getIsAdmin()) ;
+        return new UserDTO(
+            u.getId(),
+            u.getFirstName(),
+            u.getLastName(),
+            u.getEmail(),
+            RoleDTO.from(u.getRole()),
+            u.getIsTemporaryPassword(),
+            u.getIsSuspended(),
+            u.getFailedAttempts(),
+            u.getIsAdmin()
+        ) ;
     }
 
 }

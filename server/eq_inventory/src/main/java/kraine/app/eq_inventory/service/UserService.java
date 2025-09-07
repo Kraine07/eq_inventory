@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import kraine.app.eq_inventory.DTO.UserDTO;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
@@ -107,6 +108,15 @@ public class UserService {
     @CacheEvict(key = "#id")
     public void deleteUser(Long id) {
         userRepo.deleteById(id);
+    }
+
+
+
+
+
+    public List<UserDTO> getAllUserDTOs() {
+        List<User> users = getUsers();
+        return users.stream().map(UserDTO::from).toList();
     }
 }
 

@@ -83,6 +83,8 @@ public class PropertyService {
 
 
 
+
+
     public List<PropertyDTO> getAllPropertyDTOs() {
         return propertyRepository.findAllWithDetails().stream()
                 .map(this::convertToDTO)
