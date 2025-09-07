@@ -17,3 +17,4 @@ public record EquipmentDTO(Long id, String serialNumber, YearMonth manufacturedD
     }
 
 }
+

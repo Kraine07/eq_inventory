@@ -9,10 +9,16 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import kraine.app.eq_inventory.DTO.PropertyDTO;
+import kraine.app.eq_inventory.DTO.RegionDTO;
+import kraine.app.eq_inventory.DTO.RoleDTO;
+import kraine.app.eq_inventory.DTO.UserDTO;
 import kraine.app.eq_inventory.exception.DeletePropertyException;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Property;
-import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
+import kraine.app.eq_inventory.model.Region;
+import kraine.app.eq_inventory.model.Role;
+import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.PropertyRepositoryInterface;
 
 @Service
@@ -72,5 +78,47 @@ public class PropertyService {
             }
         });
         propertyRepository.deleteById(id);
+    }
+
+
+
+
+    public List<PropertyDTO> getAllPropertyDTOs() {
+        return propertyRepository.findAllWithDetails().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    private PropertyDTO convertToDTO(Property property) {
+        return new PropertyDTO(
+                property.getId(),
+                property.getName(),
+                convertRegionToDTO(property.getRegion()),
+                convertUserToDTO(property.getUser()));
+    }
+
+    private RegionDTO convertRegionToDTO(Region region) {
+        return new RegionDTO(
+                region.getId(),
+                region.getName());
+    }
+
+    private UserDTO convertUserToDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                convertRoleToDTO(user.getRole()),
+                user.getIsAdmin(),
+                user.getIsSuspended(),
+                user.getFailedAttempts(),
+                user.getIsAdmin());
+    }
+
+    private RoleDTO convertRoleToDTO(Role role) {
+        return new RoleDTO(
+                role.getId(),
+                role.getRoleType());
     }
 }
