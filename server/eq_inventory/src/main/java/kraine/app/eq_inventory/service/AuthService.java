@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kraine.app.eq_inventory.SessionHandler;
+import kraine.app.eq_inventory.DTO.LoginResponse;
 import kraine.app.eq_inventory.model.LoginAttempt;
 import kraine.app.eq_inventory.model.LoginModel;
 import kraine.app.eq_inventory.model.LoginStatus;
@@ -86,4 +87,47 @@ public class AuthService {
         las.recordSuccessfulAttempt(currentAttempt, loginModel);
         return LoginStatus.SUCCESSFUL;
     }
+
+
+
+
+
+    public LoginResponse loginFromMobile(LoginModel loginModel, HttpServletRequest request) {
+        // clear session
+        SessionHandler.clearSession(request);
+
+        // construct login attempt
+        LoginAttempt currentAttempt = LoginAttempt.builder()
+                .email(loginModel.getEmail())
+                .ipAddress(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now())
+                .status(LoginStatus.SUCCESSFUL)
+                .userAgent(request.getHeader("User-Agent"))
+                .build();
+
+        try {
+            User authUser = us.attemptLogin(loginModel);
+
+            if (authUser.getIsSuspended()) {
+                las.recordLoginLocked(currentAttempt);
+                return new LoginResponse(LoginStatus.LOCKED, null);
+            }
+
+            // save to session (if you still need it elsewhere)
+            SessionHandler.addAttribute(request, "authUser", authUser);
+
+            if (authUser.getIsTemporaryPassword()) {
+                las.recordSuccessfulAttempt(currentAttempt, loginModel);
+                return new LoginResponse(LoginStatus.TEMPORARY, authUser);
+            }
+
+            las.recordSuccessfulAttempt(currentAttempt, loginModel);
+            return new LoginResponse(LoginStatus.SUCCESSFUL, authUser);
+
+        } catch (Exception e) {
+            las.recordFailedAttempt(loginModel,currentAttempt); // consider tracking failed attempts
+            return new LoginResponse(LoginStatus.FAILED, null);
+        }
+    }
+
 }

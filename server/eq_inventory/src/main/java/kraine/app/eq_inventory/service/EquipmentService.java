@@ -65,9 +65,18 @@ public class EquipmentService {
 
 
     @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
-    public void deleteEquipment(Long id) {
-        eri.deleteById(id);
+    public boolean deleteEquipment(Long id) {
+        if (eri.existsById(id)) {
+            eri.deleteById(id);
+            return true;
+        }
+        return false;
     }
+
+    // @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+    // public void deleteEquipment(Long id) {
+    //     eri.deleteById(id);
+    // }
 
 
 

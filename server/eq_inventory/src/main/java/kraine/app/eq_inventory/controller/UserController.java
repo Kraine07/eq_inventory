@@ -65,10 +65,11 @@ public class UserController {
     private final ManufacturerService manufacturerService;
     private final ModelService modelService;
     private final EquipmentService equipmentService;
+
+
+
+
     // Constructor injection for services
-
-
-
     public UserController(UserService us, LoginAttemptsService las, RoleService roleService, AuthService authService, RegionService regionService, PropertyService propertyService, LocationService locationService, ManufacturerService manufacturerService, ModelService modelService, EquipmentService equipmentService) {
         this.us = us;
         this.las = las;

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class EquipmentController {
+
 
 
     @Autowired
@@ -82,9 +84,16 @@ public class EquipmentController {
 
 
 
-    @PostMapping("/delete-equipment")
+    @DeleteMapping("/delete-equipment")
     public String deleteEquipment(@RequestParam(name="id") String id) {
-        es.deleteEquipment(Long.parseLong(id));
+        if (es.deleteEquipment(Long.parseLong(id))) {
+
+            // TODO: replace with successa and error messages
+            System.out.println("Equipment with ID " + id + " deleted successfully.");
+        }
+        else {
+            System.out.println("Equipment with ID " + id + " not found.");
+        }
         return "redirect:/";
     }
 
