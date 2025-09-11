@@ -59,7 +59,7 @@ public class UserAPI {
 
                 case LOCKED:
                     return ResponseEntity.status(HttpStatus.LOCKED)
-                            .body(Map.of("error", "Account is locked"));
+                            .body(Map.of("error", "Account is locked. Please contact administrator."));
 
                 case FAILED:
                 default:

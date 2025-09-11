@@ -27,9 +27,7 @@ import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Page;
@@ -58,13 +56,25 @@ public class EquipmentService {
     }
 
 
-    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+//    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+    @Caching(
+        put = {
+                @CachePut(cacheNames = "equipment", key = "#result.id"),
+                @CachePut(cacheNames = "equipmentDTOs", key = "#result.id")
+        }
+    )
     public Equipment saveEquipment(Equipment equipment) {
         return eri.saveAndFlush(equipment);
     }
 
 
-    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+//    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+    @Caching(
+        evict = {
+                @CacheEvict(cacheNames = "equipment", key = "#id"),
+                @CacheEvict(cacheNames = "equipmentDTOs", key = "#id")
+        }
+    )
     public boolean deleteEquipment(Long id) {
         if (eri.existsById(id)) {
             eri.deleteById(id);

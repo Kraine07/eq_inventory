@@ -40,6 +40,8 @@ public interface EquipmentRepositoryInterface extends JpaRepository<Equipment, L
         )
     List<Equipment> findAllWithFullDetails();
 
+    Equipment findBySerialNumber(String serialNumber);
+
 
 
     List<Equipment> findByModel(Model model);
