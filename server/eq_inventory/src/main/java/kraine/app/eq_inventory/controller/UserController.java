@@ -230,34 +230,17 @@ public class UserController {
     public String addUser(@Valid RegisterModel registerModel, BindingResult bindingResult,
             Model model, @RequestParam(name = "role") String role, HttpServletRequest request) throws BindException {
 
-        // generate, set password
-        String genPass = PasswordServices.generatePassword(12);
-        registerModel.setPassword(genPass);
 
         // get and set role
         registerModel.setRole(role.contains("admin") ? roleService.getRole(RoleType.ADMINISTRATOR) : roleService.getRole(RoleType.EDITOR));
 
-        // attributes to be used when sending email
-        SessionHandler.addAttribute(request, "rawPass", genPass);
-        SessionHandler.addAttribute(request, "recipient", registerModel.getEmail());
 
-
-        if (bindingResult.hasFieldErrors("firstName")) {
+        if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
-        try {
-            // send password to email if creation was successful
-            if (us.addUser(RegisterModel.toUser(registerModel)) != null) return "redirect:/send-password";
 
-
-            return "redirect:/";
-        }
-        catch (DuplicateUserException e) {
-            throw e;
-        }
-        catch(Exception e) {throw e;}
-
+        return "redirect:/";
     }
 
 

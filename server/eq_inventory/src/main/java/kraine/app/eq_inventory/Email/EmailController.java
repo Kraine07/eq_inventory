@@ -1,5 +1,6 @@
 package kraine.app.eq_inventory.Email;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -11,6 +12,7 @@ import kraine.app.eq_inventory.SessionHandler;
 public class EmailController {
 
 
+    @Autowired
     private EmailService emailService;
 
     public EmailController(EmailService es) {

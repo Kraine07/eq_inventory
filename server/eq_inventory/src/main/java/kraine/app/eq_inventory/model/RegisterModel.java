@@ -26,8 +26,8 @@ public class RegisterModel {
     @Email(message = "Invalid email.")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^*&()]).{8,}$", message = "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character")
-    private String password;
+    // @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^*&()]).{8,}$", message = "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character")
+    // private String password;
     
     private Role role;
     
@@ -39,7 +39,7 @@ public class RegisterModel {
                 .firstName(registerModel.getFirstName())
                 .lastName(registerModel.getLastName())
                 .email(registerModel.getEmail())
-                .password(registerModel.getPassword())
+                .password(null)
                 .role(registerModel.getRole())
                 .build();
     }

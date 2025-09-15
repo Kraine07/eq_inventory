@@ -9,12 +9,18 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import kraine.app.eq_inventory.PasswordServices;
+import kraine.app.eq_inventory.SessionHandler;
 import kraine.app.eq_inventory.DTO.UserDTO;
+import kraine.app.eq_inventory.Email.EmailService;
 import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
 import kraine.app.eq_inventory.model.LoginModel;
+import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.UserRepoInterface;
 
@@ -27,23 +33,54 @@ public class UserService {
     UserRepoInterface userRepo;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private BCryptPasswordEncoder bpe;
 
 
-    public User addUser(User user) {
+
+    @CacheEvict(cacheNames = { "user", "property" }, allEntries = true)
+    public User addUser(RegisterModel registerModel, HttpServletRequest request) throws DuplicateUserException {
+
+        User user = RegisterModel.toUser(registerModel);
 
         // check for duplicate email
         if (userRepo.existsByEmail(user.getEmail())) {
             throw new DuplicateUserException("The email address " + user.getEmail() + " is already in use.");
         }
+
+        // generate, set password
+        String genPass = PasswordServices.generatePassword(12);
+
         // hash password
-        user.setPassword(bpe.encode(user.getPassword()));
+        user.setPassword(bpe.encode(genPass));
         // set remaining fields
         user.setFailedAttempts(0);
+
         user.setIsTemporaryPassword(true);
         user.setIsSuspended(false);
-        return userRepo.save(user);
+        User savedUser = userRepo.save(user);
+
+        if (savedUser != null) {
+            // attributes to be used when sending email
+            SessionHandler.addAttribute(request, "rawPass", genPass);
+            SessionHandler.addAttribute(request, "recipient", registerModel.getEmail());
+
+            try {
+                emailService.sendPassword(SessionHandler.getAttribute(request, "recipient", String.class),
+                        SessionHandler.getAttribute(request, "rawPass", String.class));
+            } catch (MessagingException e) {
+                System.out.println("Error sending email...");
+                e.printStackTrace();
+            }
+        }
+        return savedUser;
     }
+
+
+
+
 
 
     public User attemptLogin(LoginModel loginModel) {
@@ -73,6 +110,9 @@ public class UserService {
 
 
 
+
+
+
     @CacheEvict(cacheNames = { "user", "property" }, allEntries = true)
     public User updateUser(User user) throws UserNotFoundException{
         // prevent a new user form being created
@@ -83,6 +123,7 @@ public class UserService {
 
 
 
+    @CacheEvict(cacheNames = { "user", "property" }, allEntries = true)
     public User updatePassword(User user, String oldPassword) {
         //check if old password matches
         User userInDb = userRepo.findByEmail(user.getEmail());
