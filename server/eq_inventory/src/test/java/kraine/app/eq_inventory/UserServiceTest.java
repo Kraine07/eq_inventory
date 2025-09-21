@@ -1,7 +1,6 @@
 package kraine.app.eq_inventory;
 
 import kraine.app.eq_inventory.exception.DuplicateUserException;
-import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
 import kraine.app.eq_inventory.model.LoginModel;
 import kraine.app.eq_inventory.model.RegisterModel;
@@ -25,10 +24,8 @@ import kraine.app.eq_inventory.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserServiceTest {
 
@@ -42,7 +39,7 @@ public class UserServiceTest {
     private UserService userService;
 
     private User mockUser;
-    
+
     private LoginModel mockLoginModel;
     private RegisterModel mockRegisterModel;
 
@@ -54,16 +51,15 @@ public class UserServiceTest {
         mockUser.setLastName("Doe");
         mockUser.setEmail("john@example.com");
         mockUser.setPassword("plaintext123");
-        
+
         mockLoginModel = new LoginModel();
         mockLoginModel.setEmail("john@example.com");
         mockLoginModel.setPassword("plaintext123");
-        
+
         mockRegisterModel = new RegisterModel();
         mockUser.setFirstName("John");
         mockUser.setLastName("Doe");
         mockRegisterModel.setEmail("john@example.com");
-        mockRegisterModel.setPassword("plaintext123");
     }
 
 
@@ -77,7 +73,7 @@ public class UserServiceTest {
         when(userRepo.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        User savedUser = userService.addUser(mockUser);
+        User savedUser = userService.addUser(mockRegisterModel, null);
 
         // Assert
         assertThat(savedUser.getPassword()).isEqualTo("hashedPassword");
@@ -88,7 +84,10 @@ public class UserServiceTest {
     }
 
 
-    
+
+
+
+
     // DUPLICATE EMAIL
     @Test
     void shouldThrowExceptionWhenEmailAlreadyExists() {
@@ -97,15 +96,21 @@ public class UserServiceTest {
 
         // Act & Assert
         DuplicateUserException exception = assertThrows(DuplicateUserException.class, () -> {
-            userService.addUser(mockUser);
+            userService.addUser(mockRegisterModel, null);
         });
 
         assertThat(exception.getMessage()).isEqualTo("The email address john@example.com is already in use.");
         verify(userRepo, never()).save(any());
     }
 
-    
-    
+
+
+
+
+
+
+
+
     // SUCCESSFULL LOGIN
     @Test
     void successfulLogin_ReturnsUserAndResetsFailedAttempts() {
@@ -119,7 +124,7 @@ public class UserServiceTest {
             .isSuspended(false)
             .isTemporaryPassword(false)
             .build();
-        
+
         // mock repo
         when(userRepo.findByEmail("test@example.com")).thenReturn(mockUser);
         when(bpe.matches("rawPassword", "encodedPassword")).thenReturn(true);
@@ -138,12 +143,15 @@ public class UserServiceTest {
         verify(userRepo).saveAndFlush(mockUser);
     }
 
-    
-   
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
     // INVALID EMAIL
     @Test
     void testFindByEmail_UserNotFound() {
@@ -163,11 +171,16 @@ public class UserServiceTest {
     }
 
 
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
     // INVALID PASSWORD
     @Test
     void testFindByEmail_InvalidPassword() {
