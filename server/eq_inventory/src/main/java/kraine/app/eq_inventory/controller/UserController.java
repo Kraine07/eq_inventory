@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kraine.app.eq_inventory.PasswordServices;
 import kraine.app.eq_inventory.SessionHandler;
-import kraine.app.eq_inventory.exception.DuplicateUserException;
 import kraine.app.eq_inventory.exception.PasswordNotFoundException;
 import kraine.app.eq_inventory.exception.UserNotFoundException;
 import kraine.app.eq_inventory.model.Equipment;

@@ -9,6 +9,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import kraine.app.eq_inventory.DTO.ManufacturerDTO;
+import kraine.app.eq_inventory.DTO.ModelDTO;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Manufacturer;
 import kraine.app.eq_inventory.model.Model;
@@ -83,4 +85,25 @@ public class ModelService {
         manufacturer.getModels().remove(model);
         modelRepository.deleteById(id);
     }
+
+
+
+
+    // DTO Methods
+
+
+    public List<ModelDTO> getAllModelDTOs() {
+        return modelRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    private ModelDTO convertToDTO(Model model) {
+        return new ModelDTO(
+                model.getDescription(),
+                ManufacturerDTO.from(model.getManufacturer())
+        );
+    }
+
+
 }

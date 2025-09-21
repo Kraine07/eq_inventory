@@ -12,15 +12,8 @@ import java.util.List;
 import kraine.app.eq_inventory.SessionHandler;
 import kraine.app.eq_inventory.DTO.EquipmentDTO;
 import kraine.app.eq_inventory.DTO.LocationDTO;
-import kraine.app.eq_inventory.DTO.ManufacturerDTO;
 import kraine.app.eq_inventory.DTO.ModelDTO;
-import kraine.app.eq_inventory.DTO.PropertyDTO;
-import kraine.app.eq_inventory.DTO.RegionDTO;
-import kraine.app.eq_inventory.DTO.RoleDTO;
-import kraine.app.eq_inventory.DTO.UserDTO;
 import kraine.app.eq_inventory.model.Equipment;
-import kraine.app.eq_inventory.model.Location;
-import kraine.app.eq_inventory.model.Model;
 import kraine.app.eq_inventory.model.Property;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
@@ -83,10 +76,6 @@ public class EquipmentService {
         return false;
     }
 
-    // @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
-    // public void deleteEquipment(Long id) {
-    //     eri.deleteById(id);
-    // }
 
 
 
@@ -129,46 +118,41 @@ public class EquipmentService {
                 equipment.getId(),
                 equipment.getSerialNumber(),
                 equipment.getManufacturedDate(),
-                convertModelToDTO(equipment.getModel()),
-                convertLocationToDTO(equipment.getLocation())
+                // convertModelToDTO(equipment.getModel()),
+                ModelDTO.from(equipment.getModel()),
+                LocationDTO.from(equipment.getLocation())
         );
     }
 
-    private ModelDTO convertModelToDTO(Model model) {
-        return new ModelDTO(
-                model.getDescription(),
-                new ManufacturerDTO(
-                    model.getManufacturer().getId(), 
-                    model.getManufacturer().getName())
-        );
-    }
+    // private ModelDTO convertModelToDTO(Model model) {
+    //     return new ModelDTO(
+    //             model.getDescription(),
+    //             new ManufacturerDTO(
+    //                 model.getManufacturer().getId(),
+    //                 model.getManufacturer().getName())
+    //     );
+    // }
 
-    private LocationDTO convertLocationToDTO(Location location) {
-        return new LocationDTO(
-                location.getName(),
-                new PropertyDTO(
-                    location.getProperty().getId(),
-                    location.getProperty().getName(),
-                    new RegionDTO(
-                        location.getProperty().getRegion().getId(),
-                        location.getProperty().getRegion().getName()
-                    )   ,
-                    new UserDTO(
-                        location.getProperty().getUser().getId(),
-                        location.getProperty().getUser().getFirstName(),
-                        location.getProperty().getUser().getLastName(),
-                        location.getProperty().getUser().getEmail(),
-                        new RoleDTO(
-                            location.getProperty().getUser().getRole().getId(),
-                            location.getProperty().getUser().getRole().getRoleType()
-                                ),
-                        location.getProperty().getUser().getIsTemporaryPassword(),
-                        location.getProperty().getUser().getIsSuspended(),
-                        location.getProperty().getUser().getFailedAttempts(),
-                        location.getProperty().getUser().getIsAdmin()
-                    )
-                )
-        );
-    }
+    // private LocationDTO convertLocationToDTO(Location location) {
+    //     return new LocationDTO(
+    //             location.getName(),
+    //             new PropertyDTO(
+    //                 location.getProperty().getId(),
+    //                 location.getProperty().getName(),
+    //                 RegionDTO.from(location.getProperty().getRegion()),
+    //                 new UserDTO(
+    //                     location.getProperty().getUser().getId(),
+    //                     location.getProperty().getUser().getFirstName(),
+    //                     location.getProperty().getUser().getLastName(),
+    //                     location.getProperty().getUser().getEmail(),
+    //                     RoleDTO.from(user.getRole()),
+    //                     location.getProperty().getUser().getIsTemporaryPassword(),
+    //                     location.getProperty().getUser().getIsSuspended(),
+    //                     location.getProperty().getUser().getFailedAttempts(),
+    //                     location.getProperty().getUser().getIsAdmin()
+    //                 )
+    //             )
+    //     );
+    // }
 
 }

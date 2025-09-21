@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import kraine.app.eq_inventory.DTO.ManufacturerDTO;
 import kraine.app.eq_inventory.exception.DeleteManufacturerException;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Manufacturer;
@@ -74,4 +75,31 @@ public class ManufacturerService {
     public Manufacturer findById(Long id) {
         return manufacturerRepository.findManufacturerById(id);
     }
+
+
+
+
+
+    // DTO methods
+
+
+
+
+
+    @Cacheable(cacheNames = "manufacturerDTOs")
+    public List<ManufacturerDTO> getAllManufacturerDTOs() {
+        return manufacturerRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+
+
+    private ManufacturerDTO convertToDTO(Manufacturer manufacturer) {
+        return new ManufacturerDTO(manufacturer.getId(), manufacturer.getName());
+    }
+
+
+
+
 }

@@ -7,18 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kraine.app.eq_inventory.model.Location;
-import kraine.app.eq_inventory.service.LocationService;
+import kraine.app.eq_inventory.model.Manufacturer;
+import kraine.app.eq_inventory.service.ManufacturerService;
 
 @RestController
 @RequestMapping("/api/v1")
-public class LocationAPI {
+class ManufacturerAPI {
 
     @Autowired
-    private LocationService locationService;
+    private ManufacturerService manufacturerService;
 
-    @GetMapping("/get-all-locations")
-    public List<Location> getLocations() {
-        return locationService.getAllLocations();
+    @GetMapping("/get-all-manufacturers")
+    public List<Manufacturer> getManufacturers() {
+        return manufacturerService.getAllManufacturers();
     }
 }
