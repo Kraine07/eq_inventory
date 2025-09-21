@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kraine.app.eq_inventory.model.Manufacturer;
+import kraine.app.eq_inventory.DTO.ManufacturerDTO;
 import kraine.app.eq_inventory.service.ManufacturerService;
 
 @RestController
@@ -18,7 +18,9 @@ class ManufacturerAPI {
     private ManufacturerService manufacturerService;
 
     @GetMapping("/get-all-manufacturers")
-    public List<Manufacturer> getManufacturers() {
-        return manufacturerService.getAllManufacturers();
+    public List<ManufacturerDTO> getManufacturersDTO() {
+        return manufacturerService.getAllManufacturerDTOs();
     }
 }
+
+
