@@ -52,7 +52,7 @@ public class PropertyService {
 
 
 
-    @Cacheable
+    @Cacheable(cacheNames = "property")
     public List<Property> getAllProperties() {
         return propertyRepository.findAllWithDetails();
     }
@@ -85,6 +85,7 @@ public class PropertyService {
 
 
 
+    @Cacheable(cacheNames = "propertyDTOs")
     public List<PropertyDTO> getAllPropertyDTOs() {
         return propertyRepository.findAllWithDetails().stream()
                 .map(this::convertToDTO)
@@ -95,32 +96,9 @@ public class PropertyService {
         return new PropertyDTO(
                 property.getId(),
                 property.getName(),
-                convertRegionToDTO(property.getRegion()),
-                convertUserToDTO(property.getUser()));
+                RegionDTO.from(property.getRegion()),
+                UserDTO.from(property.getUser())
+                );
     }
 
-    private RegionDTO convertRegionToDTO(Region region) {
-        return new RegionDTO(
-                region.getId(),
-                region.getName());
-    }
-
-    private UserDTO convertUserToDTO(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                convertRoleToDTO(user.getRole()),
-                user.getIsAdmin(),
-                user.getIsSuspended(),
-                user.getFailedAttempts(),
-                user.getIsAdmin());
-    }
-
-    private RoleDTO convertRoleToDTO(Role role) {
-        return new RoleDTO(
-                role.getId(),
-                role.getRoleType());
-    }
 }

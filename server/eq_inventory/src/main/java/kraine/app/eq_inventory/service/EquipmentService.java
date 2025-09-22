@@ -49,15 +49,10 @@ public class EquipmentService {
     }
 
 
-//    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
-    @Caching(
-        put = {
-                @CachePut(cacheNames = "equipment", key = "#result.id"),
-                @CachePut(cacheNames = "equipmentDTOs", key = "#result.id")
-        }
-    )
-    public Equipment saveEquipment(Equipment equipment) {
-        return eri.saveAndFlush(equipment);
+    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+    public EquipmentDTO saveEquipment(Equipment equipment) {
+        Equipment savedEquipment = eri.saveAndFlush(equipment);
+        return convertToDTO(savedEquipment);
     }
 
 
@@ -124,35 +119,5 @@ public class EquipmentService {
         );
     }
 
-    // private ModelDTO convertModelToDTO(Model model) {
-    //     return new ModelDTO(
-    //             model.getDescription(),
-    //             new ManufacturerDTO(
-    //                 model.getManufacturer().getId(),
-    //                 model.getManufacturer().getName())
-    //     );
-    // }
-
-    // private LocationDTO convertLocationToDTO(Location location) {
-    //     return new LocationDTO(
-    //             location.getName(),
-    //             new PropertyDTO(
-    //                 location.getProperty().getId(),
-    //                 location.getProperty().getName(),
-    //                 RegionDTO.from(location.getProperty().getRegion()),
-    //                 new UserDTO(
-    //                     location.getProperty().getUser().getId(),
-    //                     location.getProperty().getUser().getFirstName(),
-    //                     location.getProperty().getUser().getLastName(),
-    //                     location.getProperty().getUser().getEmail(),
-    //                     RoleDTO.from(user.getRole()),
-    //                     location.getProperty().getUser().getIsTemporaryPassword(),
-    //                     location.getProperty().getUser().getIsSuspended(),
-    //                     location.getProperty().getUser().getFailedAttempts(),
-    //                     location.getProperty().getUser().getIsAdmin()
-    //                 )
-    //             )
-    //     );
-    // }
 
 }

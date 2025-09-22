@@ -30,8 +30,13 @@ public class EquipmentAPI {
     @Autowired
     private EquipmentService equipmentService;
 
-    @PostMapping("/add-equipment")
-    public Equipment addEquipment(@RequestBody Equipment equipment) {
+    @PostMapping("/save-equipment")
+    public EquipmentDTO addEquipment(@RequestBody Equipment equipment) {
+        // change blank serial number to null
+        if (equipment.getSerialNumber() == "") {
+            equipment.setSerialNumber(null);
+        }
+System.out.println("##############"+equipment.toString());
         return equipmentService.saveEquipment(equipment);
     }
 

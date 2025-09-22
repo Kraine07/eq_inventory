@@ -92,6 +92,7 @@ public class ModelService {
     // DTO Methods
 
 
+    @Cacheable(cacheNames = "modelDTOs")
     public List<ModelDTO> getAllModelDTOs() {
         return modelRepository.findAll().stream()
                 .map(this::convertToDTO)

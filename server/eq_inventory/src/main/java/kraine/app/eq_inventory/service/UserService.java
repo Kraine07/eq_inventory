@@ -154,7 +154,7 @@ public class UserService {
 
 
 
-
+    @Cacheable(cacheNames = "userDTOs")
     public List<UserDTO> getAllUserDTOs() {
         List<User> users = getUsers();
         return users.stream().map(UserDTO::from).toList();

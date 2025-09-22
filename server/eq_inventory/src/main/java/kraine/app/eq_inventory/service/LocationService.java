@@ -33,7 +33,7 @@ public class LocationService {
     EquipmentRepositoryInterface equipmentRepositoryInterface;
 
 
-    @Transactional
+
     @CacheEvict(cacheNames = { "property", "location", "equipment" }, allEntries = true)
     public Location saveLocation(String property, String name, LocationId locationId) {
         Location existingLocation = findByLocationId(locationId);
@@ -55,7 +55,7 @@ public class LocationService {
     }
 
 
-    @Cacheable
+    @Cacheable(cacheNames = "locations")
     public List<Location> getAllLocations() {
         return locationRepository.findAllWithFullDetails();
     }
@@ -84,6 +84,7 @@ public class LocationService {
     // DTO Methods
 
 
+    @Cacheable(cacheNames = "locationDTOs")
     public List<LocationDTO> getAllLocationDTOs() {
         return locationRepository.findAll().stream()
                 .map(this::convertToDTO)
