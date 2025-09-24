@@ -36,7 +36,6 @@ public class EquipmentAPI {
         if (equipment.getSerialNumber() == "") {
             equipment.setSerialNumber(null);
         }
-System.out.println("##############"+equipment.toString());
         return equipmentService.saveEquipment(equipment);
     }
 
@@ -67,7 +66,7 @@ System.out.println("##############"+equipment.toString());
 
 
 
-    @DeleteMapping("/equipment/{id}")
+    @PostMapping("/delete-equipment/{id}")
     public ResponseEntity<?> deleteEquipment(@PathVariable Long id) {
         try {
             boolean deleted = equipmentService.deleteEquipment(id);

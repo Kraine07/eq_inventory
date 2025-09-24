@@ -35,7 +35,7 @@ import org.springframework.data.domain.Sort;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "equipment")
+// @CacheConfig(cacheNames = "equipment")
 public class EquipmentService {
 
 
@@ -43,26 +43,19 @@ public class EquipmentService {
     EquipmentRepositoryInterface eri;
 
 
-    @Cacheable
     public List<Equipment> getAllWithFullDetails() {
         return eri.findAllWithFullDetails();
     }
 
 
-    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
+
     public EquipmentDTO saveEquipment(Equipment equipment) {
         Equipment savedEquipment = eri.saveAndFlush(equipment);
         return convertToDTO(savedEquipment);
     }
 
 
-//    @CacheEvict(cacheNames = { "equipment", "equipmentDTOs" }, allEntries = true)
-    @Caching(
-        evict = {
-                @CacheEvict(cacheNames = "equipment", key = "#id"),
-                @CacheEvict(cacheNames = "equipmentDTOs", key = "#id")
-        }
-    )
+
     public boolean deleteEquipment(Long id) {
         if (eri.existsById(id)) {
             eri.deleteById(id);
@@ -74,7 +67,7 @@ public class EquipmentService {
 
 
 
-    @Cacheable( key = "{#page, #size}")
+
     public Page<Equipment> getPage(int page, int size, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("location.property.name").ascending());
         User user = SessionHandler.getAttribute(request, "authUser", User.class);
@@ -101,7 +94,8 @@ public class EquipmentService {
 
     // DTOs
 
-    @Cacheable("equipmentDTOs") // Cache DTOs separately
+
+    @Cacheable(cacheNames = "equipmentDTOs")
     public List<EquipmentDTO> getAllEquipmentDTOs() {
         return eri.findAllWithFullDetails().stream()
                 .map(this::convertToDTO)
