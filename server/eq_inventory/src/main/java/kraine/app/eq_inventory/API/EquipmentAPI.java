@@ -15,7 +15,6 @@ import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Property;
 import kraine.app.eq_inventory.model.User;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,16 +71,16 @@ public class EquipmentAPI {
             boolean deleted = equipmentService.deleteEquipment(id);
 
             if (deleted) {
-                return ResponseEntity.noContent().build(); // 204 No Content
+                return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Equipment deleted successfully")); // 200 OK
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "Equipment with id " + id + " not found"));
+                        .body(Map.of("error", "Equipment with id " + id + " not found")); // 404 Not Found
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to delete equipment: " + e.getMessage()));
+                    .body(Map.of("error", "Failed to delete equipment: " + e.getMessage())); // 500 Internal Server Error
         }
-}
+    }
 
 
 

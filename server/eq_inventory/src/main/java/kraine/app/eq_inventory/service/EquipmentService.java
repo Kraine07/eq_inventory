@@ -95,7 +95,7 @@ public class EquipmentService {
     // DTOs
 
 
-    @Cacheable(cacheNames = "equipmentDTOs")
+    // @Cacheable(cacheNames = "equipmentDTOs")
     public List<EquipmentDTO> getAllEquipmentDTOs() {
         return eri.findAllWithFullDetails().stream()
                 .map(this::convertToDTO)
