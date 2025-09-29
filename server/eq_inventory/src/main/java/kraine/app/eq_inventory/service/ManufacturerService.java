@@ -34,31 +34,34 @@ public class ManufacturerService {
 
 
 
-    @Cacheable
+    // @Cacheable
     public List<Manufacturer> getAllManufacturers() {
         return manufacturerRepository.findAll();
     }
 
 
 
-    @CacheEvict(cacheNames = {"manufacturer", "equipment", "model"}, allEntries = true)
+
+
+
+    // @CacheEvict(cacheNames = {"manufacturer", "equipment", "model"}, allEntries = true)
     public Manufacturer saveManufacturer(Manufacturer manufacturer) {
 
-        Manufacturer existingManufacturer = null;
-        if (manufacturer.getId() != null) {
-            existingManufacturer = findById(manufacturer.getId());
-        }
-
+        // check if manufacturer with same name exists
+        Manufacturer existingManufacturer = manufacturerRepository.findByName(manufacturer.getName());
         if (existingManufacturer != null) {
-            existingManufacturer.setName(manufacturer.getName());
-            return manufacturerRepository.saveAndFlush(existingManufacturer);
+            throw new IllegalArgumentException("Manufacturer with name '" + manufacturer.getName() + "' already exists.");
         }
         return manufacturerRepository.saveAndFlush(manufacturer);
     }
 
 
 
-    @CacheEvict(cacheNames = {"manufacturer",  "model", "equipment"}, allEntries = true)
+
+
+
+
+    // @CacheEvict(cacheNames = {"manufacturer",  "model", "equipment"}, allEntries = true)
     public void deleteManufacturer(Long id) {
 
         // check if manufacturer has related equipment
@@ -86,7 +89,7 @@ public class ManufacturerService {
 
 
 
-    @Cacheable(cacheNames = "manufacturerDTOs")
+    // @Cacheable(cacheNames = "manufacturerDTOs")
     public List<ManufacturerDTO> getAllManufacturerDTOs() {
         return manufacturerRepository.findAll().stream()
                 .map(this::convertToDTO)

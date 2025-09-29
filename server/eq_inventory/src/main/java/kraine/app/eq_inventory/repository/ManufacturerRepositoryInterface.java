@@ -12,5 +12,6 @@ public interface ManufacturerRepositoryInterface extends JpaRepository<Manufactu
 
 
     Manufacturer findManufacturerById(Long id);
+    Manufacturer findByName(String name);
 
 }
