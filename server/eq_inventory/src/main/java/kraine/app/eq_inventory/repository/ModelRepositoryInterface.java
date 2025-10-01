@@ -23,4 +23,5 @@ public interface ModelRepositoryInterface extends JpaRepository<Model,ModelId> {
     Model findByManufacturerIdAndDescription(Long manufacturer, String description);
 
 
+
 }

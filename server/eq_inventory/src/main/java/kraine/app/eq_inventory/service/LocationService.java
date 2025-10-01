@@ -34,7 +34,9 @@ public class LocationService {
 
 
 
-    @CacheEvict(cacheNames = { "property", "location", "equipment" }, allEntries = true)
+
+
+    // @CacheEvict(cacheNames = { "property", "location", "equipment" }, allEntries = true)
     public Location saveLocation(String property, String name, LocationId locationId) {
         Location existingLocation = findByLocationId(locationId);
         Location newLocation = new Location(propertyRepositoryInterface.findPropertyById(Long.valueOf(property)), name);
@@ -55,7 +57,35 @@ public class LocationService {
     }
 
 
-    @Cacheable(cacheNames = "locations")
+
+
+
+    public Location saveLocation(Property property, String name, LocationId locationId) {
+        Location existingLocation = findByLocationId(locationId);
+        Location newLocation = new Location(property, name);
+        Location result = locationRepository.saveAndFlush(newLocation);
+
+        List<Equipment> equipmentList = equipmentRepositoryInterface.findByLocation(existingLocation);
+        if (existingLocation != null) {
+            Property existingProperty = existingLocation.getProperty();
+            equipmentList.forEach(equipment -> {
+                equipment.setLocation(newLocation);
+            });
+
+            equipmentRepositoryInterface.saveAllAndFlush(equipmentList);
+            existingProperty.getLocations().remove(existingLocation);
+            locationRepository.delete(existingLocation);
+        }
+        return result;
+    }
+
+
+
+
+
+
+
+    // @Cacheable(cacheNames = "locations")
     public List<Location> getAllLocations() {
         return locationRepository.findAllWithFullDetails();
     }
@@ -70,13 +100,33 @@ public class LocationService {
 
 
 
-    @CacheEvict(cacheNames = {"property","location","equipment"}, allEntries = true)
-    public void deleteLocation(LocationId id) {
+    // @CacheEvict(cacheNames = {"property","location","equipment"}, allEntries = true)
+    // public void deleteLocation(LocationId id) {
+    //     Location location = findByLocationId(id);
+    //     Property property = location.getProperty();
+    //     property.getLocations().remove(location);
+    //     locationRepository.deleteById(id);
+
+    // }
+
+
+
+    public Boolean deleteLocation(LocationId id) {
+
+        // Find the location and remove it from the property's location list
         Location location = findByLocationId(id);
         Property property = location.getProperty();
         property.getLocations().remove(location);
-        locationRepository.deleteById(id);
 
+        try{
+            locationRepository.deleteById(id);
+            if(locationRepository.findById(id).isPresent()) {
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 
