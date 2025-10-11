@@ -11,7 +11,7 @@
                         <th class="w-1/3">Property</th>
                         <th>Equipment Type</th>
                         <th>Serial Number</th>
-                        <th>Image</th> <!-- 👈 new column -->
+                        <th>Image</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -35,7 +35,7 @@
 
                         <!-- 🖼 Image column -->
                         <td class="text-center">
-                            <img th:src="@{'/fnd-by-equipment?equipmentId=' + ${equipment.id}}" alt="Equipment image" class="rounded-md shadow-md w-16 h-16 object-cover" onerror="this.onerror=null; this.src='/images/placeholder_image.png';">
+                            <img th:src="@{'/api/v1/fnd-by-equipment?equipmentId=' + ${equipment.id}}" alt="Equipment image" class="rounded-md shadow-md w-16 h-16 object-cover" onerror="this.onerror=null; this.src='/images/placeholder_image.png';">
                         </td>
 
                         <!-- Actions -->

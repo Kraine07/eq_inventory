@@ -65,23 +65,6 @@ public class EquipmentImageController {
 
 
 
-    @GetMapping("/fnd-by-equipment")
-    public ResponseEntity<byte[]> findByEquipment(@RequestParam Long equipmentId) {
-        EquipmentImage image = equipmentImageService.getImageByEquipment(equipmentId);
-        if (image == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG); // or dynamically set based on image.getFileName()
-        headers.setContentDispositionFormData("inline", image.getImageName());
-
-        return new ResponseEntity<>(image.getImageData(), headers, HttpStatus.OK);
-    }
-
-
-
-
     // @GetMapping("/fnd-by-equipment")
     // public EquipmentImage findByEquipment(@RequestParam Long equipmentId) {
     //         return equipmentImageService.getImageByEquipment(equipmentId);

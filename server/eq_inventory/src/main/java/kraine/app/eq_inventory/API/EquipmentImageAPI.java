@@ -2,7 +2,11 @@ package kraine.app.eq_inventory.API;
 
 import java.io.IOException;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,4 +49,21 @@ public class EquipmentImageAPI {
         return equipmentImageService.saveImage(equipmentImage);
     }
 
+
+
+
+
+    @GetMapping("/fnd-by-equipment")
+    public ResponseEntity<byte[]> findByEquipment(@RequestParam Long equipmentId) {
+        EquipmentImage image = equipmentImageService.getImageByEquipment(equipmentId);
+        if (image == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // or dynamically set based on image.getFileName()
+        headers.setContentDispositionFormData("inline", image.getImageName());
+
+        return new ResponseEntity<>(image.getImageData(), headers, HttpStatus.OK);
+    }
 }
