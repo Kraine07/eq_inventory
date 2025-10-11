@@ -47,7 +47,7 @@
 
     <!-- EQUIPMENT SEARCH -->
 
-    <!--  
+    <!--
     <div class="grid grid-cols-3 gap-6 mb-8 bg-color-1-40 text-color-1 border-2 border-color-3/10 p-4 rounded-md">
         <div class="flex flex-col space-y-1">
             <label for="eq-search">Search</label>
@@ -81,6 +81,11 @@
     <!-- Equipment card -->
     <div id="equipment-card-container" class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2  w-screen h-screen bg-transparent backdrop-blur-md ">
         <div th:replace="~{layout/components/equipment-card :: equipment-card}">...</div>
+    </div>
+
+    <!-- equipment image form-->
+    <div id="equipment-image-form-container" class="hidden absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2  w-screen h-screen bg-transparent backdrop-blur-md ">
+        <div th:replace="~{layout/forms/equipment-image-form :: equipment-image-form}">...</div>
     </div>
 
 </div>

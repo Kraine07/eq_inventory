@@ -28,6 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const serialNumber = document.querySelector("#serial-number");
     const manufacturedDate = document.querySelector("#manufactured-date");
 
+    // equipment image
+    const equipmentImageFormContainer = document.getElementById("equipment-image-form-container");
+    const openEquipmentImageButton = document.querySelectorAll(".save-image");
+    const closeEquipmentImageFormButton = document.querySelector("#close-equipment-image-form-btn");
+    const equipmentIdForImageInput = document.querySelector("#equipment-id-for-image");
+    const equipmentImageInput = document.querySelector("#equipment-image");
+
 
 
 
@@ -55,6 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const modelForm = document.querySelector("#model-form");
     const editModelButton = document.querySelectorAll(".edit-model");
     const deleteModelButton = document.querySelectorAll(".delete-model");
+
+
 
 
 
@@ -100,6 +109,12 @@ document.addEventListener("DOMContentLoaded", function () {
             equipmentForm.reset();
         }
 
+        if (event.target === equipmentImageFormContainer) {
+            document.body.classList.remove('overflow-hidden');
+            equipmentImageFormContainer.style.display = "none";
+            equipmentIdForImageInput.value = "";
+            equipmentImageInput.value = "";
+        }
 
 
         if (event.target === manufacturerFormModal) {
@@ -155,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 equipmentCard.style.display = "none";
             });
         }
-        
+
     }
 
     // edit & delete equipment
@@ -221,6 +236,43 @@ document.addEventListener("DOMContentLoaded", function () {
         })
 
     }
+
+
+
+
+    // open equipment image form
+    if (openEquipmentImageButton.length > 0) {
+        openEquipmentImageButton.forEach(imageButton => {
+            imageButton.addEventListener("click", function () {
+
+                // set equipment id
+                const equipmentRow = imageButton.closest("tr").children;
+                equipmentIdForImageInput.value = equipmentRow[0].textContent;
+
+
+
+                // show form
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                document.body.classList.add('overflow-hidden');
+                equipmentImageFormContainer.style.display = "block";
+            });
+        });
+    }
+
+
+
+    // close equipment image form with button
+    if (closeEquipmentImageFormButton !== null) {
+        closeEquipmentImageFormButton.addEventListener("click", function () {
+            document.body.classList.remove('overflow-hidden');
+            equipmentImageFormContainer.style.display = "none";
+        });
+    }
+
+
+
+
+
 
 
 

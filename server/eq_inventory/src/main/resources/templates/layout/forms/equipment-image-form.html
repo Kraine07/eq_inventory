@@ -1,0 +1,25 @@
+
+
+
+<div th:fragment="equipment-image-form" class=" flex flex-col absolute top-1/2 -translate-y-1/2   left-1/2 -translate-x-1/2 ">
+
+    <div class="inline-flex justify-end w-auto self-end">
+        <svg id="close-equipment-image-form-btn" xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="h-8 aspect-square mb-2 cursor-pointer">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+        </svg>
+    </div>
+
+    <form th:action="@{/save-equipment-image}" method="post" enctype="multipart/form-data" id="equipment-image-form"  class="bg-app-white  w-96 p-6 rounded-lg shadow-app-shadow">
+
+        <h1 id="equipment-form-heading" class="text-3xl font-thin mb-4">Add Image</h1>
+        <input type="number" name="equipment" id="equipment-id-for-image" hidden>
+        <div class="mb-3">
+            <label for="equipment-image" class="form-label">Choose Image</label>
+            <input type="file" name="equipment-image" id="equipment-image"  accept="image/*" required>
+        </div>
+
+    </form>
+    <button id="equipment-image-form-submit" form="equipment-image-form" type="submit" class="mt-4">Upload</button>
+</div>

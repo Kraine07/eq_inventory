@@ -39,19 +39,52 @@ public class ManufacturerService {
 
 
 
+    public Manufacturer saveManufacturer(Manufacturer manufacturer) {
+        // Check if name is already taken (by another manufacturer)
+        Manufacturer existingByName = manufacturerRepository.findByName(manufacturer.getName());
+        if (existingByName != null && !existingByName.getId().equals(manufacturer.getId())) {
+            throw new IllegalArgumentException(
+                    "Manufacturer with name '" + manufacturer.getName() + "' already exists.");
+        }
+
+        if (manufacturer.getId() == null) {
+            // ✅ NEW Manufacturer
+            return manufacturerRepository.saveAndFlush(manufacturer);
+        } else {
+            // ✅ UPDATE Manufacturer
+            Manufacturer managed = manufacturerRepository.findById(manufacturer.getId())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Manufacturer not found"));
+
+            // Update simple fields
+            managed.setName(manufacturer.getName());
+
+            // Update models safely (avoid replacing collection)
+            managed.getModels().clear();
+            if (manufacturer.getModels() != null && !manufacturer.getModels().isEmpty()) {
+                managed.getModels().clear();
+                managed.getModels().addAll(manufacturer.getModels());
+            }
+
+            return manufacturerRepository.saveAndFlush(managed);
+        }
+    }
+
+
+
 
 
 
     // @CacheEvict(cacheNames = {"manufacturer", "equipment", "model"}, allEntries = true)
-    public Manufacturer saveManufacturer(Manufacturer manufacturer) {
+    // public Manufacturer saveManufacturer(Manufacturer manufacturer) {
 
-        // check if manufacturer with same name exists
-        Manufacturer existingManufacturer = manufacturerRepository.findByName(manufacturer.getName());
-        if (existingManufacturer != null) {
-            throw new IllegalArgumentException("Manufacturer with name '" + manufacturer.getName() + "' already exists.");
-        }
-        return manufacturerRepository.saveAndFlush(manufacturer);
-    }
+    //     // check if manufacturer with same name exists
+    //     Manufacturer existingManufacturer = manufacturerRepository.findByName(manufacturer.getName());
+    //     if (existingManufacturer != null) {
+    //         throw new IllegalArgumentException("Manufacturer with name '" + manufacturer.getName() + "' already exists.");
+    //     }
+    //     return manufacturerRepository.saveAndFlush(manufacturer);
+    // }
 
 
 

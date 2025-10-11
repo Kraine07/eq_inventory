@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package kraine.app.eq_inventory.service;
 
 
@@ -20,7 +17,6 @@ import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Page;
@@ -45,6 +41,11 @@ public class EquipmentService {
 
     public List<Equipment> getAllWithFullDetails() {
         return eri.findAllWithFullDetails();
+    }
+
+
+    public Equipment getEquipmentById(Long id) {
+        return eri.findById(id).orElse(null);
     }
 
 
