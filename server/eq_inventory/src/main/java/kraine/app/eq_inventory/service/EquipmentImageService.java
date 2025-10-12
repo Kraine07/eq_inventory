@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.EquipmentImage;
@@ -30,6 +30,10 @@ public class EquipmentImageService {
 
 
     public EquipmentImage saveImage(EquipmentImage image) {
+        if (getImageByEquipment(image.getEquipment().getId()) != null) {
+
+            deleteImage(image.getEquipment().getId());
+        }
 
         return equipmentImageRepository.saveAndFlush(image);
     }
@@ -44,8 +48,10 @@ public class EquipmentImageService {
     }
 
     public boolean deleteImage(Long id) {
-        equipmentImageRepository.deleteById(id);
-        return !equipmentImageRepository.existsById(id);
-    }
+    equipmentImageRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Image not found with id: " + id));
+    equipmentImageRepository.deleteById(id);
+    return true;
+}
 
 }
