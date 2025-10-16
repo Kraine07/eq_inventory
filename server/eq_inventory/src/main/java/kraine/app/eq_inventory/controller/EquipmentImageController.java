@@ -58,7 +58,7 @@ public class EquipmentImageController {
         }
 
         EquipmentImage equipmentImage = new EquipmentImage(null, equipment, image.getOriginalFilename(), image.getBytes());
-        equipmentImageService.saveImage(equipmentImage);
+        equipmentImageService.saveImage(equipmentId, equipmentImage);
         return "redirect:/";
     }
 

@@ -32,57 +32,76 @@ public class EquipmentImageAPI {
 
 
 
+
     @PostMapping(value = "/save-equipment-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EquipmentImage> saveEquipmentImage(
             @RequestParam("equipment") Long equipmentId,
-            @RequestParam("equipment-image") MultipartFile image) throws IOException {
+            @RequestParam("equipment-image") MultipartFile file) throws IOException {
 
         Equipment equipment = equipmentService.getEquipmentById(equipmentId);
         if (equipment == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        if (image.isEmpty()) {
+        if (file.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
-        if (!image.getContentType().startsWith("image/")) {
+        if (!file.getContentType().startsWith("image/")) {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
         }
 
-        EquipmentImage equipmentImage = new EquipmentImage(
+        // Wrap file into EquipmentImage object (id=null for new)
+        EquipmentImage newImage = new EquipmentImage(
                 null,
                 equipment,
-                image.getOriginalFilename(),
-                image.getBytes());
+                file.getOriginalFilename(),
+                file.getBytes());
 
-        EquipmentImage savedImage = equipmentImageService.saveImage(equipmentImage);
+        // Save or replace
+        EquipmentImage savedImage = equipmentImageService.saveImage(equipmentId, newImage);
 
         return ResponseEntity.ok(savedImage);
     }
 
 
 
+
     // @PostMapping(value = "/save-equipment-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     // public ResponseEntity<EquipmentImage> saveEquipmentImage(
-    //     @RequestParam("equipment") Long equipmentId,
-    //     @RequestParam("equipment-image") MultipartFile image
-    // ) throws IOException {
+    //         @RequestParam("equipment") Long equipmentId,
+    //         @RequestParam("equipment-image") MultipartFile image) throws IOException {
 
     //     Equipment equipment = equipmentService.getEquipmentById(equipmentId);
     //     if (equipment == null) {
-    //         return null;
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     //     }
 
-    //     EquipmentImage equipmentImage = new EquipmentImage(null, equipment, image.getOriginalFilename(), image.getBytes());
-    //     return ResponseEntity.ok(equipmentImageService.saveImage(equipmentImage));
+    //     if (image.isEmpty()) {
+    //         return ResponseEntity.badRequest().build();
+    //     }
+
+    //     if (!image.getContentType().startsWith("image/")) {
+    //         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+    //     }
+
+    //     EquipmentImage equipmentImage = new EquipmentImage(
+    //             null,
+    //             equipment,
+    //             image.getOriginalFilename(),
+    //             image.getBytes());
+
+    //     EquipmentImage savedImage = equipmentImageService.saveImage(equipmentImage);
+
+    //     return ResponseEntity.ok(savedImage);
     // }
 
 
 
 
 
-    @GetMapping("/find-by-equipment") // TODO: correct the typo in the endpoint
+
+    @GetMapping("/find-by-equipment")
     public ResponseEntity<byte[]> findByEquipment(@RequestParam Long equipmentId) {
         EquipmentImage image = equipmentImageService.getImageByEquipment(equipmentId);
         if (image == null) {

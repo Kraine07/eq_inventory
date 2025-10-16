@@ -1,6 +1,7 @@
 package kraine.app.eq_inventory.model;
 
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +26,7 @@ public class EquipmentImage {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name= "equipment")
+    @JoinColumn(name= "equipment", unique=true)
     private Equipment equipment;
 
     @Column(nullable = false)

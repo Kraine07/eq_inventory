@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.EquipmentImage;
@@ -29,14 +28,46 @@ public class EquipmentImageService {
     }
 
 
-    public EquipmentImage saveImage(EquipmentImage image) {
-        if (getImageByEquipment(image.getEquipment().getId()) != null) {
 
-            deleteImage(image.getEquipment().getId());
+    public EquipmentImage saveImage(Long equipmentId, EquipmentImage newImage) {
+        Equipment equipment = equipmentRepository.findById(equipmentId)
+                .orElseThrow(() -> new RuntimeException("Equipment not found"));
+
+        EquipmentImage existing = equipmentImageRepository.findByEquipment(equipment);
+
+        if (existing != null) {
+            // Delete the old row completely
+            equipmentImageRepository.delete(existing);
+            equipmentImageRepository.flush(); // make sure it's actually gone
         }
 
-        return equipmentImageRepository.saveAndFlush(image);
+        // Attach the equipment and save the new one
+        newImage.setEquipment(equipment);
+        return equipmentImageRepository.saveAndFlush(newImage);
     }
+
+
+    // public EquipmentImage saveImage(Long equipmentId, EquipmentImage newImage) {
+    //     // Fetch managed Equipment entity
+    //     Equipment equipment = equipmentRepository.findById(equipmentId)
+    //             .orElseThrow(() -> new EntityNotFoundException("Equipment not found with id " + equipmentId));
+
+    //     // Fetch existing image if it exists
+    //     EquipmentImage existingImage = equipmentImageRepository.findByEquipment(equipment);
+
+    //     if (existingImage != null) {
+    //         // Replace the image data and name
+    //         existingImage.setImageData(newImage.getImageData().clone()); // clone to avoid reference issues
+    //         existingImage.setImageName(newImage.getImageName());
+    //         // Hibernate will detect changes because this entity is managed
+    //         return equipmentImageRepository.saveAndFlush(existingImage);
+    //     } else {
+    //         // Link and insert new one
+    //         newImage.setEquipment(equipment);
+    //         return equipmentImageRepository.saveAndFlush(newImage);
+    //     }
+    // }
+
 
 
     public EquipmentImage getImageByEquipment(Long equipmentId) {
@@ -47,11 +78,16 @@ public class EquipmentImageService {
         return equipmentImageRepository.findByEquipment(equipment);
     }
 
+
+
+
     public boolean deleteImage(Long id) {
-    equipmentImageRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Image not found with id: " + id));
-    equipmentImageRepository.deleteById(id);
-    return true;
-}
+        EquipmentImage image = equipmentImageRepository.findByEquipment(equipmentRepository.findById(id).orElse(null));
+        if (image != null) {
+            equipmentImageRepository.delete(image);
+            return true;
+        }
+        return false;
+    }
 
 }
