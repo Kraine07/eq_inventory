@@ -16,7 +16,11 @@ import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Page;
@@ -31,25 +35,34 @@ import org.springframework.data.domain.Sort;
 @Service
 @Transactional
 @RequiredArgsConstructor
-// @CacheConfig(cacheNames = "equipment")
 public class EquipmentService {
 
 
-    @Autowired
-    EquipmentRepositoryInterface eri;
+    private final EquipmentRepositoryInterface eri;
 
 
+    @Cacheable("equipmentList")
     public List<Equipment> getAllWithFullDetails() {
         return eri.findAllWithFullDetails();
     }
 
 
+    @Cacheable(cacheNames = "equipment", key = "#id", unless = "#result == null")
     public Equipment getEquipmentById(Long id) {
         return eri.findById(id).orElse(null);
     }
 
 
 
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "equipmentList", allEntries = true),
+            @CacheEvict(cacheNames = "equipmentDTOs", allEntries = true),
+        },
+        put = {
+            @CachePut(cacheNames = "equipment", key = "#result.id")
+        }
+    )
     public EquipmentDTO saveEquipment(Equipment equipment) {
         Equipment savedEquipment = eri.saveAndFlush(equipment);
         return convertToDTO(savedEquipment);
@@ -57,6 +70,12 @@ public class EquipmentService {
 
 
 
+
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "equipmentList", allEntries = true),
+            @CacheEvict(cacheNames = "equipmentDTOs", allEntries = true),
+            @CacheEvict(cacheNames = "equipment", key = "#id")
+    })
     public boolean deleteEquipment(Long id) {
         if (eri.existsById(id)) {
             eri.deleteById(id);
@@ -96,7 +115,7 @@ public class EquipmentService {
     // DTOs
 
 
-    // @Cacheable(cacheNames = "equipmentDTOs")
+    @Cacheable(cacheNames = "equipmentDTOs")
     public List<EquipmentDTO> getAllEquipmentDTOs() {
         return eri.findAllWithFullDetails().stream()
                 .map(this::convertToDTO)

@@ -60,7 +60,7 @@ public class Equipment {
 
 
 
-    @OneToOne(mappedBy = "equipment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "equipment", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private EquipmentImage image;
 
 }

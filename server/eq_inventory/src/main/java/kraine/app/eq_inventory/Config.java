@@ -1,6 +1,8 @@
 package kraine.app.eq_inventory;
 
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,12 @@ public class Config {
     public ServletContextInitializer servletContextInitializer() {
         return (ServletContext servletContext) -> servletContext.setSessionTrackingModes(
                 java.util.Collections.singleton(SessionTrackingMode.COOKIE));
+    }
+
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager( "equipment","equipmentDTOs","hightlight", "property","propertyDTOs", "location","locationDTOs", "manufacturer", "manufacturerList","manufacturerDTOs", "user","userDTOs", "userList", "model","modelDTOs", "equipmentList", "equipmentImageList", "hightlightList", "propertyList", "locationList", "locationDTOs", "manufacturerList", "userList", "modelList");
     }
 
 }

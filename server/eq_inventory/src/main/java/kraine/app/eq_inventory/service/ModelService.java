@@ -2,7 +2,10 @@ package kraine.app.eq_inventory.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -15,31 +18,35 @@ import kraine.app.eq_inventory.model.ModelId;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import kraine.app.eq_inventory.repository.ManufacturerRepositoryInterface;
 import kraine.app.eq_inventory.repository.ModelRepositoryInterface;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
-// @CacheConfig(cacheNames = "model")
+@RequiredArgsConstructor
 public class ModelService {
 
-    @Autowired
-    private ModelRepositoryInterface modelRepository;
-
-    @Autowired
-    private ManufacturerRepositoryInterface mri;
-
-    @Autowired
-    EquipmentRepositoryInterface equipmentRepositoryInterface;
+    private final ModelRepositoryInterface modelRepository;
+    private final ManufacturerRepositoryInterface manufacturerRepositoryInterface;
+    private final EquipmentRepositoryInterface equipmentRepositoryInterface;
 
 
 
 
 
-    // @CacheEvict(cacheNames = {"model","equipment","manufacturer"},allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "manufacturerList", allEntries = true),
+            @CacheEvict(cacheNames = "manufacturerDTOs", allEntries = true),
+        },
+        put = {
+            @CachePut(cacheNames = "manufacturer", key = "#result.id")
+        }
+    )
     public Model saveModel(String manufacturer, String description, ModelId modelId) {
 
         Model existingModel = findByModelId(modelId);
 
-        Model newModel = new Model(mri.findManufacturerById(Long.valueOf(manufacturer)), description);
+        Model newModel = new Model(manufacturerRepositoryInterface.findManufacturerById(Long.valueOf(manufacturer)), description);
         Model result = modelRepository.saveAndFlush(newModel);
         if (existingModel != null) {
             Manufacturer existingManufacturer = existingModel.getManufacturer();
@@ -60,6 +67,15 @@ public class ModelService {
 
 
 
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "modelList", allEntries = true),
+            @CacheEvict(cacheNames = "modelDTOs", allEntries = true),
+        },
+        put = {
+            @CachePut(cacheNames = "model", key = "#result.id")
+        }
+    )
     public Model saveModel(Manufacturer manufacturer, String description, ModelId modelId) {
 
         Model existingModel = findByModelId(modelId);
@@ -88,7 +104,7 @@ public class ModelService {
 
 
 
-    // @Cacheable
+    @Cacheable(cacheNames = "modelList")
     public List<Model> getAllModels() {
         return modelRepository.findAllWithDetails();
     }
@@ -96,17 +112,23 @@ public class ModelService {
 
 
 
+    @Cacheable(cacheNames = "model", key = "#id", unless = "#result == null")
     public Model findByModelId(ModelId modelId) {
         return modelRepository.findById(modelId).orElse(null);
-        // return modelRepository.findByManufacturerIdAndDescription(modelId.getManufacturer(), modelId.getDescription());
     }
 
 
 
-    // @CacheEvict(cacheNames = { "model","equipment","manufacturer" }, allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "modelList", allEntries = true),
+            @CacheEvict(cacheNames = "modelDTOs", allEntries = true),
+            @CacheEvict(cacheNames = "model", key = "#id")
+        }
+    )
     public Boolean deleteModel(ModelId id) {
 
-        // Find the model and remove it from the manufacturer's model list
+        // Find the model and remove it from the manufacturer's model list first
         Model model = findByModelId(id);
         Manufacturer manufacturer = model.getManufacturer();
         manufacturer.getModels().remove(model);
@@ -130,7 +152,7 @@ public class ModelService {
     // DTO Methods
 
 
-    // @Cacheable(cacheNames = "modelDTOs")
+    @Cacheable(cacheNames = "modelDTOs")
     public List<ModelDTO> getAllModelDTOs() {
         return modelRepository.findAll().stream()
                 .map(this::convertToDTO)

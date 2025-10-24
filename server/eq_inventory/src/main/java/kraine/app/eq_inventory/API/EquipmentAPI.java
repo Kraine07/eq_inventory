@@ -30,12 +30,18 @@ public class EquipmentAPI {
     private EquipmentService equipmentService;
 
     @PostMapping("/save-equipment")
-    public EquipmentDTO addEquipment(@RequestBody Equipment equipment) {
+    public ResponseEntity<?> addEquipment(@RequestBody Equipment equipment) {
         // change blank serial number to null
-        if (equipment.getSerialNumber() == "") {
+        if (equipment.getSerialNumber() != null && equipment.getSerialNumber().trim().isEmpty()) {
             equipment.setSerialNumber(null);
         }
-        return equipmentService.saveEquipment(equipment);
+        try {
+            EquipmentDTO saved = equipmentService.saveEquipment(equipment);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to save equipment."));
+        }
     }
 
 

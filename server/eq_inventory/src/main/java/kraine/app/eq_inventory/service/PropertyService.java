@@ -2,40 +2,41 @@ package kraine.app.eq_inventory.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import kraine.app.eq_inventory.DTO.PropertyDTO;
 import kraine.app.eq_inventory.DTO.RegionDTO;
-import kraine.app.eq_inventory.DTO.RoleDTO;
 import kraine.app.eq_inventory.DTO.UserDTO;
 import kraine.app.eq_inventory.exception.DeletePropertyException;
 import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Property;
-import kraine.app.eq_inventory.model.Region;
-import kraine.app.eq_inventory.model.Role;
-import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.PropertyRepositoryInterface;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
-@CacheConfig(cacheNames = "property")
+@RequiredArgsConstructor
 public class PropertyService {
 
-    @Autowired
-    private PropertyRepositoryInterface propertyRepository;
-
-    @Autowired
-    private EquipmentService equipmentService;
+    private final PropertyRepositoryInterface propertyRepository;
+    private final EquipmentService equipmentService;
 
 
 
-
-    @CacheEvict(cacheNames = {"property","location", "equipment"}, allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "propertyList", allEntries = true),
+            @CacheEvict(cacheNames = "propertyDTOs", allEntries = true)
+        },
+        put = {
+            @CachePut(cacheNames = "property", key = "#result.id")
+        }
+    )
     public Property save(Property property) {
         Property existingProperty = null;
         if (property.getId() != null) {
@@ -52,7 +53,7 @@ public class PropertyService {
 
 
 
-    @Cacheable(cacheNames = "property")
+    @Cacheable(cacheNames = "propertyList")
     public List<Property> getAllProperties() {
         return propertyRepository.findAllWithDetails();
     }
@@ -60,6 +61,7 @@ public class PropertyService {
 
 
 
+    @Cacheable(cacheNames = "property", key = "#id", unless = "#result == null")
     public Property findById(Long id) {
         return propertyRepository.findById(id).orElse(null);
     }
@@ -67,7 +69,13 @@ public class PropertyService {
 
 
 
-    @CacheEvict(cacheNames = { "property", "location", "equipment" }, allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "propertyList", allEntries = true),
+            @CacheEvict(cacheNames = "propertyDTOs", allEntries = true),
+            @CacheEvict(cacheNames = "property", key = "#id")
+        }
+    )
     public void deleteProperty(Long id) throws DeletePropertyException {
 
         // check if property has equipment present

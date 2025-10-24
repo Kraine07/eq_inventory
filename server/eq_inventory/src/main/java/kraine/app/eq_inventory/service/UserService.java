@@ -2,10 +2,10 @@ package kraine.app.eq_inventory.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,24 +23,31 @@ import kraine.app.eq_inventory.model.LoginModel;
 import kraine.app.eq_inventory.model.RegisterModel;
 import kraine.app.eq_inventory.model.User;
 import kraine.app.eq_inventory.repository.UserRepoInterface;
+import lombok.RequiredArgsConstructor;
+
+
+
 
 @Service
 @Transactional
-@CacheConfig(cacheNames = "user")
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepoInterface userRepo;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private BCryptPasswordEncoder bpe;
+    private final UserRepoInterface userRepo;
+    private final EmailService emailService;
+    private final BCryptPasswordEncoder bpe;
 
 
 
-    @CacheEvict(cacheNames = { "user", "property" }, allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "userList", allEntries = true),
+            @CacheEvict(cacheNames = "userDTOs", allEntries = true)
+        },
+        put = {
+            @CachePut(cacheNames = "user", key = "#result.id")
+        }
+    )
     public User addUser(RegisterModel registerModel, HttpServletRequest request) throws DuplicateUserException {
 
         User user = RegisterModel.toUser(registerModel);
@@ -83,6 +90,7 @@ public class UserService {
 
 
 
+
     public User attemptLogin(LoginModel loginModel) {
         User retrievedUser = userRepo.findByEmail(loginModel.getEmail());
 
@@ -113,7 +121,15 @@ public class UserService {
 
 
 
-    @CacheEvict(cacheNames = { "user", "property" }, allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "userList", allEntries = true),
+            @CacheEvict(cacheNames = "userDTOs", allEntries = true)
+        },
+        put = {
+            @CachePut(cacheNames = "user", key = "#user.id")
+        }
+    )
     public User updateUser(User user) throws UserNotFoundException{
         // prevent a new user form being created
         if(user == null || user.getId() == null || !userRepo.existsById(user.getId())) throw new UserNotFoundException("This user does not exist.");
@@ -123,7 +139,15 @@ public class UserService {
 
 
 
-    @CacheEvict(cacheNames = { "user", "property" }, allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "userList", allEntries = true),
+            @CacheEvict(cacheNames = "userDTOs", allEntries = true)
+        },
+        put = {
+            @CachePut(cacheNames = "user", key = "#result.id")
+        }
+    )
     public User updatePassword(User user, String oldPassword) {
         //check if old password matches
         User userInDb = userRepo.findByEmail(user.getEmail());
@@ -136,17 +160,27 @@ public class UserService {
 
 
 
+    @Cacheable(cacheNames = "user", key = "#id")
     public User findById(Long id) {
         return userRepo.findById(id).orElseThrow(()-> new UserNotFoundException("User not found."));
     }
 
 
-    @Cacheable
+
+    @Cacheable(cacheNames = "userList")
     public List<User> getUsers() {
         return userRepo.findAllWithDetails();
     }
 
-    @CacheEvict(key = "#id")
+
+
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "userList", allEntries = true),
+            @CacheEvict(cacheNames = "userDTOs", allEntries = true),
+            @CacheEvict(cacheNames = "user", key = "#id")
+        }
+    )
     public void deleteUser(Long id) {
         userRepo.deleteById(id);
     }

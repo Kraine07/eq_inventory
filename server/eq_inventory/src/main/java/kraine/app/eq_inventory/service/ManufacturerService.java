@@ -2,8 +2,12 @@ package kraine.app.eq_inventory.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -13,32 +17,41 @@ import kraine.app.eq_inventory.model.Equipment;
 import kraine.app.eq_inventory.model.Manufacturer;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import kraine.app.eq_inventory.repository.ManufacturerRepositoryInterface;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
-@CacheConfig(cacheNames = "manufacturer")
+@RequiredArgsConstructor
 
 
 public class ManufacturerService {
 
 
-    @Autowired
-    private ManufacturerRepositoryInterface manufacturerRepository;
+    private final ManufacturerRepositoryInterface manufacturerRepository;
 
-    @Autowired
-    private EquipmentRepositoryInterface equipmentRepositoryInterface;
+    private final EquipmentRepositoryInterface equipmentRepositoryInterface;
 
 
 
 
 
-    // @Cacheable
+    @Cacheable(cacheNames = "manufacturerList")
     public List<Manufacturer> getAllManufacturers() {
         return manufacturerRepository.findAll();
     }
 
 
 
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "manufacturerList", allEntries = true),
+            @CacheEvict(cacheNames = "model", allEntries = true),
+            @CacheEvict(cacheNames = "equipment", allEntries = true)
+        },
+        put = {
+            @CachePut(cacheNames = "manufacturer", key = "#result.id")
+        }
+    )
     public Manufacturer saveManufacturer(Manufacturer manufacturer) {
         // Check if name is already taken (by another manufacturer)
         Manufacturer existingByName = manufacturerRepository.findByName(manufacturer.getName());
@@ -75,24 +88,14 @@ public class ManufacturerService {
 
 
 
-    // @CacheEvict(cacheNames = {"manufacturer", "equipment", "model"}, allEntries = true)
-    // public Manufacturer saveManufacturer(Manufacturer manufacturer) {
-
-    //     // check if manufacturer with same name exists
-    //     Manufacturer existingManufacturer = manufacturerRepository.findByName(manufacturer.getName());
-    //     if (existingManufacturer != null) {
-    //         throw new IllegalArgumentException("Manufacturer with name '" + manufacturer.getName() + "' already exists.");
-    //     }
-    //     return manufacturerRepository.saveAndFlush(manufacturer);
-    // }
 
 
 
-
-
-
-
-    // @CacheEvict(cacheNames = {"manufacturer",  "model", "equipment"}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "manufacturerList", allEntries = true),
+            @CacheEvict(cacheNames = "manufacturerDTOs", allEntries = true),
+            @CacheEvict(cacheNames = "manufacturer", key = "#id")
+    })
     public void deleteManufacturer(Long id) {
 
         // check if manufacturer has related equipment
@@ -120,7 +123,7 @@ public class ManufacturerService {
 
 
 
-    // @Cacheable(cacheNames = "manufacturerDTOs")
+    @Cacheable(cacheNames = "manufacturerDTOs")
     public List<ManufacturerDTO> getAllManufacturerDTOs() {
         return manufacturerRepository.findAll().stream()
                 .map(this::convertToDTO)

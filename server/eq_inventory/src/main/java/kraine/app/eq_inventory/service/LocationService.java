@@ -1,11 +1,10 @@
 package kraine.app.eq_inventory.service;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import kraine.app.eq_inventory.DTO.LocationDTO;
@@ -17,26 +16,32 @@ import kraine.app.eq_inventory.model.Property;
 import kraine.app.eq_inventory.repository.EquipmentRepositoryInterface;
 import kraine.app.eq_inventory.repository.LocationRepositoryInterface;
 import kraine.app.eq_inventory.repository.PropertyRepositoryInterface;
+import lombok.RequiredArgsConstructor;
+
+
 
 @Service
 @Transactional
-@CacheConfig(cacheNames = "location")
+@RequiredArgsConstructor
 public class LocationService {
 
-    @Autowired
-    private LocationRepositoryInterface locationRepository;
+    private final LocationRepositoryInterface locationRepository;
 
-    @Autowired
-    private PropertyRepositoryInterface propertyRepositoryInterface;
+    private final PropertyRepositoryInterface propertyRepositoryInterface;
 
-    @Autowired
-    EquipmentRepositoryInterface equipmentRepositoryInterface;
+    private final EquipmentRepositoryInterface equipmentRepositoryInterface;
 
 
 
-
-
-    // @CacheEvict(cacheNames = { "property", "location", "equipment" }, allEntries = true)
+    @Caching(
+        evict = {
+            @CacheEvict(cacheNames = "locationList", allEntries = true),
+            @CacheEvict(cacheNames = "locationDTOs", allEntries = true),
+        },
+        put = {
+            @CachePut(cacheNames = "location", key = "#result.id")
+        }
+    )
     public Location saveLocation(String property, String name, LocationId locationId) {
         Location existingLocation = findByLocationId(locationId);
         Location newLocation = new Location(propertyRepositoryInterface.findPropertyById(Long.valueOf(property)), name);
@@ -59,7 +64,12 @@ public class LocationService {
 
 
 
-
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "locationList", allEntries = true),
+            @CacheEvict(cacheNames = "locationDTOs", allEntries = true),
+    }, put = {
+            @CachePut(cacheNames = "location", key = "#result.id")
+    })
     public Location saveLocation(Property property, String name, LocationId locationId) {
         Location existingLocation = findByLocationId(locationId);
         Location newLocation = new Location(property, name);
@@ -85,32 +95,28 @@ public class LocationService {
 
 
 
-    // @Cacheable(cacheNames = "locations")
+    @Cacheable(cacheNames = "locationList")
     public List<Location> getAllLocations() {
         return locationRepository.findAllWithFullDetails();
     }
 
 
 
+
+
+    @Cacheable(cacheNames = "location", key = "#locationId", unless = "#result == null")
     public Location findByLocationId(LocationId locationId) {
         return locationRepository.findById(locationId).orElse(null);
-        // return locationRepository.findByPropertyIdAndName(locationId.getProperty(), locationId.getName());
     }
 
 
 
 
-    // @CacheEvict(cacheNames = {"property","location","equipment"}, allEntries = true)
-    // public void deleteLocation(LocationId id) {
-    //     Location location = findByLocationId(id);
-    //     Property property = location.getProperty();
-    //     property.getLocations().remove(location);
-    //     locationRepository.deleteById(id);
-
-    // }
-
-
-
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "locationList", allEntries = true),
+            @CacheEvict(cacheNames = "locationDTOs", allEntries = true),
+            @CacheEvict(cacheNames = "location", key = "#id")
+    })
     public Boolean deleteLocation(LocationId id) {
 
         // Find the location and remove it from the property's location list

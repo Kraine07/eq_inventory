@@ -28,6 +28,9 @@ public class DataInitializer implements CommandLineRunner {
             roleRepository.save(new Role(null, RoleType.EDITOR, null));
             System.out.println("Roles initialized");
         }
+
+        // populate region table if empty
+        // TODO: create CRUD for regions
         if (regionRepositoryInterface.count() == 0) {
             regionRepositoryInterface.save(new Region(null,"Region 1"));
             regionRepositoryInterface.save(new Region(null,"Region 2"));
