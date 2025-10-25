@@ -46,7 +46,7 @@ public class EquipmentImageController {
 
 
 
-    @PostMapping(value = "/save-equipment-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/save-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String uploadEquipmentImage(
         @RequestParam("equipment") Long equipmentId,
         @RequestParam("equipment-image") MultipartFile image

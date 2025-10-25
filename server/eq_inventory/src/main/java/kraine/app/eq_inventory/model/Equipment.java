@@ -16,6 +16,7 @@ import kraine.app.eq_inventory.YearMonthConveter;
 
 import java.time.YearMonth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -60,6 +61,7 @@ public class Equipment {
 
 
 
+    @JsonIgnore
     @OneToOne(mappedBy = "equipment", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private EquipmentImage image;
 

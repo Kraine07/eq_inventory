@@ -127,7 +127,6 @@ public class EquipmentService {
                 equipment.getId(),
                 equipment.getSerialNumber(),
                 equipment.getManufacturedDate(),
-                // convertModelToDTO(equipment.getModel()),
                 ModelDTO.from(equipment.getModel()),
                 LocationDTO.from(equipment.getLocation())
         );

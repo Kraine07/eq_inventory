@@ -47,27 +47,6 @@ public class EquipmentImageService {
     }
 
 
-    // public EquipmentImage saveImage(Long equipmentId, EquipmentImage newImage) {
-    //     // Fetch managed Equipment entity
-    //     Equipment equipment = equipmentRepository.findById(equipmentId)
-    //             .orElseThrow(() -> new EntityNotFoundException("Equipment not found with id " + equipmentId));
-
-    //     // Fetch existing image if it exists
-    //     EquipmentImage existingImage = equipmentImageRepository.findByEquipment(equipment);
-
-    //     if (existingImage != null) {
-    //         // Replace the image data and name
-    //         existingImage.setImageData(newImage.getImageData().clone()); // clone to avoid reference issues
-    //         existingImage.setImageName(newImage.getImageName());
-    //         // Hibernate will detect changes because this entity is managed
-    //         return equipmentImageRepository.saveAndFlush(existingImage);
-    //     } else {
-    //         // Link and insert new one
-    //         newImage.setEquipment(equipment);
-    //         return equipmentImageRepository.saveAndFlush(newImage);
-    //     }
-    // }
-
 
 
     public EquipmentImage getImageByEquipment(Long equipmentId) {
